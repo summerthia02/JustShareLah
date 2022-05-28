@@ -14,23 +14,26 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends AuthState<LoginPage> {
   bool _isLoading = false;
   late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
 
   Future<void> _signIn() async {
     setState(() {
       _isLoading = true;
     });
+
     final response = await supabase.auth.signIn(
-        email: _emailController.text,
-        options: AuthOptions(
-            redirectTo: kIsWeb
-                ? null
-                : 'io.supabase.flutterquickstart://login-callback/'));
+      email: _emailController.text,
+      password: _passwordController.text,
+    );
+
     final error = response.error;
+    debugPrint(error!.message);
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
     } else {
-      context.showSnackBar(message: 'Check your email for login link!');
+      context.showSnackBar(message: 'Welcome back!');
       _emailController.clear();
+      _passwordController.clear();
     }
 
     setState(() {
@@ -42,11 +45,13 @@ class _LoginPageState extends AuthState<LoginPage> {
   void initState() {
     super.initState();
     _emailController = TextEditingController();
+    _passwordController = TextEditingController();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
@@ -64,25 +69,39 @@ class _LoginPageState extends AuthState<LoginPage> {
             const Text('Welcome to'),
             const Text('JustShareLah!'),
             const SizedBox(height: 32),
-            const Align(
-              alignment: Alignment.centerLeft,
-              child: Text('To get started:\n' 
-                '- Enter with your email below and click Send Magic Link\n'
-                '- Click the link sent to your email inbox to access your account'
-              ),
-            ),
-            const SizedBox(height: 18),
+            // const Align(
+            //   alignment: Alignment.centerLeft,
+            //   child: Text('To get started:\n'
+            //       '- Enter with your email below and click Send Magic Link\n'
+            //       '- Click the link sent to your email inbox to access your account'),
+            // ),
+            // const SizedBox(height: 18),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
+              // validator: (String? value) {
+              //   if (value!.isEmpty || !value.contains('@')) {
+              //     context.showErrorSnackBar(message: "Email is not valid");
+              //   }
+              // },
+            ),
+            const SizedBox(height: 18),
+            TextFormField(
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              // validator: (String? value) {
+              //   if (value!.isEmpty) {
+              //     context.showErrorSnackBar(message: "Invalid Password");
+              //   }
+              // },
             ),
             const SizedBox(height: 18),
             Row(
-              children: [ 
+              children: [
                 Expanded(
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _signIn,
-                    child: Text(_isLoading ? 'Loading' : 'Send Link'),
+                    child: Text(_isLoading ? 'Loading' : 'Log In'),
                   ),
                 ),
               ],
