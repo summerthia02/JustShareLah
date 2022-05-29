@@ -107,17 +107,22 @@ class _LoginPageState extends AuthState<LoginPage> {
               ],
             ),
             const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                children: [
-                  const Text("Don't have an account? "),
-                  InkWell(
-                    child: const Text('Sign up.'),
-                    onTap: () => Navigator.of(context).pushNamed('/signup'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              textDirection: TextDirection.ltr,
+              children: [
+                const Text("Don't have an account? "),
+                InkWell(
+                  child: Text(
+                    'Sign up.',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.teal[600],
+                    ),
                   ),
-                ],
-              ),
+                  onTap: () => Navigator.of(context).pushNamed('/signup'),
+                ),
+              ],
             ),
           ],
         ),
