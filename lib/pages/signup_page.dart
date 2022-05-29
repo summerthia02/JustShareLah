@@ -14,42 +14,50 @@ class SignupPage extends StatefulWidget {
 class _SignupPageState extends AuthState<SignupPage> {
   bool _isLoading = false;
   late final TextEditingController _emailController;
+  late final TextEditingController _usernameController;
+  late final TextEditingController _firstnameController;
+  late final TextEditingController _lastnameController;
   late final TextEditingController _passwordController;
+  late final TextEditingController _cfmpasswordController;
 
-  // Future<void> _signIn() async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   final response = await supabase.auth.signIn(
-  //       email: _emailController.text,
-  //       options: AuthOptions(
-  //           redirectTo: kIsWeb
-  //               ? null
-  //               : 'io.supabase.flutterquickstart://login-callback/'));
-  //   final error = response.error;
-  //   if (error != null) {
-  //     context.showErrorSnackBar(message: error.message);
-  //   } else {
-  //     context.showSnackBar(message: 'Check your email for login link!');
-  //     _emailController.clear();
-  //   }
+  Future<void> _signUp() async {
+    setState(() {
+      _isLoading = true;
+    });
+    final response = await supabase.auth
+        .signUp(_emailController.text, _passwordController.text);
+    final error = response.error;
+    if (error != null) {
+      context.showErrorSnackBar(message: error.message);
+    } else {
+      context.showSnackBar(message: 'Sign Up Successful!');
+      Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+    }
 
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  // }
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
+    _cfmpasswordController = TextEditingController();
+    _usernameController = TextEditingController();
+    _firstnameController = TextEditingController();
+    _lastnameController = TextEditingController();
   }
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _usernameController.dispose();
+    _lastnameController.dispose();
+    _firstnameController.dispose();
+    _cfmpasswordController.dispose();
     super.dispose();
   }
 
@@ -60,48 +68,55 @@ class _SignupPageState extends AuthState<SignupPage> {
       // appBar: AppBar(title: const Text('Welcome')),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
+        child: ListView(
           children: [
-            const SizedBox(height: 60),
-            const Text(
-              'Registration',
-              style: TextStyle(fontSize: 32)
+            const SizedBox(height: 32),
+            Center(
+              child: Text('Registration',
+                style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headline4?.fontSize ?? 32
+                ),
+              ),
             ),
             const SizedBox(height: 32),
-            // const Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: Text('To get started:\n'
-            //       '- Enter with your email below and click Send Magic Link\n'
-            //       '- Click the link sent to your email inbox to access your account'),
-            // ),
-            const SizedBox(height: 18),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
-              validator: (String? value) {
-                if (value!.isEmpty || !value.contains('@')) {
-                  return 'Email is not valid';
-                }
-              },
             ),
             const SizedBox(height: 18),
             TextFormField(
+              controller: _usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+            ),
+            const SizedBox(height: 18),
+            TextFormField(
+              controller: _firstnameController,
+              decoration: const InputDecoration(labelText: 'First Name'),
+            ),
+            const SizedBox(height: 18),
+            TextFormField(
+              controller: _lastnameController,
+              decoration: const InputDecoration(labelText: 'Last Name'),
+            ),
+            const SizedBox(height: 18),
+            //TODO: Make sure the passwords are the same
+            TextFormField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
-              validator: (String? value) {
-                if (value!.isEmpty) {
-                      return 'Invalid password';
-                }
-              },
+            ),
+            const SizedBox(height: 18),
+            TextFormField(
+              controller: _cfmpasswordController,
+              decoration: const InputDecoration(labelText: 'Confirm Password'),
             ),
             const SizedBox(height: 18),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: null,
-                    child: Text(_isLoading ? 'Loading' : 'Send Link'),
+                    onPressed: _signUp,
+                    child: Text(_isLoading ? 'Loading' : 'Submit'),
                   ),
                 ),
               ],
