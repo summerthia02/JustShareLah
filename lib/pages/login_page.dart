@@ -27,13 +27,11 @@ class _LoginPageState extends AuthState<LoginPage> {
     );
 
     final error = response.error;
-    debugPrint(error!.message);
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
     } else {
-      context.showSnackBar(message: 'Welcome back!');
-      _emailController.clear();
-      _passwordController.clear();
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/account', (route) => false);
     }
 
     setState(() {
@@ -66,34 +64,23 @@ class _LoginPageState extends AuthState<LoginPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             const SizedBox(height: 150),
-            const Text('Welcome to'),
-            const Text('JustShareLah!'),
+            Text('Welcome to',
+                style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headline6?.fontSize ?? 32)),
+            Text('JustShareLah!',
+                style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headline3?.fontSize ?? 48)),
             const SizedBox(height: 32),
-            // const Align(
-            //   alignment: Alignment.centerLeft,
-            //   child: Text('To get started:\n'
-            //       '- Enter with your email below and click Send Magic Link\n'
-            //       '- Click the link sent to your email inbox to access your account'),
-            // ),
-            // const SizedBox(height: 18),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
-              // validator: (String? value) {
-              //   if (value!.isEmpty || !value.contains('@')) {
-              //     context.showErrorSnackBar(message: "Email is not valid");
-              //   }
-              // },
             ),
             const SizedBox(height: 18),
             TextFormField(
               controller: _passwordController,
               decoration: const InputDecoration(labelText: 'Password'),
-              // validator: (String? value) {
-              //   if (value!.isEmpty) {
-              //     context.showErrorSnackBar(message: "Invalid Password");
-              //   }
-              // },
             ),
             const SizedBox(height: 18),
             Row(
@@ -107,17 +94,22 @@ class _LoginPageState extends AuthState<LoginPage> {
               ],
             ),
             const SizedBox(height: 10),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                children: [
-                  const Text("Don't have an account? "),
-                  InkWell(
-                    child: const Text('Sign up.'),
-                    onTap: () => Navigator.of(context).pushNamed('/signup'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              textDirection: TextDirection.ltr,
+              children: [
+                const Text("Don't have an account? "),
+                InkWell(
+                  child: Text(
+                    'Sign up.',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.teal[600],
+                    ),
                   ),
-                ],
-              ),
+                  onTap: () => Navigator.of(context).pushNamed('/signup'),
+                ),
+              ],
             ),
           ],
         ),
