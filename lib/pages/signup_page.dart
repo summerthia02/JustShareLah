@@ -63,8 +63,11 @@ class _SignupPageState extends AuthState<SignupPage> {
         child: Column(
           mainAxisSize: MainAxisSize.max,
           children: [
-            const SizedBox(height: 150),
-            const Text('Sign up!'),
+            const SizedBox(height: 60),
+            const Text(
+              'Registration',
+              style: TextStyle(fontSize: 32)
+            ),
             const SizedBox(height: 32),
             // const Align(
             //   alignment: Alignment.centerLeft,

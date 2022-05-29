@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/pages/signup_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:justsharelah_v1/pages/account_page.dart';
@@ -25,19 +26,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'JustShareLah',
-      theme: ThemeData.light().copyWith(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.teal
-        ),
-        textTheme: GoogleFonts.nunitoSansTextTheme(),
-        scaffoldBackgroundColor: Colors.white,
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            // onPrimary: Colors.teal[100],
-            primary: Colors.teal[400],
-          ),
-        ),
-      ),
+      theme: AppTheme().buildThemeData(),
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
