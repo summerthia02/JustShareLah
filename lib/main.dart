@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/pages/signup_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:justsharelah_v1/pages/account_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/': (_) => const SplashPage(),
         '/login': (_) => const LoginPage(),
         '/account': (_) => const AccountPage(),
+        '/signup': (_) => const SignupPage(),
       },
     );
   }
