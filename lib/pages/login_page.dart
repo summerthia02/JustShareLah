@@ -27,13 +27,11 @@ class _LoginPageState extends AuthState<LoginPage> {
     );
 
     final error = response.error;
-    debugPrint(error!.message);
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
     } else {
-      context.showSnackBar(message: 'Welcome back!');
-      _emailController.clear();
-      _passwordController.clear();
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/account', (route) => false);
     }
 
     setState(() {
@@ -66,20 +64,14 @@ class _LoginPageState extends AuthState<LoginPage> {
           mainAxisSize: MainAxisSize.max,
           children: [
             const SizedBox(height: 150),
-            Text(
-              'Welcome to',
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme
-                          .headline6?.fontSize?? 32
-              )
-            ),
-            Text(
-              'JustShareLah!',
-              style: TextStyle(
-                fontSize: Theme.of(context).textTheme
-                          .headline3?.fontSize?? 48
-              )
-            ),
+            Text('Welcome to',
+                style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headline6?.fontSize ?? 32)),
+            Text('JustShareLah!',
+                style: TextStyle(
+                    fontSize:
+                        Theme.of(context).textTheme.headline3?.fontSize ?? 48)),
             const SizedBox(height: 32),
             TextFormField(
               controller: _emailController,

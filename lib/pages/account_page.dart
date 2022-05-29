@@ -17,53 +17,53 @@ class _AccountPageState extends AuthRequiredState<AccountPage> {
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
-    setState(() {
-      _loading = true;
-    });
-    final response = await supabase
-        .from('profiles')
-        .select()
-        .eq('id', userId)
-        .single()
-        .execute();
-    final error = response.error;
-    if (error != null && response.status != 406) {
-      context.showErrorSnackBar(message: error.message);
-    }
-    final data = response.data;
-    if (data != null) {
-      _usernameController.text = (data['username'] ?? '') as String;
-      _websiteController.text = (data['website'] ?? '') as String;
-    }
-    setState(() {
-      _loading = false;
-    });
+    // setState(() {
+    //   _loading = true;
+    // });
+    // final response = await supabase
+    //     .from('profiles')
+    //     .select()
+    //     .eq('id', userId)
+    //     .single()
+    //     .execute();
+    // final error = response.error;
+    // if (error != null && response.status != 406) {
+    //   context.showErrorSnackBar(message: error.message);
+    // }
+    // final data = response.data;
+    // if (data != null) {
+    //   _usernameController.text = (data['username'] ?? '') as String;
+    //   _websiteController.text = (data['website'] ?? '') as String;
+    // }
+    // setState(() {
+    //   _loading = false;
+    // });
   }
 
   /// Called when user taps `Update` button
   Future<void> _updateProfile() async {
-    setState(() {
-      _loading = true;
-    });
-    final userName = _usernameController.text;
-    final website = _websiteController.text;
-    final user = supabase.auth.currentUser;
-    final updates = {
-      'id': user!.id,
-      'username': userName,
-      'website': website,
-      'updated_at': DateTime.now().toIso8601String(),
-    };
-    final response = await supabase.from('profiles').upsert(updates).execute();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    } else {
-      context.showSnackBar(message: 'Successfully updated profile!');
-    }
-    setState(() {
-      _loading = false;
-    });
+    // setState(() {
+    //   _loading = true;
+    // });
+    // final userName = _usernameController.text;
+    // final website = _websiteController.text;
+    // final user = supabase.auth.currentUser;
+    // final updates = {
+    //   'id': user!.id,
+    //   'username': userName,
+    //   'website': website,
+    //   'updated_at': DateTime.now().toIso8601String(),
+    // };
+    // final response = await supabase.from('profiles').upsert(updates).execute();
+    // final error = response.error;
+    // if (error != null) {
+    //   context.showErrorSnackBar(message: error.message);
+    // } else {
+    //   context.showSnackBar(message: 'Successfully updated profile!');
+    // }
+    // setState(() {
+    //   _loading = false;
+    // });
   }
 
   Future<void> _signOut() async {

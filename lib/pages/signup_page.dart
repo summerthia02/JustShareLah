@@ -24,8 +24,10 @@ class _SignupPageState extends AuthState<SignupPage> {
     setState(() {
       _isLoading = true;
     });
+
     final response = await supabase.auth
         .signUp(_emailController.text, _passwordController.text);
+    
     final error = response.error;
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
@@ -79,7 +81,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                 ),
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 18),
             TextFormField(
               controller: _emailController,
               decoration: const InputDecoration(labelText: 'Email'),
