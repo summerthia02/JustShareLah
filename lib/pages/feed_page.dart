@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/apptheme.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
@@ -91,22 +92,30 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        actions: [
-          TextFormField(
-            controller: _searchController,
-            decoration: const InputDecoration(hintText: 'Search'),
-          ),
-        ],
+        title: const Text("Feed Page"),
+        centerTitle: true,  
       ),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        children: [
-          const SizedBox(height: 18),
-          ElevatedButton(
-              onPressed: _updateProfile,
-              child: Text(_loading ? 'Saving...' : 'Update')),
-          const SizedBox(height: 18),
-          ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
+        children: const [
+          SizedBox.expand(),
+          Text("Items will be displayed here."),
+        ],
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.chat),
+            label: 'Chat',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add),
+            label: 'Add Listing',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.face_outlined),
+            label: 'User Profile',
+          ),
         ],
       ),
     );

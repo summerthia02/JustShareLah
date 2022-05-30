@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   ThemeData buildThemeData() {
     return ThemeData.light().copyWith(
+      primaryColor: Colors.teal,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal),
       textTheme: GoogleFonts.nunitoSansTextTheme(),
       scaffoldBackgroundColor: Colors.white,
@@ -12,6 +13,10 @@ class AppTheme {
           // onPrimary: Colors.teal[100],
           primary: Colors.teal[400],
         ),
+      ),
+      bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
       ),
     );
 
