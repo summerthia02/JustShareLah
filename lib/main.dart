@@ -7,6 +7,7 @@ import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
