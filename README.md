@@ -41,14 +41,14 @@ We envision a mobile application that allows for seamless borrowing/lending/rent
 ### Features
 
 The Mobile Application (compatible with both iOS and Android) first brings the user to a login/register page. After they log in, they will be directed to a landing page. 
-
-- Landing Page + Feed
+<br>
+- **Landing Page + Feed**
   - The landing page contains a search bar in the middle
   - Users can scroll below the search bar to view item listings either
     - Ranked by proximity of the user listing the item, OR
     - By friends they follow on the application
 
-- Searching for items
+- **Searching for items**
   - Users will be able to search for items to either
     - Borrow from those in their direct vicinity, for a short period of time (within a day), OR
     - Rent from anybody within Singapore, for an extended period of time (specified by the user, and agreed upon by the renter)
@@ -61,10 +61,10 @@ The Mobile Application (compatible with both iOS and Android) first brings the u
     - Location
     - Price range (input by the person searching, only applicable for items being rented)
 
-- Chat
+- **Chat**
   - Before dealing with the lender/renter, users can chat with them to coordinate places to meet up to obtain the item listed, or for general purposes i.e. enquiries
 
-- Profile page and Listings
+- **Profile page and Listings**
   - Users can navigate to their profile page, where their current item listings are displayed
     - Item listings refer to products that the user is willing to lend/rent
     - These will contain information such as
@@ -74,16 +74,16 @@ The Mobile Application (compatible with both iOS and Android) first brings the u
   - Users can add, remove or edit listings
   - Users can add other users as friends by visiting their profile
 
-- Share Credits
+- **Share Credits**
   - Each user would have a certain amount of Share Credits when an account is created, which is displayed on their individual profiles
   - Share Credits would:
     - Increase every time a user lends an item to another party
     - Decrease every time the user borrows from another party
   - User will not be allowed to borrow once reaching a certain Share Credit floor
     - This incentivises users to lend their own items so that they are able to borrow more
-  - **Note that Share Credits are not affected by listings that involve monetary transaction (renting)
+  - Note that Share Credits are not affected by listings that involve monetary transaction (renting)
 
-- Reviews
+- **Reviews**
   - After each transaction is made (borrowing/lending or renting), users are prompted to leave a review for the other party
   - Reviews and ratings would be shown on each user’s profile
     - This assures users of the credibility of other parties
@@ -91,10 +91,10 @@ The Mobile Application (compatible with both iOS and Android) first brings the u
 <hr>
 
 ### Tech Stack
-Front-end: Flutter<br>
-Back-end: Supabase<br>
-User Authorization: Supabase Auth<br>
-CI/CD + Deployment: Github Actions
+*Front-end:* Flutter<br>
+*Back-end:* Supabase<br>
+*User Authorization:* Supabase Auth<br>
+*CI/CD + Deployment:* Github Actions
 <hr>
 
 ### Poster + Video Link
