@@ -91,12 +91,12 @@ It also reduces the likelihood of errant / irresponsible users who would undermi
 <hr>
 
 ### Tech Stack
-Front-end: Flutter
-Back-end: Supabase
-User Authorization: Supabase Auth
+Front-end: Flutter<br>
+Back-end: Supabase<br>
+User Authorization: Supabase Auth<br>
 CI/CD + Deployment: Github Actions
 <hr>
 
 ### Poster + Video Link
-Poster: 5011.pdf 
-Video: 5011.mp4
+Poster: [5011.pdf](https://drive.google.com/file/d/1lvXZxw3PGwX0bxjjKtWldovTyYTCKdrd/view?usp=sharing)<br>
+Video: [5011.mp4](https://drive.google.com/file/d/1ON6u0wTBIKMeA11svlxJA-YJkGRfGv1m/view?usp=sharing)
