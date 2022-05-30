@@ -14,6 +14,30 @@ class FeedPage extends StatefulWidget {
 class _FeedPageState extends AuthRequiredState<FeedPage> {
   final _searchController = TextEditingController();
   var _loading = false;
+  // Index for bottom nav bar
+  int _selectedIndex = 0;
+
+  // Routing for bottom nav bar
+  void _onItemTapped(int index) {
+    setState(() {
+      _loading = true;
+    });
+    switch (index) {
+      case 0:
+        // _navigatorKey.currentState!.pushNamed("/chat");
+        break;
+      case 1:
+        // _navigatorKey.currentState!.pushNamed("/addlisting");
+        break;
+      case 2:
+        Navigator.of(context).pushNamed("/account");
+        break;
+    }
+    setState(() {
+      _selectedIndex = index;
+      _loading = false;
+    });
+  }
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
@@ -40,40 +64,6 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     // });
   }
 
-  /// Called when user taps `Update` button
-  Future<void> _updateProfile() async {
-    // setState(() {
-    //   _loading = true;
-    // });
-    // final userName = _usernameController.text;
-    // final website = _websiteController.text;
-    // final user = supabase.auth.currentUser;
-    // final updates = {
-    //   'id': user!.id,
-    //   'username': userName,
-    //   'website': website,
-    //   'updated_at': DateTime.now().toIso8601String(),
-    // };
-    // final response = await supabase.from('profiles').upsert(updates).execute();
-    // final error = response.error;
-    // if (error != null) {
-    //   context.showErrorSnackBar(message: error.message);
-    // } else {
-    //   context.showSnackBar(message: 'Successfully updated profile!');
-    // }
-    // setState(() {
-    //   _loading = false;
-    // });
-  }
-
-  Future<void> _signOut() async {
-    final response = await supabase.auth.signOut();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    }
-  }
-
   @override
   void onAuthenticated(Session session) {
     final user = session.user;
@@ -93,16 +83,20 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Feed Page"),
-        centerTitle: true,  
+        centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: const [
-          SizedBox.expand(),
-          Text("Items will be displayed here."),
+          Center(
+            child: Text("Items will be displayed here."),
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: _loading ? null : _onItemTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.chat),
