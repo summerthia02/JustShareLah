@@ -29,7 +29,7 @@ class _LoginPageState extends AuthState<LoginPage> {
       context.showErrorSnackBar(message: error.message);
     } else {
       Navigator.of(context)
-          .pushNamedAndRemoveUntil('/account', (route) => false);
+          .pushNamedAndRemoveUntil('/feed', (route) => false);
     }
 
     setState(() {
