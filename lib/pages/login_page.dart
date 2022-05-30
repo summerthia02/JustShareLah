@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 
