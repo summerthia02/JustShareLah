@@ -36,6 +36,7 @@ We envision a mobile application that allows for seamless borrowing/lending/rent
 - As a user, I wish to chat with those I want to transact with.
 - As a user, I want to manage all my chats on a single page.
 - As a user, I want to monitor my activity in my account.
+<hr>
 
 ### Features
 
