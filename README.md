@@ -1,6 +1,7 @@
 # JustShareLah! (By: Praveen and Summer)
 
 ### Contents
+- Deployment
 - Motivation
 - Aim
 - User Stories
@@ -8,6 +9,10 @@
 - Tech Stack
 - Poster + Video Links
 <hr>
+
+### Deployment
+
+Our latest release is published here on Github! The .apk (Android) and .ipa (iOS) files for the application can be found under the “Releases” header.
 
 ### Motivation
 
