@@ -12,7 +12,7 @@
 
 ### Deployment
 
-Our latest release is published here on Github! The .apk (Android) and .ipa (iOS) files for the application can be found under the “Releases” header.
+Our latest release is published here on Github! The .apk (Android) and .ipa (iOS) files for the application **can be found under the “Releases” header.**
 <hr>
 
 ### Motivation
