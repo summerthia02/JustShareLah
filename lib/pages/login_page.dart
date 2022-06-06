@@ -1,6 +1,10 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
+import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -28,8 +32,7 @@ class _LoginPageState extends AuthState<LoginPage> {
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
     } else {
-      Navigator.of(context)
-          .pushNamedAndRemoveUntil('/feed', (route) => false);
+      Navigator.of(context).pushNamedAndRemoveUntil('/feed', (route) => false);
     }
 
     setState(() {
@@ -54,62 +57,103 @@ class _LoginPageState extends AuthState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan,
       // TODO: Do we need an appbar?
       // appBar: AppBar(title: const Text('Welcome')),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            const SizedBox(height: 150),
-            Text('Welcome to',
-                style: TextStyle(
-                    fontSize:
-                        Theme.of(context).textTheme.headline6?.fontSize ?? 32)),
-            Text('JustShareLah!',
-                style: TextStyle(
-                    fontSize:
-                        Theme.of(context).textTheme.headline3?.fontSize ?? 48)),
-            const SizedBox(height: 32),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
-            ),
-            const SizedBox(height: 18),
-            TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-            ),
-            const SizedBox(height: 18),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signIn,
-                    child: Text(_isLoading ? 'Loading' : 'Log In'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              textDirection: TextDirection.ltr,
-              children: [
-                const Text("Don't have an account? "),
-                InkWell(
-                  child: Text(
-                    'Sign up.',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      color: Colors.teal[600],
+      body: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Flexible(
+                child: Hero(
+                  tag: 'logo',
+                  child: Container(
+                    height: 150.0,
+                    child: CircleAvatar(
+                      backgroundColor: Colors.black,
+                      radius: 60.0,
+                      child: CircleAvatar(
+                          backgroundColor: Colors.cyan,
+                          radius: 70,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.zero,
+                            child: Image.asset('images/logo.png',
+                                width: 130, height: 140),
+                          )),
                     ),
                   ),
-                  onTap: () => Navigator.of(context).pushNamed('/signup'),
                 ),
-              ],
-            ),
-          ],
+              ),
+              Container(
+                  padding: EdgeInsets.all(20.0),
+                  alignment: Alignment.center,
+                  child: Text('JustShareLah!', style: kJustShareLahStyle)),
+              SizedBox(
+                height: 20.0,
+              ),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                textAlign: TextAlign.center,
+                controller: _emailController,
+                decoration: kTextFormFieldDecoration.copyWith(
+                    hintText: 'Enter your email',
+                    labelText: 'Email',
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
+              ),
+              const SizedBox(height: 18),
+              TextFormField(
+                obscureText: true,
+                textAlign: TextAlign.center,
+                controller: _passwordController,
+                decoration: kTextFormFieldDecoration.copyWith(
+                    hintText: 'Enter your password',
+                    labelText: 'Password',
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
+              ),
+              const SizedBox(height: 18),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _signIn,
+                      child: Text(_isLoading ? 'Loading' : 'Log In'),
+                    ),
+                  ),
+                ],
+              ),
+              FlatButton(
+                onPressed: () {
+                  //TODO FORGOT PASSWORD SCREEN GOES HERE
+                },
+                child: Text(
+                  'Forgot Password',
+                  style: TextStyle(color: Colors.white, fontSize: 15, decoration: TextDecoration.underline,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                textDirection: TextDirection.ltr,
+                children: [
+                  const Text("New User? "),
+                  InkWell(
+                    child: Text(
+                      'Sign up.',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.black,
+                      ),
+                    ),
+                    onTap: () => Navigator.of(context).pushNamed('/signup'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );
