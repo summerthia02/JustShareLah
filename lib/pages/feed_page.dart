@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -78,12 +81,27 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     super.dispose();
   }
 
+  Future<void> _signOut() async {
+    final response = await supabase.auth.signOut();
+    final error = response.error;
+    if (error != null) {
+      context.showErrorSnackBar(message: error.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Feed Page"),
+        title: const Text("JustShareLah!"),
+        backgroundColor: Colors.cyan,
         centerTitle: true,
+        leading: IconButton(
+            icon: Icon(Icons.exit_to_app),
+            onPressed: () {
+              _signOut();
+              Navigator.pop(context);
+            }),
       ),
       body: Column(
         mainAxisSize: MainAxisSize.max,
