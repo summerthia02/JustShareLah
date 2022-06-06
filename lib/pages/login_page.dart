@@ -125,27 +125,45 @@ class _LoginPageState extends AuthState<LoginPage> {
                   ),
                 ],
               ),
-              FlatButton(
-                onPressed: () {
-                  //TODO FORGOT PASSWORD SCREEN GOES HERE
-                },
-                child: Text(
-                  'Forgot Password',
-                  style: TextStyle(color: Colors.white, fontSize: 15, decoration: TextDecoration.underline,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                textDirection: TextDirection.ltr,
+                children: [
+                  const Text(
+                    "Forgot Password? ",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      //TODO FORGOT PASSWORD SCREEN GOES HERE
+                    },
+                    child: Text(
+                      'Reset Password',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
                 textDirection: TextDirection.ltr,
                 children: [
-                  const Text("New User? "),
+                  const Text(
+                    "New User? ",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
                   InkWell(
                     child: Text(
                       'Sign up.',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
-                        color: Colors.black,
+                        color: Colors.white,
+                        fontSize: 15,
                       ),
                     ),
                     onTap: () => Navigator.of(context).pushNamed('/signup'),

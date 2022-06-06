@@ -27,7 +27,7 @@ class _SignupPageState extends AuthState<SignupPage> {
 
     final response = await supabase.auth
         .signUp(_emailController.text, _passwordController.text);
-    
+
     final error = response.error;
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
@@ -74,11 +74,11 @@ class _SignupPageState extends AuthState<SignupPage> {
           children: [
             const SizedBox(height: 32),
             Center(
-              child: Text('Registration',
+              child: Text(
+                'Registration',
                 style: TextStyle(
                     fontSize:
-                        Theme.of(context).textTheme.headline4?.fontSize ?? 32
-                ),
+                        Theme.of(context).textTheme.headline4?.fontSize ?? 32),
               ),
             ),
             const SizedBox(height: 18),
