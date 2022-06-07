@@ -135,7 +135,7 @@ class _LoginPageState extends AuthState<LoginPage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      //TODO FORGOT PASSWORD SCREEN GOES HERE
+                      Navigator.of(context).pushNamed('/forget_password');
                     },
                     child: Text(
                       'Reset Password',
