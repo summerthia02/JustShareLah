@@ -174,6 +174,8 @@ class _SignupPageState extends AuthState<SignupPage> {
             ),
             const SizedBox(height: 120),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -185,7 +187,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
                         padding: EdgeInsets.all(20)),
-                    onPressed: _signUp,
+                    onPressed: _isLoading ? null : _signUp,
                     child: Text(_isLoading ? 'Loading' : 'Register'),
                   ),
                 ),

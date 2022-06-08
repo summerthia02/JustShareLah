@@ -11,6 +11,8 @@ import 'addListing.dart';
 import 'package:justsharelah_v1/profile_page.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/appbar.dart';
+import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -28,11 +30,6 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   PersistentTabController controller = PersistentTabController(initialIndex: 0);
 
   // List of next pages to go to
-  List<Widget> widgetPages = <Widget>[
-    ChatPage(),
-    AddListingPage(),
-    ProfilePage(),
-  ];
 
   // // Routing for bottom nav bar
   // void _onItemTapped(int index) {
@@ -106,17 +103,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:  Text("HomePage!"),
-        backgroundColor: Colors.cyan,
-        centerTitle: true,
-        leading: IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: () {
-              _signOut();
-              Navigator.pop(context);
-            }),
-      ),
+      appBar: MyAppBar().buildAppBar(const Text("Feed"), context, _signOut),
       // body: Column(
       //   mainAxisSize: MainAxisSize.max,
       //   mainAxisAlignment: MainAxisAlignment.center,
@@ -126,30 +113,9 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
       //     ),
       //   ],
       // ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        // onTap: _loading ? null : _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add Listing',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.face_outlined),
-            label: 'User d',
-          ),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
-      ),
-      body: widgetPages.elementAt(_selectedIndex),
+      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+
+      body: const SizedBox(width: 100),
     );
   }
 }

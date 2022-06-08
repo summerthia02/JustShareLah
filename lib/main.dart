@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/pages/addListing.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/forget_password.dart';
 import 'package:justsharelah_v1/pages/signup_page.dart';
+import 'package:justsharelah_v1/profile_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:justsharelah_v1/pages/account_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
@@ -29,6 +31,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'JustShareLah',
+      theme: AppTheme().buildThemeData(),
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
@@ -37,6 +41,8 @@ class MyApp extends StatelessWidget {
         '/signup': (_) => const SignupPage(),
         '/feed': (_) => const FeedPage(),
         '/chat': (_) => const ChatPage(),
+        '/addlisting': (_) => const AddListingPage(),
+        '/profile': (_) => const ProfilePage()
       },
     );
   }

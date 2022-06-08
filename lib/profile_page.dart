@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
@@ -113,32 +114,35 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // if add appbar -> two layers of appbar will appear.
-        body: Padding(
-      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 64),
-          const Icon(Icons.face_rounded),
-          const SizedBox(height: 12),
-          Center(
-            child: Text("Your Username",
-                style: TextStyle(
-                    fontSize:
-                        Theme.of(context).textTheme.headline6?.fontSize ?? 32)),
-          ),
-          const Expanded(child: SizedBox(height: 18)),
-          ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
-          const SizedBox(height: 8),
-          const Center(
-            child: Text("*Button to be removed subsequently"),
-          ),
-          const SizedBox(height: 64),
-        ],
+      // if add appbar -> two layers of appbar will appear.
+      body: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+        child: Column(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 64),
+            const Icon(Icons.face_rounded),
+            const SizedBox(height: 12),
+            Center(
+              child: Text("Your Username",
+                  style: TextStyle(
+                      fontSize:
+                          Theme.of(context).textTheme.headline6?.fontSize ??
+                              32)),
+            ),
+            const Expanded(child: SizedBox(height: 18)),
+            ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
+            const SizedBox(height: 8),
+            const Center(
+              child: Text("*Button to be removed subsequently"),
+            ),
+            const SizedBox(height: 64),
+          ],
+        ),
       ),
-    ));
+      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+    );
   }
 }
