@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/pages/addListing.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
+import 'package:justsharelah_v1/pages/forget_password.dart';
 import 'package:justsharelah_v1/pages/signup_page.dart';
+import 'package:justsharelah_v1/profile_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:justsharelah_v1/pages/account_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
-
+import 'package:justsharelah_v1/pages/chat_page.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,10 +36,13 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
+        '/forget_password': (_) => const ForgetPassword(),
         '/login': (_) => const LoginPage(),
-        '/account': (_) => const AccountPage(),
         '/signup': (_) => const SignupPage(),
         '/feed': (_) => const FeedPage(),
+        '/chat': (_) => const ChatPage(),
+        '/addlisting': (_) => const AddListingPage(),
+        '/profile': (_) => const ProfilePage()
       },
     );
   }

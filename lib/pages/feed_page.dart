@@ -1,8 +1,18 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'chat_page.dart';
+import 'addListing.dart';
+import 'package:justsharelah_v1/profile_page.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/appbar.dart';
+import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -17,27 +27,31 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   // Index for bottom nav bar
   int _selectedIndex = 0;
 
-  // Routing for bottom nav bar
-  void _onItemTapped(int index) {
-    setState(() {
-      _loading = true;
-    });
-    switch (index) {
-      case 0:
-        // _navigatorKey.currentState!.pushNamed("/chat");
-        break;
-      case 1:
-        // _navigatorKey.currentState!.pushNamed("/addlisting");
-        break;
-      case 2:
-        Navigator.of(context).pushNamed("/account");
-        break;
-    }
-    setState(() {
-      _selectedIndex = index;
-      _loading = false;
-    });
-  }
+  PersistentTabController controller = PersistentTabController(initialIndex: 0);
+
+  // List of next pages to go to
+
+  // // Routing for bottom nav bar
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   switch (index) {
+  //     case 0:
+  //       // _navigatorKey.currentState!.pushNamed("/chat");
+  //       break;
+  //     case 1:
+  //       // _navigatorKey.currentState!.pushNamed("/addlisting");
+  //       break;
+  //     case 2:
+  //       Navigator.of(context).pushNamed("/account");
+  //       break;
+  //   }
+  //   setState(() {
+  //     _selectedIndex = index;
+  //     _loading = false;
+  //   });
+  // }
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
@@ -78,40 +92,30 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     super.dispose();
   }
 
+  Future<void> _signOut() async {
+    final response = await supabase.auth.signOut();
+    final error = response.error;
+    if (error != null) {
+      context.showErrorSnackBar(message: error.message);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Feed Page"),
-        centerTitle: true,
-      ),
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Center(
-            child: Text("Items will be displayed here."),
-          ),
-        ],
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: _loading ? null : _onItemTapped,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.chat),
-            label: 'Chat',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add),
-            label: 'Add Listing',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.face_outlined),
-            label: 'User Profile',
-          ),
-        ],
-      ),
+      appBar: MyAppBar().buildAppBar(const Text("Feed"), context, _signOut),
+      // body: Column(
+      //   mainAxisSize: MainAxisSize.max,
+      //   mainAxisAlignment: MainAxisAlignment.center,
+      //   children: const [
+      //     Center(
+      //       child: Text("Items will be displayed here."),
+      //     ),
+      //   ],
+      // ),
+      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+
+      body: const SizedBox(width: 100),
     );
   }
 }

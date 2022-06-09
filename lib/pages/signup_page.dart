@@ -1,8 +1,12 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:justsharelah_v1/const_templates.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -27,7 +31,7 @@ class _SignupPageState extends AuthState<SignupPage> {
 
     final response = await supabase.auth
         .signUp(_emailController.text, _passwordController.text);
-    
+
     final error = response.error;
     if (error != null) {
       context.showErrorSnackBar(message: error.message);
@@ -65,67 +69,147 @@ class _SignupPageState extends AuthState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // TODO: Do we need an appbar?
-      // appBar: AppBar(title: const Text('Welcome')),
-      body: Container(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        child: ListView(
-          children: [
-            const SizedBox(height: 32),
-            Center(
-              child: Text('Registration',
-                style: TextStyle(
-                    fontSize:
-                        Theme.of(context).textTheme.headline4?.fontSize ?? 32
-                ),
+    return Stack(children: [
+      Scaffold(
+        appBar: AppBar(
+          title: const Text("JustShareLah!"),
+          backgroundColor: Colors.black,
+          centerTitle: true,
+          leading: IconButton(
+              icon: Icon(Icons.close),
+              onPressed: () {
+                Navigator.pop(context);
+              }),
+        ),
+        body: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(20.0),
+              alignment: Alignment.center,
+              child: Text(
+                'Register Your Details!',
+                style: kHeadingText,
               ),
             ),
-            const SizedBox(height: 18),
+
+            SizedBox(
+              height: 20.0,
+            ),
+
             TextFormField(
+              obscureText: false,
+              textAlign: TextAlign.center,
               controller: _emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: 'Enter your email',
+                  labelText: 'Email',
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
+
             const SizedBox(height: 18),
+
             TextFormField(
+              obscureText: false,
+              textAlign: TextAlign.center,
               controller: _usernameController,
-              decoration: const InputDecoration(labelText: 'Username'),
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: 'Enter your username',
+                  labelText: 'Username',
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
+
             const SizedBox(height: 18),
+
             TextFormField(
+              obscureText: false,
+              textAlign: TextAlign.center,
               controller: _firstnameController,
-              decoration: const InputDecoration(labelText: 'First Name'),
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: 'Enter your first name',
+                  labelText: 'First Name',
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
+
             const SizedBox(height: 18),
+
             TextFormField(
+              obscureText: false,
+              textAlign: TextAlign.center,
               controller: _lastnameController,
-              decoration: const InputDecoration(labelText: 'Last Name'),
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: 'Enter your last name',
+                  labelText: 'Last Name',
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
+
             const SizedBox(height: 18),
             //TODO: Make sure the passwords are the same
             TextFormField(
+              obscureText: true,
+              textAlign: TextAlign.center,
               controller: _passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: 'Enter your password',
+                  labelText: 'Password',
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
+
+            // make sure that the password is same - idk why but doesn't work
             const SizedBox(height: 18),
             TextFormField(
+              obscureText: true,
+              textAlign: TextAlign.center,
               controller: _cfmpasswordController,
-              decoration: const InputDecoration(labelText: 'Confirm Password'),
+              validator: (value) {
+                if (value != _passwordController.text) {
+                  return 'Passwords do not match';
+                }
+
+                return null;
+              },
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: 'Enter the same password as above',
+                  labelText: 'Confirm Password',
+                  floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-            const SizedBox(height: 18),
+            const SizedBox(height: 120),
             Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.max,
               children: [
-                Expanded(
+                Align(
+                  alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
-                    onPressed: _signUp,
-                    child: Text(_isLoading ? 'Loading' : 'Submit'),
+                    style: ElevatedButton.styleFrom(
+                        primary: Colors.redAccent,
+                        side: BorderSide(width: 4, color: Colors.black),
+                        elevation: 3,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)),
+                        padding: EdgeInsets.all(20)),
+                    onPressed: _isLoading ? null : _signUp,
+                    child: Text(_isLoading ? 'Loading' : 'Register'),
                   ),
                 ),
               ],
             ),
           ],
         ),
-      ),
-    );
+      )
+    ]);
   }
 }
+
+//   ,)]),)
+// Container(
+//   padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+//   child: ListView(
+//     children: [
+//       const SizedBox(height: 32),
+//       Center(
+//         child: Text(
+//           'Registration',
+//           style: TextStyle(
+//               fontSize:
+//                   Theme.of(context).textTheme.headline4?.fontSize ??
+//                       32),
