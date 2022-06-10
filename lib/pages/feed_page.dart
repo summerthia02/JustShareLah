@@ -103,7 +103,7 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar().buildAppBar(const Text("Feed"), context, _signOut),
+      appBar: MyAppBar().buildAppBar(const Text("Feed"), context),
       // body: Column(
       //   mainAxisSize: MainAxisSize.max,
       //   mainAxisAlignment: MainAxisAlignment.center,

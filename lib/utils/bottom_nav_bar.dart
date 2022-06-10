@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class MyBottomNavBar {
   List<String> widgetPages = <String>[
+    "/feed",
     "/chat",
     "/addlisting",
     "/profile",
@@ -9,17 +10,26 @@ class MyBottomNavBar {
 
   BottomNavigationBar buildBottomNavBar(BuildContext context) {
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat),
+          icon: Icon(Icons.home_outlined),
+          activeIcon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.chat_outlined),
+          activeIcon: Icon(Icons.chat),
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add),
+          icon: Icon(Icons.add_outlined),
+          activeIcon: Icon(Icons.add),
           label: 'Add Listing',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.face_outlined),
+          icon: Icon(Icons.person_outline),
+          activeIcon: Icon(Icons.person),
           label: 'User Profile',
         ),
       ],

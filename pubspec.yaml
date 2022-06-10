@@ -43,6 +43,7 @@ dependencies:
   material_design_icons_flutter: ^5.0.6595
   font_awesome_flutter: ^10.1.0
   persistent_bottom_nav_bar: any
+  stream_feed_flutter_core: ^0.8.0
 
 dev_dependencies:
   flutter_test:
