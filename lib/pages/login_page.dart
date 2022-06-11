@@ -57,9 +57,6 @@ class _LoginPageState extends AuthState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.cyan,
-      // TODO: Do we need an appbar?
-      // appBar: AppBar(title: const Text('Welcome')),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
@@ -75,7 +72,7 @@ class _LoginPageState extends AuthState<LoginPage> {
                     backgroundColor: Colors.black,
                     radius: 60.0,
                     child: CircleAvatar(
-                        backgroundColor: Colors.cyan,
+                        backgroundColor: Theme.of(context).primaryColor,
                         radius: 70,
                         child: ClipRRect(
                           borderRadius: BorderRadius.zero,
@@ -123,32 +120,33 @@ class _LoginPageState extends AuthState<LoginPage> {
                 ),
               ],
             ),
+            SizedBox(height: 20,),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               textDirection: TextDirection.ltr,
               children: [
                 const Text(
                   "Forgot Password? ",
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pushNamed('/forget_password');
-                  },
+                InkWell(
                   child: Text(
                     'Reset Password',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 15,
                       decoration: TextDecoration.underline,
                     ),
                   ),
+                  onTap: () {
+                    Navigator.of(context).pushNamed('/forget_password');
+                  },
                 ),
               ],
             ),
             const SizedBox(height: 10),
             Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.end,
               textDirection: TextDirection.ltr,
               children: [
                 const Text(
@@ -157,10 +155,10 @@ class _LoginPageState extends AuthState<LoginPage> {
                 ),
                 InkWell(
                   child: Text(
-                    'Sign up.',
+                    'Sign up',
                     style: TextStyle(
                       decoration: TextDecoration.underline,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       fontSize: 15,
                     ),
                   ),
