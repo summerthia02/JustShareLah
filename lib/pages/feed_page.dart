@@ -9,7 +9,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'chat_page.dart';
 import 'addListing.dart';
 import 'package:justsharelah_v1/profile_page.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
@@ -27,7 +26,6 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   // Index for bottom nav bar
   int _selectedIndex = 0;
 
-  PersistentTabController controller = PersistentTabController(initialIndex: 0);
 
   // List of next pages to go to
 
