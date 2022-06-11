@@ -73,7 +73,6 @@ class _SignupPageState extends AuthState<SignupPage> {
       Scaffold(
         appBar: AppBar(
           title: const Text("JustShareLah!"),
-          backgroundColor: Colors.black,
           centerTitle: true,
           leading: IconButton(
               icon: Icon(Icons.close),
@@ -91,11 +90,9 @@ class _SignupPageState extends AuthState<SignupPage> {
                 style: kHeadingText,
               ),
             ),
-
             SizedBox(
               height: 20.0,
             ),
-
             TextFormField(
               obscureText: false,
               textAlign: TextAlign.center,
@@ -105,9 +102,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                   labelText: 'Email',
                   floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-
             const SizedBox(height: 18),
-
             TextFormField(
               obscureText: false,
               textAlign: TextAlign.center,
@@ -117,9 +112,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                   labelText: 'Username',
                   floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-
             const SizedBox(height: 18),
-
             TextFormField(
               obscureText: false,
               textAlign: TextAlign.center,
@@ -129,9 +122,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                   labelText: 'First Name',
                   floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-
             const SizedBox(height: 18),
-
             TextFormField(
               obscureText: false,
               textAlign: TextAlign.center,
@@ -141,7 +132,6 @@ class _SignupPageState extends AuthState<SignupPage> {
                   labelText: 'Last Name',
                   floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-
             const SizedBox(height: 18),
             //TODO: Make sure the passwords are the same
             TextFormField(
@@ -153,7 +143,6 @@ class _SignupPageState extends AuthState<SignupPage> {
                   labelText: 'Password',
                   floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-
             // make sure that the password is same - idk why but doesn't work
             const SizedBox(height: 18),
             TextFormField(
@@ -164,7 +153,6 @@ class _SignupPageState extends AuthState<SignupPage> {
                 if (value != _passwordController.text) {
                   return 'Passwords do not match';
                 }
-
                 return null;
               },
               decoration: kTextFormFieldDecoration.copyWith(
@@ -172,7 +160,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                   labelText: 'Confirm Password',
                   floatingLabelBehavior: FloatingLabelBehavior.always),
             ),
-            const SizedBox(height: 120),
+            Expanded(child: const SizedBox()),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               mainAxisSize: MainAxisSize.max,
@@ -181,18 +169,19 @@ class _SignupPageState extends AuthState<SignupPage> {
                   alignment: Alignment.bottomCenter,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                        primary: Colors.redAccent,
+                        // primary: Colors.redAccent,
                         side: BorderSide(width: 4, color: Colors.black),
-                        elevation: 3,
+                        elevation: 15,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20)),
-                        padding: EdgeInsets.all(20)),
+                        padding: EdgeInsets.all(15)),
                     onPressed: _isLoading ? null : _signUp,
                     child: Text(_isLoading ? 'Loading' : 'Register'),
                   ),
                 ),
               ],
             ),
+            const SizedBox(height: 30),
           ],
         ),
       )
