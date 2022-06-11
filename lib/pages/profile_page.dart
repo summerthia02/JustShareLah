@@ -18,26 +18,6 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   int _selectedIndex = 0;
 
   // Routing for bottom nav bar
-  void _onItemTapped(int index) {
-    setState(() {
-      _loading = true;
-    });
-    switch (index) {
-      case 0:
-        // _navigatorKey.currentState!.pushNamed("/Profile");
-        break;
-      case 1:
-        // _navigatorKey.currentState!.pushNamed("/addlisting");
-        break;
-      case 2:
-        Navigator.of(context).pushNamed("/chat");
-        break;
-    }
-    setState(() {
-      _selectedIndex = index;
-      _loading = false;
-    });
-  }
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
@@ -114,6 +94,7 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       // if add appbar -> two layers of appbar will appear.
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
