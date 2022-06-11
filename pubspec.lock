@@ -15,13 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  button:
-    dependency: "direct main"
-    description:
-      name: button
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.4"
   characters:
     dependency: transitive
     description:
