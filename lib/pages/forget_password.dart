@@ -12,9 +12,7 @@ class ForgetPassword extends StatelessWidget {
     return Stack(
       children: [
         Scaffold(
-          backgroundColor: Colors.cyan,
           appBar: AppBar(
-            backgroundColor: Colors.cyan,
             elevation: 0,
             leading: IconButton(
               icon: Icon(Icons.exit_to_app),
@@ -24,7 +22,6 @@ class ForgetPassword extends StatelessWidget {
             ),
             title: Text(
               'Forgot Password',
-              style: kBodyText,
             ),
             centerTitle: true,
           ),
@@ -32,19 +29,17 @@ class ForgetPassword extends StatelessWidget {
             children: [
               Center(
                 child: Column(
+                  mainAxisSize: MainAxisSize.max,
                   children: [
                     SizedBox(
                       height: 60.0,
                     ),
-                    Container(
-                      width: 3000,
-                      child: Text(
-                        'Enter your email we will send instruction to reset your password',
-                        style: kBodyText,
-                      ),
+                    Text(
+                      'Enter your email\nWe will send you instructions to reset your password',
+                        textAlign: TextAlign.center,
                     ),
                     SizedBox(
-                      height: 20,
+                      height: 30,
                     ),
                     TextFormField(
                       obscureText: false,
