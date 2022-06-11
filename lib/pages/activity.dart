@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../utils/appbar.dart';
 import '../utils/bottom_nav_bar.dart';
 
 class ActivityPage extends StatelessWidget {
@@ -7,6 +8,8 @@ class ActivityPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: MyAppBar()
+          .buildAppBar(const Text("Latest Activities"), context, '/feed'),
       body: Container(
         child: Center(child: Text("Activity")),
       ),
