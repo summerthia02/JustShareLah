@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
-import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class ForgetPassword extends StatelessWidget {
   const ForgetPassword({Key? key}) : super(key: key);
