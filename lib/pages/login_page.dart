@@ -120,7 +120,9 @@ class _LoginPageState extends AuthState<LoginPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               textDirection: TextDirection.ltr,
