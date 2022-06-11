@@ -11,7 +11,6 @@ import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:justsharelah_v1/pages/chat_page.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

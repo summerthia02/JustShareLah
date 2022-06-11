@@ -41,7 +41,6 @@ dependencies:
   button: ^0.0.4
   material_design_icons_flutter: ^5.0.6595
   font_awesome_flutter: ^10.1.0
-  persistent_bottom_nav_bar: any
 
 dev_dependencies:
   flutter_test:
