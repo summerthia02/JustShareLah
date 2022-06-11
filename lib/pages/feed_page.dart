@@ -8,7 +8,7 @@ import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'chat_page.dart';
 import 'addListing.dart';
-import 'package:justsharelah_v1/profile_page.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
