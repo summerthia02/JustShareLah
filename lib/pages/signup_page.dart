@@ -2,6 +2,7 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/utils/form_validation.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
@@ -45,8 +46,6 @@ class _SignupPageState extends AuthState<SignupPage> {
       _isLoading = false;
     });
   }
-
-  
 
   @override
   void initState() {
@@ -102,6 +101,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                 obscureText: false,
                 textAlign: TextAlign.center,
                 controller: _emailController,
+                validator: FormValidation.formFieldEmpty,
                 decoration: kTextFormFieldDecoration.copyWith(
                     hintText: 'Enter your email',
                     labelText: 'Email',
@@ -112,6 +112,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                 obscureText: false,
                 textAlign: TextAlign.center,
                 controller: _usernameController,
+                validator: FormValidation.formFieldEmpty,
                 decoration: kTextFormFieldDecoration.copyWith(
                     hintText: 'Enter your username',
                     labelText: 'Username',
@@ -122,6 +123,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                 obscureText: false,
                 textAlign: TextAlign.center,
                 controller: _firstnameController,
+                validator: FormValidation.formFieldEmpty,
                 decoration: kTextFormFieldDecoration.copyWith(
                     hintText: 'Enter your first name',
                     labelText: 'First Name',
@@ -132,6 +134,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                 obscureText: false,
                 textAlign: TextAlign.center,
                 controller: _lastnameController,
+                validator: FormValidation.formFieldEmpty,
                 decoration: kTextFormFieldDecoration.copyWith(
                     hintText: 'Enter your last name',
                     labelText: 'Last Name',
@@ -142,6 +145,7 @@ class _SignupPageState extends AuthState<SignupPage> {
                 obscureText: true,
                 textAlign: TextAlign.center,
                 controller: _passwordController,
+                validator: FormValidation.formFieldEmpty,
                 decoration: kTextFormFieldDecoration.copyWith(
                     hintText: 'Enter your password',
                     labelText: 'Password',

@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
-
 class FormValidation {
-  bool formFieldEmpty(String text) {
-    return text.isEmpty;
+  static String? formFieldEmpty(String? text) {
+    return text!.isEmpty ? "This field cannot be empty" : null;
   }
 }
