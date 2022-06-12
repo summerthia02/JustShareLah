@@ -17,6 +17,7 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends AuthState<SignupPage> {
   bool _isLoading = false;
+  bool _validate = false;
   late final TextEditingController _emailController;
   late final TextEditingController _usernameController;
   late final TextEditingController _firstnameController;
@@ -69,122 +70,125 @@ class _SignupPageState extends AuthState<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Scaffold(
-        appBar: AppBar(
-          title: const Text("JustShareLah!"),
-          centerTitle: true,
-          leading: IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                Navigator.pop(context);
-              }),
-        ),
-        body: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(20.0),
-              alignment: Alignment.center,
-              child: Text(
-                'Register Your Details!',
-                style: kHeadingText,
-              ),
-            ),
-            SizedBox(
-              height: 20.0,
-            ),
-            TextFormField(
-              obscureText: false,
-              textAlign: TextAlign.center,
-              controller: _emailController,
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Enter your email',
-                  labelText: 'Email',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
-            ),
-            const SizedBox(height: 18),
-            TextFormField(
-              obscureText: false,
-              textAlign: TextAlign.center,
-              controller: _usernameController,
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Enter your username',
-                  labelText: 'Username',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
-            ),
-            const SizedBox(height: 18),
-            TextFormField(
-              obscureText: false,
-              textAlign: TextAlign.center,
-              controller: _firstnameController,
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Enter your first name',
-                  labelText: 'First Name',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
-            ),
-            const SizedBox(height: 18),
-            TextFormField(
-              obscureText: false,
-              textAlign: TextAlign.center,
-              controller: _lastnameController,
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Enter your last name',
-                  labelText: 'Last Name',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
-            ),
-            const SizedBox(height: 18),
-            //TODO: Make sure the passwords are the same
-            TextFormField(
-              obscureText: true,
-              textAlign: TextAlign.center,
-              controller: _passwordController,
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Enter your password',
-                  labelText: 'Password',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
-            ),
-            // make sure that the password is same - idk why but doesn't work
-            const SizedBox(height: 18),
-            TextFormField(
-              obscureText: true,
-              textAlign: TextAlign.center,
-              controller: _cfmpasswordController,
-              validator: (value) {
-                if (value != _passwordController.text) {
-                  return 'Passwords do not match';
-                }
-                return null;
-              },
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Enter the same password as above',
-                  labelText: 'Confirm Password',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
-            ),
-            Expanded(child: const SizedBox()),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        // primary: Colors.redAccent,
-                        side: BorderSide(width: 4, color: Colors.black),
-                        elevation: 15,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20)),
-                        padding: EdgeInsets.all(15)),
-                    onPressed: _isLoading ? null : _signUp,
-                    child: Text(_isLoading ? 'Loading' : 'Register'),
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            title: const Text("JustShareLah!"),
+            centerTitle: true,
+            leading: IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                }),
+          ),
+          body: Form(
+            child: Column(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(20.0),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Register Your Details!',
+                    style: kHeadingText,
                   ),
                 ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                TextFormField(
+                  obscureText: false,
+                  textAlign: TextAlign.center,
+                  controller: _emailController,
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: 'Enter your email',
+                      labelText: 'Email',
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+                const SizedBox(height: 18),
+                TextFormField(
+                  obscureText: false,
+                  textAlign: TextAlign.center,
+                  controller: _usernameController,
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: 'Enter your username',
+                      labelText: 'Username',
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+                const SizedBox(height: 18),
+                TextFormField(
+                  obscureText: false,
+                  textAlign: TextAlign.center,
+                  controller: _firstnameController,
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: 'Enter your first name',
+                      labelText: 'First Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+                const SizedBox(height: 18),
+                TextFormField(
+                  obscureText: false,
+                  textAlign: TextAlign.center,
+                  controller: _lastnameController,
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: 'Enter your last name',
+                      labelText: 'Last Name',
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+                const SizedBox(height: 18),
+                //TODO: Make sure the passwords are the same
+                TextFormField(
+                  obscureText: true,
+                  textAlign: TextAlign.center,
+                  controller: _passwordController,
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: 'Enter your password',
+                      labelText: 'Password',
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+                // make sure that the password is same - idk why but doesn't work
+                const SizedBox(height: 18),
+                TextFormField(
+                  obscureText: true,
+                  textAlign: TextAlign.center,
+                  controller: _cfmpasswordController,
+                  validator: (value) {
+                    if (value != _passwordController.text) {
+                      return 'Passwords do not match';
+                    }
+                    return null;
+                  },
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: 'Enter the same password as above',
+                      labelText: 'Confirm Password',
+                      floatingLabelBehavior: FloatingLabelBehavior.always),
+                ),
+                Expanded(child: const SizedBox()),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            // primary: Colors.redAccent,
+                            side: BorderSide(width: 4, color: Colors.black),
+                            elevation: 15,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            padding: EdgeInsets.all(15)),
+                        onPressed: _isLoading ? null : _signUp,
+                        child: Text(_isLoading ? 'Loading' : 'Register'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 30),
               ],
             ),
-            const SizedBox(height: 30),
-          ],
-        ),
-      )
+          ),
+        )
     ]);
   }
 }
