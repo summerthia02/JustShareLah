@@ -30,6 +30,9 @@ class _SignupPageState extends AuthState<SignupPage> {
       _isLoading = true;
     });
 
+    //TODO: Check if username exists
+
+    // checks if the email already exists
     final response = await supabase.auth
         .signUp(_emailController.text, _passwordController.text);
 
@@ -49,7 +52,16 @@ class _SignupPageState extends AuthState<SignupPage> {
       return success;
     }
 
-    // ADD INFO TO SUPABASe
+    // TODO: ADD INFO TO SUPABASe
+    // const { data, addRowError } =
+    supabase.from('profiles').insert(
+      {
+        'username': _usernameController.text,
+        'first_name': _firstnameController.text,
+        'last_name': _lastnameController.text,
+      }
+    );
+    print('Updated info');
 
     setState(() {
       _isLoading = false;
