@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
@@ -24,7 +25,7 @@ class _SignupPageState extends AuthState<SignupPage> {
   late final TextEditingController _passwordController;
   late final TextEditingController _cfmpasswordController;
 
-  Future<void> _signUp() async {
+  Future<bool> _signUp() async {
     setState(() {
       _isLoading = true;
     });
@@ -33,16 +34,27 @@ class _SignupPageState extends AuthState<SignupPage> {
         .signUp(_emailController.text, _passwordController.text);
 
     final error = response.error;
+    bool success = false;
     if (error != null) {
-      context.showErrorSnackBar(message: error.message);
+      print(error.message);
     } else {
-      context.showSnackBar(message: 'Sign Up Successful!');
-      Navigator.of(context).pushNamedAndRemoveUntil("/login", (route) => false);
+      success = true;
     }
+
+    if (!success) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      return success;
+    }
+
+    // ADD INFO TO SUPABASe
 
     setState(() {
       _isLoading = false;
     });
+    return success;
   }
 
   @override
@@ -84,11 +96,12 @@ class _SignupPageState extends AuthState<SignupPage> {
           child: Form(
             key: _signupFormKey,
             child: SizedBox(
-              height: MediaQuery.of(context).size.height
-                - AppBar().preferredSize.height,
+              height: MediaQuery.of(context).size.height -
+                  AppBar().preferredSize.height,
               width: MediaQuery.of(context).size.width,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
                 child: Column(
                   children: <Widget>[
                     Container(
@@ -182,16 +195,32 @@ class _SignupPageState extends AuthState<SignupPage> {
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
                                 // primary: Colors.redAccent,
-                                side: const BorderSide(width: 4, color: Colors.black),
+                                side: const BorderSide(
+                                    width: 4, color: Colors.black),
                                 elevation: 15,
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(20)),
                                 padding: const EdgeInsets.all(15)),
-                            onPressed: () {
-                              if (_isLoading || !_signupFormKey.currentState!.validate()) return;
+                            onPressed: () async {
+                              if (_isLoading ||
+                                  !_signupFormKey.currentState!.validate())
+                                return;
+
+                              bool signedUp = await _signUp();
+                              if (!signedUp) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            'Error signing up. Try Again.')));
+                                return;
+                              }
+
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Signed Up Successfully!'))
-                              );
+                                  const SnackBar(
+                                      content:
+                                          Text('Signed Up Successfully!')));
+                              Navigator.of(context)
+                                  .pushReplacementNamed("/feed");
                             },
                             child: Text(_isLoading ? 'Loading' : 'Register'),
                           ),
@@ -209,17 +238,3 @@ class _SignupPageState extends AuthState<SignupPage> {
     ]);
   }
 }
-
-//   ,)]),)
-// Container(
-//   padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-//   child: ListView(
-//     children: [
-//       const SizedBox(height: 32),
-//       Center(
-//         child: Text(
-//           'Registration',
-//           style: TextStyle(
-//               fontSize:
-//                   Theme.of(context).textTheme.headline4?.fontSize ??
-//                       32),
