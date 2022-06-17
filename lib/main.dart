@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         '/feed': (_) => const FeedPage(),
         '/chat': (_) => const ChatPage(),
         '/addlisting': (_) => const AddListingPage(),
-        '/profile': (_) => const ProfilePage()
+        '/profile': (_) => const ProfilePage(),
       },
     );
   }

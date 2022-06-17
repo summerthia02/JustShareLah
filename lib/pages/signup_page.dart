@@ -7,6 +7,7 @@ import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -52,16 +53,12 @@ class _SignupPageState extends AuthState<SignupPage> {
       return success;
     }
 
-    // TODO: ADD INFO TO SUPABASe
-    // const { data, addRowError } =
-    supabase.from('profiles').insert(
-      {
-        'username': _usernameController.text,
-        'first_name': _firstnameController.text,
-        'last_name': _lastnameController.text,
-      }
-    );
-    print('Updated info');
+    var addUserProfile = await supabase.from('profiles').insert({
+      'id': supabase.auth.currentUser!.id,
+      'username': _usernameController.text,
+      'first_name': _firstnameController.text,
+      'last_name': _lastnameController.text,
+    }).execute();
 
     setState(() {
       _isLoading = false;
@@ -141,7 +138,8 @@ class _SignupPageState extends AuthState<SignupPage> {
                       obscureText: false,
                       textAlign: TextAlign.center,
                       controller: _usernameController,
-                      validator: FormValidation.formFieldEmpty,
+                      validator: (text) => 
+                        FormValidation.enforceNumOfChars(text, 6),
                       decoration: kTextFormFieldDecoration.copyWith(
                           hintText: 'Enter your username',
                           labelText: 'Username',
