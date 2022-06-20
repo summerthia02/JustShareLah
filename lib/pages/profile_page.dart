@@ -1,13 +1,21 @@
+import 'dart:html';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:image_picker/image_picker.dart';
+
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key, required this.profileId}) : super(key: key);
 
+  final String profileId;
+  final ImagePicker _picker = ImagePicker();
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -70,6 +78,18 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
     // });
   }
 
+  // upload photo from gallery
+
+  // upload photo from camera
+  cameraPhoto() async {
+     = await ImagePicker.pickImage(
+      
+    )
+  }
+
+
+
+
   Future<void> _signOut() async {
     final response = await supabase.auth.signOut();
     final error = response.error;
@@ -94,7 +114,7 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: MyAppBar().buildAppBar(const Text("Chat"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),

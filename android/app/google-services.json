@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "10879165640",
+    "project_id": "justsharelah-6dca5",
+    "storage_bucket": "justsharelah-6dca5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:10879165640:android:387e1e6c8d037fd4dff1fd",
+        "android_client_info": {
+          "package_name": "com.summer.justsharelah"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "10879165640-ipqeaemtarv9h5kpgsr216su9r9pueqk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.summer.justsharelah",
+            "certificate_hash": "9b1b89208acdf122cea3ff6c734bd622640ee6aa"
+          }
+        },
+        {
+          "client_id": "10879165640-678p35fbbk6hq6upl2m32tl5mi54o8d7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCp1VNKc82AuklUJVaLTWczmSflEcmYAzE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "10879165640-678p35fbbk6hq6upl2m32tl5mi54o8d7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "10879165640-82ja20ouc8u9tu8id6cbr81nffqkd03p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.summer.justsharelah"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
