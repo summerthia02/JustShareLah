@@ -1,3 +1,6 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:js';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -5,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/firebase/firebase_auth_service.dart';
 import 'package:justsharelah_v1/main.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
@@ -40,13 +44,21 @@ class _LoginPageState extends AuthState<LoginPage> {
     );
 
     try {
-      await _auth
-          .signInWithEmailAndPassword(email: email, password: password)
-          .then((uid) => {
-                Fluttertoast.showToast(msg: "Login Successful"),
-                Navigator.of(context).pushReplacement(
-                    MaterialPageRoute(builder: (context) => FeedPage())),
-              });
+      AuthenticationHelper()
+          .signIn(email: email, password: password)
+          .then((result) {
+        if (result == null) {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => const FeedPage()));
+        } else {
+          Scaffold.of(context).showSnackBar(SnackBar(
+            content: Text(
+              result,
+              style: TextStyle(fontSize: 16),
+            ),
+          ));
+        }
+      });
     } on FirebaseAuthException catch (error) {
       switch (error.code) {
         case "invalid-email":
@@ -98,7 +110,6 @@ class _LoginPageState extends AuthState<LoginPage> {
   //   });
   // }
 
-  // @override
   // void initState() {
   //   super.initState();
   //   _emailController = TextEditingController();
