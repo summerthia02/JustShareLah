@@ -5,13 +5,16 @@ import 'dart:js';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/firebase/firebase_auth_service.dart';
 import 'package:justsharelah_v1/main.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:justsharelah_v1/utils/helper.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter/cupertino.dart';
+
 // import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
@@ -21,7 +24,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends AuthState<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -34,59 +37,6 @@ class _LoginPageState extends AuthState<LoginPage> {
 
   // string for displaying the error Message
   String? errorMessage;
-
-  // login function
-  void signIn(String email, String password) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
-
-    try {
-      AuthenticationHelper()
-          .signIn(email: email, password: password)
-          .then((result) {
-        if (result == null) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => const FeedPage()));
-        } else {
-          Scaffold.of(context).showSnackBar(SnackBar(
-            content: Text(
-              result,
-              style: TextStyle(fontSize: 16),
-            ),
-          ));
-        }
-      });
-    } on FirebaseAuthException catch (error) {
-      switch (error.code) {
-        case "invalid-email":
-          errorMessage = "Your email address appears to be malformed.";
-
-          break;
-        case "wrong-password":
-          errorMessage = "Your password is wrong.";
-          break;
-        case "user-not-found":
-          errorMessage = "User with this email doesn't exist.";
-          break;
-        case "user-disabled":
-          errorMessage = "User with this email has been disabled.";
-          break;
-        case "too-many-requests":
-          errorMessage = "Too many requests";
-          break;
-        case "operation-not-allowed":
-          errorMessage = "Signing in with Email and Password is not enabled.";
-          break;
-        default:
-          errorMessage = "An undefined Error happened.";
-      }
-    }
-
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
-  }
 
   // Future<void> _signIn() async {
   //   setState(() {
@@ -116,13 +66,13 @@ class _LoginPageState extends AuthState<LoginPage> {
   //   _passwordController = TextEditingController();
   // }
 
+  // @override
+  // void dispose() {
+  //   _emailController.dispose();
+  //   _passwordController.dispose();
+  //   super.dispose();
+  // }
   @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
-  }
-
   Widget build(BuildContext context) {
     // email field
     final emailField = TextFormField(
@@ -179,7 +129,10 @@ class _LoginPageState extends AuthState<LoginPage> {
             icon: Icon(Icons.lock_open),
             label: Text('Log In'),
             onPressed: () {
-              signIn(_emailController.text, _passwordController.text);
+              context.read<AuthenticationService>().signIn(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text.trim(),
+                  );
             },
           ),
         ),

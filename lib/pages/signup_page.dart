@@ -1,20 +1,20 @@
-// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_constructors, library_private_types_in_public_api
 
 import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:justsharelah_v1/firebase/firebase_auth_service.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
 import 'package:justsharelah_v1/main.dart';
 import 'package:justsharelah_v1/models/user_model.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
-import 'package:supabase/supabase.dart';
+import 'package:provider/provider.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:gotrue/src/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -25,14 +25,14 @@ class SignupPage extends StatefulWidget {
   _SignupPageState createState() => _SignupPageState();
 }
 
-class _SignupPageState extends AuthState<SignupPage> {
+class _SignupPageState extends State<SignupPage> {
   bool _isLoading = false;
+  late final TextEditingController _cfmpasswordController;
   late final TextEditingController _emailController;
   late final TextEditingController _usernameController;
   late final TextEditingController _firstnameController;
   late final TextEditingController _lastnameController;
   late final TextEditingController _passwordController;
-  late final TextEditingController _cfmpasswordController;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -42,48 +42,48 @@ class _SignupPageState extends AuthState<SignupPage> {
   //formkey
   final _formKey = GlobalKey<FormState>();
 
-  void signUp(String email, String password) async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
-    if (_formKey.currentState!.validate()) {
-      try {
-        await _auth.createUserWithEmailAndPassword(
-            email: email, password: password);
-        //   .then((value) => {postDetailsToFirestore()})
-        //   .catchError((e) {
-        // Fluttertoast.showToast(msg: e!.message);
+  // void signUp(String email, String password) async {
+  //   showDialog(
+  //     context: context,
+  //     barrierDismissible: false,
+  //     builder: (context) => Center(child: CircularProgressIndicator()),
+  //   );
+  //   if (_formKey.currentState!.validate()) {
+  //     try {
+  //       await _auth.createUserWithEmailAndPassword(
+  //           email: email, password: password);
+  //       //   .then((value) => {postDetailsToFirestore()})
+  //       //   .catchError((e) {
+  //       // Fluttertoast.showToast(msg: e!.message);
 
-      } on FirebaseAuthException catch (error) {
-        switch (error.code) {
-          case "invalid-email":
-            errorMessage = "Your email address appears to be malformed.";
-            break;
-          case "wrong-password":
-            errorMessage = "Your password is wrong.";
-            break;
-          case "user-not-found":
-            errorMessage = "User with this email doesn't exist.";
-            break;
-          case "user-disabled":
-            errorMessage = "User with this email has been disabled.";
-            break;
-          case "too-many-requests":
-            errorMessage = "Too many requests";
-            break;
-          case "operation-not-allowed":
-            errorMessage = "Signing in with Email and Password is not enabled.";
-            break;
-          default:
-            errorMessage = "An undefined Error happened.";
-        }
-        Fluttertoast.showToast(msg: errorMessage!);
-      }
-    }
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
-  }
+  //     } on FirebaseAuthException catch (error) {
+  //       switch (error.code) {
+  //         case "invalid-email":
+  //           errorMessage = "Your email address appears to be malformed.";
+  //           break;
+  //         case "wrong-password":
+  //           errorMessage = "Your password is wrong.";
+  //           break;
+  //         case "user-not-found":
+  //           errorMessage = "User with this email doesn't exist.";
+  //           break;
+  //         case "user-disabled":
+  //           errorMessage = "User with this email has been disabled.";
+  //           break;
+  //         case "too-many-requests":
+  //           errorMessage = "Too many requests";
+  //           break;
+  //         case "operation-not-allowed":
+  //           errorMessage = "Signing in with Email and Password is not enabled.";
+  //           break;
+  //         default:
+  //           errorMessage = "An undefined Error happened.";
+  //       }
+  //       Fluttertoast.showToast(msg: errorMessage!);
+  //     }
+  //   }
+  //   navigatorKey.currentState!.popUntil((route) => route.isFirst);
+  // }
 
   // postDetailsToFirestore() async {
   //   // calling our firestore
@@ -274,8 +274,12 @@ class _SignupPageState extends AuthState<SignupPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
                           padding: EdgeInsets.all(15)),
-                      onPressed: () {
-                        signUp(_emailController.text, _passwordController.text);
+                      onPressed: () async {
+                        final result = await context
+                            .read<AuthenticationService>()
+                            .signUp(
+                                email: _emailController.text,
+                                password: _passwordController.text);
                       },
                       child: Text(_isLoading ? 'Loading' : 'Register'),
                     ),

@@ -3,11 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/firebase/firebase_auth_service.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+// import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -18,7 +20,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends AuthRequiredState<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   var _loading = false;
   // Index for bottom nav bar
   int _selectedIndex = 0;
@@ -93,18 +95,18 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   //   }
   // }
 
-  @override
-  void onAuthenticated(Session session) {
-    final user = session.user;
-    if (user != null) {
-      _getProfile(user.id);
-    }
-  }
+  // @override
+  // void onAuthenticated(Session session) {
+  //   final user = session.user;
+  //   if (user != null) {
+  //     _getProfile(user.id);
+  //   }
+  // }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +131,11 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
                               32)),
             ),
             const Expanded(child: SizedBox(height: 18)),
-            ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
+            ElevatedButton(
+                onPressed: () {
+                  context.read<AuthenticationService>().signOut();
+                },
+                child: const Text('Sign Out')),
             const SizedBox(height: 8),
             const Center(
               child: Text("*Button to be removed subsequently"),

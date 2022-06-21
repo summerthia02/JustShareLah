@@ -25,7 +25,7 @@ class FeedPage extends StatefulWidget {
   _FeedPageState createState() => _FeedPageState();
 }
 
-class _FeedPageState extends AuthRequiredState<FeedPage> {
+class _FeedPageState extends State<FeedPage> {
   final _searchController = TextEditingController();
   var _loading = false;
   // Index for bottom nav bar
@@ -80,13 +80,13 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     // });
   }
 
-  @override
-  void onAuthenticated(Session session) {
-    final user = session.user;
-    if (user != null) {
-      _getProfile(user.id);
-    }
-  }
+  // @override
+  // void onAuthenticated(Session session) {
+  //   final user = session.user;
+  //   if (user != null) {
+  //     _getProfile(user.id);
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -94,13 +94,13 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
     super.dispose();
   }
 
-  Future<void> _signOut() async {
-    final response = await supabase.auth.signOut();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    }
-  }
+  // Future<void> _signOut() async {
+  //   final response = await supabase.auth.signOut();
+  //   final error = response.error;
+  //   if (error != null) {
+  //     context.showErrorSnackBar(message: error.message);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
