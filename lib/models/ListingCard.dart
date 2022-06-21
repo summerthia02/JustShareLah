@@ -17,7 +17,7 @@ class ListingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {},
+      onTap: press,
       child: Container(
         padding: const EdgeInsets.all(3),
         width: 150,
