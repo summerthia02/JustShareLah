@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'JustShareLah',
       theme: AppTheme().buildThemeData(),
-      initialRoute: '/',
+      initialRoute: '/login',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
         '/forget_password': (_) => const ForgetPassword(),

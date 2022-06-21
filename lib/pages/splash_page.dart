@@ -12,6 +12,7 @@ class _SplashPageState extends State<SplashPage> {
   void initState() {
     // recoverSupabaseSession();
     super.initState();
+    Navigator.of(context).pushReplacementNamed("/login");
   }
 
   @override
