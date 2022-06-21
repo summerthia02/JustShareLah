@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:supabase/supabase.dart';
@@ -24,7 +25,6 @@ class _FeedPageState extends State<FeedPage> {
   var _loading = false;
   // Index for bottom nav bar
   int _selectedIndex = 0;
-
 
   // List of next pages to go to
 
@@ -90,11 +90,7 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   Future<void> _signOut() async {
-    // final response = await supabase.auth.signOut();
-    // final error = response.error;
-    // if (error != null) {
-    //   context.showErrorSnackBar(message: error.message);
-    // }
+    FirebaseAuth.instance.signOut();
   }
 
   @override
