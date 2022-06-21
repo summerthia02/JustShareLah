@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'chat_page.dart';
@@ -20,7 +19,7 @@ class FeedPage extends StatefulWidget {
   _FeedPageState createState() => _FeedPageState();
 }
 
-class _FeedPageState extends AuthRequiredState<FeedPage> {
+class _FeedPageState extends State<FeedPage> {
   final _searchController = TextEditingController();
   var _loading = false;
   // Index for bottom nav bar
@@ -91,11 +90,11 @@ class _FeedPageState extends AuthRequiredState<FeedPage> {
   }
 
   Future<void> _signOut() async {
-    final response = await supabase.auth.signOut();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    }
+    // final response = await supabase.auth.signOut();
+    // final error = response.error;
+    // if (error != null) {
+    //   context.showErrorSnackBar(message: error.message);
+    // }
   }
 
   @override

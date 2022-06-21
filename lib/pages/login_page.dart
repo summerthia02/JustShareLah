@@ -2,7 +2,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 // import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -14,7 +13,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends AuthState<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;

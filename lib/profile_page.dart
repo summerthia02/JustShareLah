@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -12,7 +11,7 @@ class ProfilePage extends StatefulWidget {
   _ProfilePageState createState() => _ProfilePageState();
 }
 
-class _ProfilePageState extends AuthRequiredState<ProfilePage> {
+class _ProfilePageState extends State<ProfilePage> {
   var _loading = false;
   // Index for bottom nav bar
   int _selectedIndex = 0;
@@ -91,11 +90,11 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   }
 
   Future<void> _signOut() async {
-    final response = await supabase.auth.signOut();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    }
+    // final response = await supabase.auth.signOut();
+    // final error = response.error;
+    // if (error != null) {
+    //   context.showErrorSnackBar(message: error.message);
+    // }
   }
 
   @override

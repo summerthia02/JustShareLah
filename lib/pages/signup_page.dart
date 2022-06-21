@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
 import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,7 +15,7 @@ class SignupPage extends StatefulWidget {
   _SignupPageState createState() => _SignupPageState();
 }
 
-class _SignupPageState extends AuthState<SignupPage> {
+class _SignupPageState extends State<SignupPage> {
   bool _isLoading = false;
   final _signupFormKey = GlobalKey<FormState>();
   late final TextEditingController _emailController;
@@ -34,36 +33,37 @@ class _SignupPageState extends AuthState<SignupPage> {
     //TODO: Check if username exists
 
     // checks if the email already exists
-    final response = await supabase.auth
-        .signUp(_emailController.text, _passwordController.text);
+    // final response = await supabase.auth
+    //     .signUp(_emailController.text, _passwordController.text);
 
-    final error = response.error;
-    bool success = false;
-    if (error != null) {
-      print(error.message);
-    } else {
-      success = true;
-    }
+    // final error = response.error;
+    // bool success = false;
+    // if (error != null) {
+    //   print(error.message);
+    // } else {
+    //   success = true;
+    // }
 
-    if (!success) {
-      setState(() {
-        _isLoading = false;
-      });
+    // if (!success) {
+    //   setState(() {
+    //     _isLoading = false;
+    //   });
 
-      return success;
-    }
+    //   return success;
+    // }
 
-    var addUserProfile = await supabase.from('profiles').insert({
-      'id': supabase.auth.currentUser!.id,
-      'username': _usernameController.text,
-      'first_name': _firstnameController.text,
-      'last_name': _lastnameController.text,
-    }).execute();
+    // var addUserProfile = await supabase.from('profiles').insert({
+    //   'id': supabase.auth.currentUser!.id,
+    //   'username': _usernameController.text,
+    //   'first_name': _firstnameController.text,
+    //   'last_name': _lastnameController.text,
+    // }).execute();
 
     setState(() {
       _isLoading = false;
     });
-    return success;
+    // return success;
+    return true;
   }
 
   @override
@@ -138,8 +138,8 @@ class _SignupPageState extends AuthState<SignupPage> {
                       obscureText: false,
                       textAlign: TextAlign.center,
                       controller: _usernameController,
-                      validator: (text) => 
-                        FormValidation.enforceNumOfChars(text, 6),
+                      validator: (text) =>
+                          FormValidation.enforceNumOfChars(text, 6),
                       decoration: kTextFormFieldDecoration.copyWith(
                           hintText: 'Enter your username',
                           labelText: 'Username',

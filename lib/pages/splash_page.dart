@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/components/auth_state.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({Key? key}) : super(key: key);
@@ -8,10 +7,10 @@ class SplashPage extends StatefulWidget {
   _SplashPageState createState() => _SplashPageState();
 }
 
-class _SplashPageState extends AuthState<SplashPage> {
+class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    recoverSupabaseSession();
+    // recoverSupabaseSession();
     super.initState();
   }
 
