@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/const_templates.dart';
@@ -23,14 +24,13 @@ class _LoginPageState extends AuthState<LoginPage> {
       _isLoading = true;
     });
 
-    final response = await supabase.auth.signIn(
-      email: _emailController.text,
-      password: _passwordController.text,
+    final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: _emailController.text.trim(),
+      password: _passwordController.text.trim(),
     );
 
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
+    if (response.user == null) {
+      context.showErrorSnackBar(message: "Error Signing In");
     } else {
       Navigator.of(context).pushNamedAndRemoveUntil('/feed', (route) => false);
     }
@@ -120,7 +120,9 @@ class _LoginPageState extends AuthState<LoginPage> {
                 ),
               ],
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               textDirection: TextDirection.ltr,
