@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/firebase/firebase_auth_service.dart';
 // import 'package:fluttertoast/fluttertoast.dart';
 import 'package:justsharelah_v1/main.dart';
-import 'package:justsharelah_v1/models/user_model.dart';
+import 'package:justsharelah_v1/test%20data/user_model.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:provider/provider.dart';
 import 'package:justsharelah_v1/components/auth_state.dart';

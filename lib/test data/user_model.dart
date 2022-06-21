@@ -1,21 +1,24 @@
-// class UserModel {
-//   UserModel({
-//     required this.uid,
-//     required this.userName,
-//     required this.firstName,
-//     required this.lastName,
-//     required this.email,
-//     required this.imageUrl,
-//   });
+class User {
+  final String uid;
+  final String firstName;
+  final String lastName;
+  final String userName;
+  final String email;
+  final String imageUrl;
 
-//   String uid;
-//   String userName;
-//   String firstName;
-//   String lastName;
-//   String email;
-//   String imageUrl;
+  User({
+    required this.uid,
+    required this.userName,
+    required this.firstName,
+    required this.lastName,
+    required this.email,
+    required this.imageUrl,
+  });
+}
 
-//   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+
+
+//   factory User.fromJson(Map<String, dynamic> json) => User(
 //         uid: json['uid'] ?? "",
 //         userName: json['userName'] ?? "",
 //         firstName: json['firstName'] ?? "",
@@ -32,7 +35,7 @@
 //         'email': email,
 //         'imageUrl': imageUrl,
 //       };
-//   factory UserModel.empty() => const UserModel(
+//   factory User.empty() => const User(
 //         uid: "",
 //         userName: "",
 //         firstName: "",

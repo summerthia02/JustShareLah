@@ -1,9 +1,12 @@
 import 'dart:html';
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/firebase/firebase_auth_service.dart';
+import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/test%20data/user_info.dart' as u;
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
@@ -25,7 +28,102 @@ class _ProfilePageState extends State<ProfilePage> {
   // Index for bottom nav bar
   int _selectedIndex = 0;
 
-  // Routing for bottom nav bar
+  @override
+  Widget build(BuildContext context) {
+    // get the current usr
+    // new instance of userfactory
+    final userFactory = u.UserInfo();
+    final fakeUser = userFactory.generateFake();
+
+    return Scaffold(
+      appBar: MyAppBar().buildAppBar(const Text("Chat"), context, '/feed'),
+      // if add appbar -> two layers of appbar will appear.
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          ProfileWidget(
+            imageUrl: fakeUser.imageUrl,
+            onClicked: () async {},
+          ),
+          const SizedBox(height: 24),
+          buildName(fakeUser),
+          const SizedBox(height: 24),
+          buildAbout(fakeUser),
+        ],
+      ),
+    );
+  }
+
+  // build user's username, first and last name
+  Widget buildName(var fakeUser) => Column(
+        children: [
+          Text(
+            fakeUser.userName,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            fakeUser.email,
+            style: const TextStyle(color: Colors.grey),
+          )
+        ],
+      );
+
+  Widget buildAbout(fakeUser) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 48),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'About',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 16),
+            Text(
+              "i like to sell clothes",
+              style: TextStyle(fontSize: 16, height: 1.4),
+            ),
+          ],
+        ),
+      );
+
+//        Padding(
+//         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.max,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             const SizedBox(height: 64),
+//             const Icon(Icons.face_rounded),
+//             const SizedBox(height: 12),
+//             Center(
+//               child: Text("Your Username",
+//                   style: TextStyle(
+//                       fontSize:
+//                           Theme.of(context).textTheme.headline6?.fontSize ??
+//                               32)),
+//             ),
+//             const Expanded(child: SizedBox(height: 18)),
+//             ElevatedButton(
+//                 onPressed: () {
+//                   context.read<AuthenticationService>().signOut();
+//                 },
+//                 child: const Text('Sign Out')),
+//             const SizedBox(height: 8),
+//             const Center(
+//               child: Text("*Button to be removed subsequently"),
+//             ),
+//             const SizedBox(height: 64),
+//           ],
+//         ),
+//       ),
+//       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+//     );
+//   }
+// }
+
+// Routing for bottom nav bar
 
   /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
@@ -78,73 +176,33 @@ class _ProfilePageState extends State<ProfilePage> {
     // });
   }
 
-  // upload photo from gallery
+// upload photo from gallery
 
-  // upload photo from camera
-  // cameraPhoto() async {
-  //    = await ImagePicker.pickImage(
+// upload photo from camera
+// cameraPhoto() async {
+//    = await ImagePicker.pickImage(
 
-  //   )
-  // }
+//   )
+// }
 
-  // Future<void> _signOut() async {
-  //   final response = await supabase.auth.signOut();
-  //   final error = response.error;
-  //   if (error != null) {
-  //     context.showErrorSnackBar(message: error.message);
-  //   }
-  // }
+// Future<void> _signOut() async {
+//   final response = await supabase.auth.signOut();
+//   final error = response.error;
+//   if (error != null) {
+//     context.showErrorSnackBar(message: error.message);
+//   }
+// }
 
-  // @override
-  // void onAuthenticated(Session session) {
-  //   final user = session.user;
-  //   if (user != null) {
-  //     _getProfile(user.id);
-  //   }
-  // }
+// @override
+// void onAuthenticated(Session session) {
+//   final user = session.user;
+//   if (user != null) {
+//     _getProfile(user.id);
+//   }
+// }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: MyAppBar().buildAppBar(const Text("Chat"), context, '/feed'),
-      // if add appbar -> two layers of appbar will appear.
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 64),
-            const Icon(Icons.face_rounded),
-            const SizedBox(height: 12),
-            Center(
-              child: Text("Your Username",
-                  style: TextStyle(
-                      fontSize:
-                          Theme.of(context).textTheme.headline6?.fontSize ??
-                              32)),
-            ),
-            const Expanded(child: SizedBox(height: 18)),
-            ElevatedButton(
-                onPressed: () {
-                  context.read<AuthenticationService>().signOut();
-                },
-                child: const Text('Sign Out')),
-            const SizedBox(height: 8),
-            const Center(
-              child: Text("*Button to be removed subsequently"),
-            ),
-            const SizedBox(height: 64),
-          ],
-        ),
-      ),
-      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
-    );
-  }
+// @override
+// void dispose() {
+//   super.dispose();
+// }
 }
