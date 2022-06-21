@@ -2,16 +2,22 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/models/ForRenting.dart';
+import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import '../models/ForBorrowing.dart';
+import '../models/ListingCard.dart';
 import 'chat_page.dart';
 import 'addListing.dart';
-import 'package:justsharelah_v1/profile_page.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
+import 'package:justsharelah_v1/models/listings.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -96,7 +102,53 @@ class _FeedPageState extends State<FeedPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar().buildAppBar(const Text("Feed"), context, _signOut),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {},
+        ),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('images/location.png', width: 40, height: 30),
+            const SizedBox(width: 10.0),
+            Text(
+              "NUS, Singapore",
+            )
+          ],
+        ),
+      ),
+
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Explore",
+              style: kJustShareLahStyle.copyWith(
+                  fontSize: 35, fontWeight: FontWeight.w500),
+            ),
+            const Text(
+              'Listings For You',
+              style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
+            ),
+            const SizedBox(height: defaultPadding),
+            Form(
+                child: TextFormField(
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: "Search for Listings...",
+                  prefixIcon: Icon(Icons.search_rounded)),
+            )),
+            const SizedBox(height: defaultPadding),
+            ForBorrowing(),
+            const SizedBox(height: defaultPadding),
+            ForRenting()
+          ],
+        ),
+      ),
+
+      // appBar: MyAppBar().buildAppBar(const Text("Feed"), context, '/login'),
       // body: Column(
       //   mainAxisSize: MainAxisSize.max,
       //   mainAxisAlignment: MainAxisAlignment.center,
@@ -107,8 +159,6 @@ class _FeedPageState extends State<FeedPage> {
       //   ],
       // ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
-
-      body: const SizedBox(width: 100),
     );
   }
 }

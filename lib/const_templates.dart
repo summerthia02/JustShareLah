@@ -3,6 +3,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+const double defaultPadding = 16.0;
+const double defaultBorderRadius = 12.0;
+
 const kJustShareLahStyle = TextStyle(
   fontFamily: 'Lato',
   fontSize: 45.0,

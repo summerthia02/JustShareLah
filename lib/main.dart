@@ -2,12 +2,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/pages/activity.dart';
 import 'package:justsharelah_v1/pages/addListing.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/forget_password.dart';
 import 'package:justsharelah_v1/pages/main_page.dart';
 import 'package:justsharelah_v1/pages/signup_page.dart';
-import 'package:justsharelah_v1/profile_page.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:justsharelah_v1/pages/chat_page.dart';
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/chat': (_) => const ChatPage(),
         '/addlisting': (_) => const AddListingPage(),
         '/profile': (_) => const ProfilePage(),
+        '/activity': (_) => const ActivityPage(),
       },
     );
   }
