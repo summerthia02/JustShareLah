@@ -5,7 +5,6 @@ import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/pages/addListing.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/forget_password.dart';
-import 'package:justsharelah_v1/pages/main_page.dart';
 import 'package:justsharelah_v1/pages/signup_page.dart';
 import 'package:justsharelah_v1/profile_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
@@ -30,10 +29,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'JustShareLah',
       theme: AppTheme().buildThemeData(),
-      initialRoute: '/main',
+      initialRoute: '/login',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
-        '/main': (_) => const MainPage(),
         '/forget_password': (_) => const ForgetPassword(),
         '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignupPage(),
