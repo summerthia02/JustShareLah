@@ -5,7 +5,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
-import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';

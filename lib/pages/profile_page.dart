@@ -5,17 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
-import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:image_picker/image_picker.dart';
 
-
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key, required this.profileId}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
-  final String profileId;
-  final ImagePicker _picker = ImagePicker();
+  // final String profileId;
+  // final ImagePicker _picker = ImagePicker();
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -81,22 +79,19 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   // upload photo from gallery
 
   // upload photo from camera
-  cameraPhoto() async {
-     = await ImagePicker.pickImage(
-      
-    )
-  }
+  // cameraPhoto() async {
+  //    = await ImagePicker.pickImage(
 
+  //   )
+  // }
 
-
-
-  Future<void> _signOut() async {
-    final response = await supabase.auth.signOut();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    }
-  }
+  // Future<void> _signOut() async {
+  //   final response = await supabase.auth.signOut();
+  //   final error = response.error;
+  //   if (error != null) {
+  //     context.showErrorSnackBar(message: error.message);
+  //   }
+  // }
 
   @override
   void onAuthenticated(Session session) {

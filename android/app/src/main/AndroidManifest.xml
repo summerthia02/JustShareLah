@@ -39,5 +39,6 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-    </application>
-</manifest>
+<application android:usesCleartextTraffic="true">
+  <!-- possibly other elements -->
+</application></manifest>

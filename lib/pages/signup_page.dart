@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:html';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:justsharelah_v1/main.dart';
 import 'package:justsharelah_v1/models/user_model.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:supabase/supabase.dart';
@@ -12,6 +14,9 @@ import 'package:justsharelah_v1/components/auth_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:gotrue/src/user.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -29,7 +34,7 @@ class _SignupPageState extends AuthState<SignupPage> {
   late final TextEditingController _passwordController;
   late final TextEditingController _cfmpasswordController;
 
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // string for displaying the error Message
   String? errorMessage;
@@ -38,14 +43,19 @@ class _SignupPageState extends AuthState<SignupPage> {
   final _formKey = GlobalKey<FormState>();
 
   void signUp(String email, String password) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
+    );
     if (_formKey.currentState!.validate()) {
       try {
-        await _auth
-            .createUserWithEmailAndPassword(email: email, password: password)
-            .then((value) => {postDetailsToFirestore()})
-            .catchError((e) {
-          Fluttertoast.showToast(msg: e!.message);
-        });
+        await _auth.createUserWithEmailAndPassword(
+            email: email, password: password);
+        //   .then((value) => {postDetailsToFirestore()})
+        //   .catchError((e) {
+        // Fluttertoast.showToast(msg: e!.message);
+
       } on FirebaseAuthException catch (error) {
         switch (error.code) {
           case "invalid-email":
@@ -72,34 +82,35 @@ class _SignupPageState extends AuthState<SignupPage> {
         Fluttertoast.showToast(msg: errorMessage!);
       }
     }
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
   }
 
-  postDetailsToFirestore() async {
-    // calling our firestore
-    // calling our user model
-    // sedning these values
+  // postDetailsToFirestore() async {
+  //   // calling our firestore
+  //   // calling our user model
+  //   // sedning these values
 
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    User? user = _auth.currentUser;
+  //   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  //   User? user = _auth.currentUser;
 
-    UserModel userModel = UserModel();
+  //   UserModel userModel = UserModel();
 
-    // writing all the values
-    userModel.email = user!.email;
-    userModel.uid = user.uid;
-    userModel.userName = _usernameController.text;
-    userModel.firstName = _firstnameController.text;
-    userModel.lastName = _lastnameController.text;
+  //   // writing all the values
+  //   userModel.email = user!.email;
+  //   userModel.uid = user.uid;
+  //   userModel.userName = _usernameController.text;
+  //   userModel.firstName = _firstnameController.text;
+  //   userModel.lastName = _lastnameController.text;
 
-    await firebaseFirestore
-        .collection("users")
-        .doc(user.uid)
-        .set(userModel.toMap());
-    Fluttertoast.showToast(msg: "Account created successfully :) ");
+  //   await firebaseFirestore
+  //       .collection("users")
+  //       .doc(user.uid)
+  //       .set(userModel.toMap());
+  //   Fluttertoast.showToast(msg: "Account created successfully :) ");
 
-    Navigator.pushAndRemoveUntil((context),
-        MaterialPageRoute(builder: (context) => FeedPage()), (route) => false);
-  }
+  //   Navigator.pushAndRemoveUntil((context),
+  //       MaterialPageRoute(builder: (context) => FeedPage()), (route) => false);
+  // }
 
   // Future<void> _signUp() async {
   //   setState(() {

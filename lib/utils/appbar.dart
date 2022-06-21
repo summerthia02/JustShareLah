@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 // deleted the function as not all pages sign out from there
 class MyAppBar {

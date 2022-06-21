@@ -1,32 +1,46 @@
-class UserModel {
-  String? uid;
-  String? email;
-  String? userName;
-  String? firstName;
-  String? lastName;
+// class UserModel {
+//   UserModel({
+//     required this.uid,
+//     required this.userName,
+//     required this.firstName,
+//     required this.lastName,
+//     required this.email,
+//     required this.imageUrl,
+//   });
 
-  UserModel(
-      {this.uid, this.email, this.userName, this.firstName, this.lastName});
+//   String uid;
+//   String userName;
+//   String firstName;
+//   String lastName;
+//   String email;
+//   String imageUrl;
 
-  // receiving data from server
-  factory UserModel.fromMap(map) {
-    return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-      userName: map['userName'],
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-    );
-  }
+//   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
+//         uid: json['uid'] ?? "",
+//         userName: json['userName'] ?? "",
+//         firstName: json['firstName'] ?? "",
+//         lastName: json['lastName'] ?? "",
+//         email: json['email'] ?? "",
+//         imageUrl: json['imageUrl'] ?? "",
+//       );
 
-  // sending data to our server
-  Map<String, dynamic> toMap() {
-    return {
-      'uid': uid,
-      'email': email,
-      'userName': userName,
-      'firstName': firstName,
-      'lastName': lastName,
-    };
-  }
-}
+//   Map<String, dynamic> toJson() => <String, dynamic>{
+//         'uid': uid,
+//         'userName': userName,
+//         'firstName': firstName,
+//         'lastName': lastName,
+//         'email': email,
+//         'imageUrl': imageUrl,
+//       };
+//   factory UserModel.empty() => const UserModel(
+//         uid: "",
+//         userName: "",
+//         firstName: "",
+//         lastName: "",
+//         email: "",
+//         imageUrl: "",
+//       );
+
+//   List<Object?> get props =>
+//       [uid, userName, firstName, lastName, email, imageUrl];
+// }
