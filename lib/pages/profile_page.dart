@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/test%20data/user_info.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
@@ -90,6 +91,59 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
     super.dispose();
   }
 
+  @override
+  Widget build(BuildContext context) {
+    // get the current usr
+    // new instance of userfactory
+    final userFactory = UserInfo();
+    final fakeUser = userFactory.generateFake();
+
+    return Scaffold(
+      appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
+      // if add appbar -> two layers of appbar will appear.
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          // ProfileWidget(
+          //   imageUrl: fakeUser.imageUrl,
+          //   onClicked: () async {},
+          // ),
+
+          const SizedBox(height: 30),
+          buildName(fakeUser),
+          const SizedBox(height: 12),
+          editProfileButton(),
+
+          const SizedBox(height: 24),
+          buildAbout(fakeUser),
+        ],
+      ),
+      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+    );
+  }
+
+  Align editProfileButton() {
+    return Align(
+      alignment: Alignment.center,
+      child: ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => EditProfilePage(),
+              ));
+        },
+        child: Text('Edit Profile'),
+        style: ElevatedButton.styleFrom(
+            primary: Colors.black,
+            elevation: 2,
+            shadowColor: Colors.black,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(40))),
+      ),
+    );
+  }
+
   Widget buildName(var fakeUser) => Column(
         children: [
           Text(
@@ -113,7 +167,7 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
               'About',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 10),
             Text(
               "i like to sell clothes",
               style: TextStyle(fontSize: 16, height: 1.4),
@@ -121,33 +175,8 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
           ],
         ),
       );
-  @override
-  Widget build(BuildContext context) {
-    // get the current usr
-    // new instance of userfactory
-    final userFactory = UserInfo();
-    final fakeUser = userFactory.generateFake();
 
-    return Scaffold(
-      appBar:
-          MyAppBar().buildAppBar(const Text("Profile"), context, '/profile'),
-      // if add appbar -> two layers of appbar will appear.
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          ProfileWidget(
-            imageUrl: fakeUser.imageUrl,
-            onClicked: () async {},
-          ),
-          const SizedBox(height: 24),
-          buildName(fakeUser),
-          const SizedBox(height: 24),
-          buildAbout(fakeUser),
-        ],
-      ),
-      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
-    );
-  }
+  EditProfile() {}
 
   // build user's username, first and last name
 
