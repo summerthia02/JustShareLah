@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -30,34 +32,19 @@ class _SignupPageState extends State<SignupPage> {
       _isLoading = true;
     });
 
-    //TODO: Check if username exists
+    try {
+      final response =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    // checks if the email already exists
-    // final response = await supabase.auth
-    //     .signUp(_emailController.text, _passwordController.text);
-
-    // final error = response.error;
-    // bool success = false;
-    // if (error != null) {
-    //   print(error.message);
-    // } else {
-    //   success = true;
-    // }
-
-    // if (!success) {
-    //   setState(() {
-    //     _isLoading = false;
-    //   });
-
-    //   return success;
-    // }
-
-    // var addUserProfile = await supabase.from('profiles').insert({
-    //   'id': supabase.auth.currentUser!.id,
-    //   'username': _usernameController.text,
-    //   'first_name': _firstnameController.text,
-    //   'last_name': _lastnameController.text,
-    // }).execute();
+      if (response.user == null) {
+        return false;
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
 
     setState(() {
       _isLoading = false;
@@ -229,8 +216,7 @@ class _SignupPageState extends State<SignupPage> {
                                   const SnackBar(
                                       content:
                                           Text('Signed Up Successfully!')));
-                              Navigator.of(context)
-                                  .pushReplacementNamed("/feed");
+                              Navigator.of(context).pop();
                             },
                             child: Text(_isLoading ? 'Loading' : 'Register'),
                           ),

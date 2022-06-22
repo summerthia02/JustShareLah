@@ -20,6 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = true;
     });
+    
     try {
       final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -28,9 +29,6 @@ class _LoginPageState extends State<LoginPage> {
 
       if (response.user == null) {
         context.showErrorSnackBar(message: "Error Signing In");
-      } else {
-        Navigator.of(context)
-            .pushNamedAndRemoveUntil('/feed', (route) => false);
       }
     } on FirebaseAuthException catch (e) {
       print(e);
