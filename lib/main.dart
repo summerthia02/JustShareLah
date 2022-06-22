@@ -13,6 +13,7 @@ import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:justsharelah_v1/pages/chat_page.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'firebase/auth_provider.dart';
 import 'firebase/firebase_options.dart';
