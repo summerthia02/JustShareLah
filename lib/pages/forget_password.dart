@@ -1,11 +1,30 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:justsharelah_v1/utils/form_validation.dart';
 
-class ForgetPassword extends StatelessWidget {
-  const ForgetPassword({Key? key}) : super(key: key);
+class ForgetPasswordPage extends StatefulWidget {
+  const ForgetPasswordPage({Key? key}) : super(key: key);
+
+  @override
+  _ForgetPasswordPageState createState() => _ForgetPasswordPageState();
+}
+
+class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
+  final TextEditingController _emailController = TextEditingController();
+
+  void _resetPassword() async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text.trim());
+      Navigator.of(context).pop();
+    } on FirebaseAuthException catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +55,16 @@ class ForgetPassword extends StatelessWidget {
                     ),
                     Text(
                       'Enter your email\nWe will send you instructions to reset your password',
-                        textAlign: TextAlign.center,
+                      textAlign: TextAlign.center,
                     ),
                     SizedBox(
                       height: 30,
                     ),
                     TextFormField(
                       obscureText: false,
+                      controller: _emailController,
                       textAlign: TextAlign.center,
+                      validator: FormValidation.validEmail,
                       decoration: kTextFormFieldDecoration.copyWith(
                           hintText: 'Enter your email',
                           labelText: 'Email',
@@ -53,8 +74,7 @@ class ForgetPassword extends StatelessWidget {
                       height: 20,
                     ),
                     ElevatedButton(
-                      onPressed: () {},
-                       child: Text('Send')),
+                        onPressed: _resetPassword, child: Text('Send')),
                   ],
                 ),
               )
