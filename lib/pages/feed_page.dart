@@ -30,77 +30,11 @@ class _FeedPageState extends State<FeedPage> {
   var _loading = false;
   // Index for bottom nav bar
   int _selectedIndex = 0;
-
-  // List of next pages to go to
-
-  // // Routing for bottom nav bar
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _loading = true;
-  //   });
-  //   switch (index) {
-  //     case 0:
-  //       // _navigatorKey.currentState!.pushNamed("/chat");
-  //       break;
-  //     case 1:
-  //       // _navigatorKey.currentState!.pushNamed("/addlisting");
-  //       break;
-  //     case 2:
-  //       Navigator.of(context).pushNamed("/account");
-  //       break;
-  //   }
-  //   setState(() {
-  //     _selectedIndex = index;
-  //     _loading = false;
-  //   });
-  // }
-
-  /// Called once a user id is received within `onAuthenticated()`
-  Future<void> _getProfile(String userId) async {
-    // setState(() {
-    //   _loading = true;
-    // });
-    // final response = await supabase
-    //     .from('profiles')
-    //     .select()
-    //     .eq('id', userId)
-    //     .single()
-    //     .execute();
-    // final error = response.error;
-    // if (error != null && response.status != 406) {
-    //   context.showErrorSnackBar(message: error.message);
-    // }
-    // final data = response.data;
-    // if (data != null) {
-    //   _usernameController.text = (data['username'] ?? '') as String;
-    //   _websiteController.text = (data['website'] ?? '') as String;
-    // }
-    // setState(() {
-    //   _loading = false;
-    // });
-  }
-
-  // @override
-  // void onAuthenticated(Session session) {
-  //   final user = session.user;
-  //   if (user != null) {
-  //     _getProfile(user.id);
-  //   }
-  // }
-
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
   }
-
-  // Future<void> _signOut() async {
-  //   final response = await supabase.auth.signOut();
-  //   final error = response.error;
-  //   if (error != null) {
-  //     context.showErrorSnackBar(message: error.message);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -164,4 +98,70 @@ class _FeedPageState extends State<FeedPage> {
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
+
+  // List of next pages to go to
+
+  // // Routing for bottom nav bar
+  // void _onItemTapped(int index) {
+  //   setState(() {
+  //     _loading = true;
+  //   });
+  //   switch (index) {
+  //     case 0:
+  //       // _navigatorKey.currentState!.pushNamed("/chat");
+  //       break;
+  //     case 1:
+  //       // _navigatorKey.currentState!.pushNamed("/addlisting");
+  //       break;
+  //     case 2:
+  //       Navigator.of(context).pushNamed("/account");
+  //       break;
+  //   }
+  //   setState(() {
+  //     _selectedIndex = index;
+  //     _loading = false;
+  //   });
+  // }
+
+  /// Called once a user id is received within `onAuthenticated()`
+  // Future<void> _getProfile(String userId) async {
+  // setState(() {
+  //   _loading = true;
+  // });
+  // final response = await supabase
+  //     .from('profiles')
+  //     .select()
+  //     .eq('id', userId)
+  //     .single()
+  //     .execute();
+  // final error = response.error;
+  // if (error != null && response.status != 406) {
+  //   context.showErrorSnackBar(message: error.message);
+  // }
+  // final data = response.data;
+  // if (data != null) {
+  //   _usernameController.text = (data['username'] ?? '') as String;
+  //   _websiteController.text = (data['website'] ?? '') as String;
+  // }
+  // setState(() {
+  //   _loading = false;
+  // });
 }
+
+// @override
+// void onAuthenticated(Session session) {
+//   final user = session.user;
+//   if (user != null) {
+//     _getProfile(user.id);
+//   }
+// }
+
+
+
+  // Future<void> _signOut() async {
+  //   final response = await supabase.auth.signOut();
+  //   final error = response.error;
+  //   if (error != null) {
+  //     context.showErrorSnackBar(message: error.message);
+  //   }
+  // }

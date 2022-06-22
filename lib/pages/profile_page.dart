@@ -126,7 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
 // Routing for bottom nav bar
 
   /// Called once a user id is received within `onAuthenticated()`
-  Future<void> _getProfile(String userId) async {
+  // Future<void> _getProfile(String userId) async {
     // setState(() {
     //   _loading = true;
     // });
@@ -151,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   /// Called when user taps `Update` button
-  Future<void> _updateProfile() async {
+  // Future<void> _updateProfile() async {
     // setState(() {
     //   _loading = true;
     // });
@@ -174,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // setState(() {
     //   _loading = false;
     // });
-  }
+  
 
 // upload photo from gallery
 
@@ -205,4 +205,4 @@ class _ProfilePageState extends State<ProfilePage> {
 // void dispose() {
 //   super.dispose();
 // }
-}
+
