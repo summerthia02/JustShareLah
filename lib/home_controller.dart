@@ -7,7 +7,7 @@ import 'firebase/auth_provider.dart';
 import 'firebase/auth_service.dart';
 
 class HomeController extends StatelessWidget {
-  const HomeController({required Key key}) : super(key: key);
+  const HomeController({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

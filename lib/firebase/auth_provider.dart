@@ -4,7 +4,7 @@ import 'auth_service.dart';
 class Provider extends InheritedWidget {
   final AuthService auth;
   const Provider({
-    required Key key,
+    Key? key,
     required Widget child,
     required this.auth,
   }) : super(key: key, child: child);
