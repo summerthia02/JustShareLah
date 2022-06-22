@@ -23,6 +23,8 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
+final navigatorKey = GlobalKey<NavigatorState>();
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -31,7 +33,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'JustShareLah',
       theme: AppTheme().buildThemeData(),
-      initialRoute: '/main',
+      navigatorKey: navigatorKey,
+      initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
         '/main': (_) => const MainPage(),

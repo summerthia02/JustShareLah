@@ -10,9 +10,9 @@ class SplashPage extends StatefulWidget {
 class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
-    // recoverSupabaseSession();
     super.initState();
-    Navigator.of(context).pushReplacementNamed("/main");
+    WidgetsBinding.instance.addPostFrameCallback(
+        (_) => Navigator.of(context).pushReplacementNamed("/main"));
   }
 
   @override

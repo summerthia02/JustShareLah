@@ -1,10 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/main.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
-// import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -23,16 +21,29 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
-    final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: _emailController.text.trim(),
-      password: _passwordController.text.trim(),
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => Center(child: CircularProgressIndicator()),
     );
 
-    if (response.user == null) {
-      context.showErrorSnackBar(message: "Error Signing In");
-    } else {
-      Navigator.of(context).pushNamedAndRemoveUntil('/feed', (route) => false);
+    try {
+      final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (response.user == null) {
+        context.showErrorSnackBar(message: "Error Signing In");
+      } else {
+        Navigator.of(context)
+            .pushNamedAndRemoveUntil('/feed', (route) => false);
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e);
     }
+
+    navigatorKey.currentState!.popUntil((route) => route.isFirst);
 
     setState(() {
       _isLoading = false;
