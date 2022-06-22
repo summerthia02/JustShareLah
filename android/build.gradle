@@ -10,7 +10,11 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-
+android {
+    defaultConfig {
+        minSdkVeresion 19
+    }
+}
 allprojects {
     repositories {
         google()
@@ -21,10 +25,10 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
     project.evaluationDependsOn(':app')
+
 }
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir
