@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/test%20data/user_info.dart';
+import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/components/auth_required_state.dart';
@@ -16,10 +19,6 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
   var _loading = false;
   // Index for bottom nav bar
   int _selectedIndex = 0;
-
-  // Routing for bottom nav bar
-
-  /// Called once a user id is received within `onAuthenticated()`
   Future<void> _getProfile(String userId) async {
     // setState(() {
     //   _loading = true;
@@ -91,39 +90,104 @@ class _ProfilePageState extends AuthRequiredState<ProfilePage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      // if add appbar -> two layers of appbar will appear.
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+  Widget buildName(var fakeUser) => Column(
+        children: [
+          Text(
+            fakeUser.userName,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            fakeUser.email,
+            style: const TextStyle(color: Colors.grey),
+          )
+        ],
+      );
+
+  Widget buildAbout(fakeUser) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 48),
         child: Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const SizedBox(height: 64),
-            const Icon(Icons.face_rounded),
-            const SizedBox(height: 12),
-            Center(
-              child: Text("Your Username",
-                  style: TextStyle(
-                      fontSize:
-                          Theme.of(context).textTheme.headline6?.fontSize ??
-                              32)),
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: const [
+            Text(
+              'About',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const Expanded(child: SizedBox(height: 18)),
-            ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
-            const SizedBox(height: 8),
-            const Center(
-              child: Text("*Button to be removed subsequently"),
+            SizedBox(height: 16),
+            Text(
+              "i like to sell clothes",
+              style: TextStyle(fontSize: 16, height: 1.4),
             ),
-            const SizedBox(height: 64),
           ],
         ),
+      );
+  @override
+  Widget build(BuildContext context) {
+    // get the current usr
+    // new instance of userfactory
+    final userFactory = UserInfo();
+    final fakeUser = userFactory.generateFake();
+
+    return Scaffold(
+      appBar:
+          MyAppBar().buildAppBar(const Text("Profile"), context, '/profile'),
+      // if add appbar -> two layers of appbar will appear.
+      body: ListView(
+        physics: const BouncingScrollPhysics(),
+        children: [
+          ProfileWidget(
+            imageUrl: fakeUser.imageUrl,
+            onClicked: () async {},
+          ),
+          const SizedBox(height: 24),
+          buildName(fakeUser),
+          const SizedBox(height: 24),
+          buildAbout(fakeUser),
+        ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
+
+  // build user's username, first and last name
+
+  // Routing for bottom nav bar
 }
+
+/// Called once a user id is received within `onAuthenticated()`
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(),
+//       // if add appbar -> two layers of appbar will appear.
+//       body: Padding(
+//         padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.max,
+//           mainAxisAlignment: MainAxisAlignment.center,
+//           crossAxisAlignment: CrossAxisAlignment.stretch,
+//           children: [
+//             const SizedBox(height: 64),
+//             const Icon(Icons.face_rounded),
+//             const SizedBox(height: 12),
+//             Center(
+//               child: Text("Your Username",
+//                   style: TextStyle(
+//                       fontSize:
+//                           Theme.of(context).textTheme.headline6?.fontSize ??
+//                               32)),
+//             ),
+//             const Expanded(child: SizedBox(height: 18)),
+//             ElevatedButton(onPressed: _signOut, child: const Text('Sign Out')),
+//             const SizedBox(height: 8),
+//             const Center(
+//               child: Text("*Button to be removed subsequently"),
+//             ),
+//             const SizedBox(height: 64),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
