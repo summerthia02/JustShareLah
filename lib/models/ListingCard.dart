@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../const_templates.dart';
+import '../utils/const_templates.dart';
 
 class ListingCard extends StatelessWidget {
   const ListingCard({

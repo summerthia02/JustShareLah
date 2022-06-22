@@ -1,10 +1,8 @@
-// ignore_for_file: prefer_const_constructors
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/components/auth_state.dart';
-import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
+import 'package:justsharelah_v1/main.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
-// import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -13,7 +11,7 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends AuthState<LoginPage> {
+class _LoginPageState extends State<LoginPage> {
   bool _isLoading = false;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -22,17 +20,18 @@ class _LoginPageState extends AuthState<LoginPage> {
     setState(() {
       _isLoading = true;
     });
+    
+    try {
+      final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
 
-    final response = await supabase.auth.signIn(
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    } else {
-      Navigator.of(context).pushNamedAndRemoveUntil('/feed', (route) => false);
+      if (response.user == null) {
+        context.showErrorSnackBar(message: "Error Signing In");
+      }
+    } on FirebaseAuthException catch (e) {
+      print(e);
     }
 
     setState(() {
@@ -114,7 +113,11 @@ class _LoginPageState extends AuthState<LoginPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signIn,
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            _signIn();
+                          },
                     child: Text(_isLoading ? 'Loading' : 'Log In'),
                   ),
                 ),

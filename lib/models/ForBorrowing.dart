@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
