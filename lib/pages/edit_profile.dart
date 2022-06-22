@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 
@@ -72,7 +73,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ElevatedButton buildButtonField(String text, Color color, double length) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => ProfilePage()));
+      },
       style: ElevatedButton.styleFrom(
           padding: EdgeInsets.symmetric(horizontal: length),
           primary: color,
