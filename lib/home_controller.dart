@@ -1,42 +1,29 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:justsharelah_v1/const_templates.dart';
-// import 'package:justsharelah_v1/pages/feed_page.dart';
-// import 'package:justsharelah_v1/pages/login_page.dart';
-// import 'package:justsharelah_v1/utils/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/pages/feed_page.dart';
+import 'package:justsharelah_v1/pages/login_page.dart';
 
-// class MainPage extends StatefulWidget {
-//   const MainPage({Key? key}) : super(key: key);
+import 'firebase/auth_provider.dart';
+import 'firebase/auth_service.dart';
 
-//   @override
-//   _MainPageState createState() => _MainPageState();
-// }
+class HomeController extends StatelessWidget {
+  const HomeController({required Key key}) : super(key: key);
 
-// class _MainPageState extends State<MainPage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
+  @override
+  Widget build(BuildContext context) {
+    final AuthService auth = Provider.of(context)!.auth;
 
-//   @override
-//   void dispose() {
-//     super.dispose();
-//   }
-
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: StreamBuilder<User?>(
-//         stream: FirebaseAuth.instance.authStateChanges(),
-//         builder: (context, snapshot) {
-//           if (snapshot.hasData) {
-//             return const FeedPage();
-//           }
-
-//           return const LoginPage();
-//         },
-//       ),
-//     );
-//   }
-// }
+    return StreamBuilder(
+      stream: auth.onAuthStateChanged,
+      builder: (context, AsyncSnapshot<User?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.active) {
+          final bool signedIn = snapshot.hasData;
+          return signedIn ? const FeedPage() : const LoginPage();
+        }
+        return Container(
+          color: Colors.black,
+        );
+      },
+    );
+  }
+}
