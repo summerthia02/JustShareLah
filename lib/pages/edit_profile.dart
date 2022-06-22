@@ -17,9 +17,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          MyAppBar().buildAppBar(const Text("Edit Profile"), context, '/feed'),
-      body: Container(
+        appBar: MyAppBar()
+            .buildAppBar(const Text("Edit Profile"), context, '/feed'),
+        body: Container(
           padding: EdgeInsets.only(top: 24, left: 20),
           child: ListView(
             children: [
@@ -27,42 +27,62 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 "Edit Profile",
                 style: kHeadingText,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
-              ProfileImage(),
-              SizedBox(
+              const ProfileImage(),
+              const SizedBox(
                 height: 20,
               ),
               // edit email
               buildFormField("Email", "Edit your Email", false),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               buildFormField("First Name", "Edit your First Name", false),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               buildFormField("Last Name", "Edit your Last Name", false),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               buildFormField("User Name", "Edit your UserName", false),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               buildFormField("Email ", "Edit your Email ", false),
 
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               buildFormField("Password", "Edit your Password", true),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                buildButtonField("CANCEL", Colors.red, 20.0),
+                const SizedBox(width: 60),
+                buildButtonField("SAVE", Colors.green, 30.0),
+              ]),
             ],
-          )),
-      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+          ),
+        ));
+  }
+
+  ElevatedButton buildButtonField(String text, Color color, double length) {
+    return ElevatedButton(
+      onPressed: () {},
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: length),
+          primary: color,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
+      ),
     );
   }
 
