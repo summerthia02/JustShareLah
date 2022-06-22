@@ -52,7 +52,9 @@ class ForgetPassword extends StatelessWidget {
                     SizedBox(
                       height: 20,
                     ),
-                    ElevatedButton(onPressed: () {}, child: Text('Send')),
+                    ElevatedButton(
+                      onPressed: () {},
+                       child: Text('Send')),
                   ],
                 ),
               )

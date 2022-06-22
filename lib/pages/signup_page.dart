@@ -44,6 +44,11 @@ class _SignupPageState extends State<SignupPage> {
       }
     } on FirebaseAuthException catch (e) {
       print(e);
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //   const SnackBar(
+      //     content: Text('Signed Up Successfully!'),
+      //   ),
+      // );
     }
 
     setState(() {
@@ -114,7 +119,7 @@ class _SignupPageState extends State<SignupPage> {
                       obscureText: false,
                       textAlign: TextAlign.center,
                       controller: _emailController,
-                      validator: FormValidation.formFieldEmpty,
+                      validator: FormValidation.validEmail,
                       decoration: kTextFormFieldDecoration.copyWith(
                           hintText: 'Enter your email',
                           labelText: 'Email',
