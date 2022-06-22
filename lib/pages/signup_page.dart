@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -27,10 +28,17 @@ class _SignupPageState extends State<SignupPage> {
   late final TextEditingController _passwordController;
   late final TextEditingController _cfmpasswordController;
 
+  CollectionReference users = FirebaseFirestore.instance.collection('Users');
+
   Future<bool> _signUp() async {
     setState(() {
       _isLoading = true;
     });
+    void returnState() {
+      setState(() {
+        _isLoading = false;
+      });
+    }
 
     try {
       final response =
@@ -40,21 +48,33 @@ class _SignupPageState extends State<SignupPage> {
       );
 
       if (response.user == null) {
+        returnState();
         return false;
       }
+
+      var userData = {
+        'email': _emailController.text.trim(),
+        'username': _usernameController.text.trim(),
+        'first_name': _firstnameController.text.trim(),
+        'last_name': _lastnameController.text.trim()
+      };
+      users
+          
+          .add(userData)
+          .then((value) => print('User Added'))
+          .catchError((err) => print('Failed to add user: $err'));
     } on FirebaseAuthException catch (e) {
       print(e);
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(
-      //     content: Text('Signed Up Successfully!'),
-      //   ),
-      // );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(e.message ?? "Error displaying error message"),
+        ),
+      );
+      returnState();
+      return false;
     }
 
-    setState(() {
-      _isLoading = false;
-    });
-    // return success;
+    returnState();
     return true;
   }
 
