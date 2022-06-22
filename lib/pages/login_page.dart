@@ -20,13 +20,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = true;
     });
-
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Center(child: CircularProgressIndicator()),
-    );
-
     try {
       final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -42,8 +35,6 @@ class _LoginPageState extends State<LoginPage> {
     } on FirebaseAuthException catch (e) {
       print(e);
     }
-
-    navigatorKey.currentState!.popUntil((route) => route.isFirst);
 
     setState(() {
       _isLoading = false;
@@ -124,7 +115,12 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signIn,
+                    onPressed: _isLoading
+                        ? null
+                        : () {
+                            _signIn();
+                            Navigator.of(context).pushReplacementNamed("/feed");
+                          },
                     child: Text(_isLoading ? 'Loading' : 'Log In'),
                   ),
                 ),

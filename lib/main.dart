@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (_) => const SplashPage(),
-        '/main': (_) => const MainPage(),
+        // '/main': (_) => const MainPage(),
         '/forget_password': (_) => const ForgetPassword(),
         '/login': (_) => const LoginPage(),
         '/signup': (_) => const SignupPage(),

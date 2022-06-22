@@ -95,7 +95,7 @@ class _FeedPageState extends State<FeedPage> {
     super.dispose();
   }
 
-  Future<void> _signOut() async {
+  _signOut() async {
     FirebaseAuth.instance.signOut();
   }
 
@@ -105,7 +105,7 @@ class _FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {},
+          onPressed: _signOut,
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
