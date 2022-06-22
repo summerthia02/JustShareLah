@@ -105,7 +105,9 @@ class _FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: _signOut,
+          onPressed: () {
+            _signOut();
+          },
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,

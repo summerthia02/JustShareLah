@@ -119,7 +119,6 @@ class _LoginPageState extends State<LoginPage> {
                         ? null
                         : () {
                             _signIn();
-                            Navigator.of(context).pushReplacementNamed("/feed");
                           },
                     child: Text(_isLoading ? 'Loading' : 'Log In'),
                   ),
