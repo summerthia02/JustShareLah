@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/utils/constants.dart';

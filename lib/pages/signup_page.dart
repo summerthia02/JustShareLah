@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
-import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
 

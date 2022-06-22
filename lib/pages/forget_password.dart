@@ -1,7 +1,7 @@
 // ignore_for_file: prefer_const_constructors
 
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 
 class ForgetPassword extends StatelessWidget {

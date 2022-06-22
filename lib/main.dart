@@ -1,19 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/pages/activity.dart';
 import 'package:justsharelah_v1/pages/addListing.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/forget_password.dart';
-import 'package:justsharelah_v1/pages/main_page.dart';
+import 'package:justsharelah_v1/home_controller.dart';
 import 'package:justsharelah_v1/pages/signup_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:justsharelah_v1/pages/chat_page.dart';
 
-import 'firebase_options.dart';
+import 'firebase/firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
