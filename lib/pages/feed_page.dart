@@ -26,7 +26,7 @@ class FeedPage extends StatefulWidget {
   _FeedPageState createState() => _FeedPageState();
 }
 
-class _FeedPageState extends AuthRequiredState<FeedPage> {
+class _FeedPageState extends State<FeedPage> {
   final _searchController = TextEditingController();
   var _loading = false;
   // Index for bottom nav bar

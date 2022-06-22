@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
+import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 
@@ -29,7 +30,14 @@ class ForRenting extends StatelessWidget {
                     image: demoListing[index].image,
                     title: demoListing[index].title,
                     price: demoListing[index].price,
-                    press: () {},
+                    press: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                EnlargedScreen(listing: demoListing[index]),
+                          ));
+                    },
                   ),
                 ),
               )),
