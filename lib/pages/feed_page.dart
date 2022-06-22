@@ -1,12 +1,12 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/components/auth_required_state.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../models/ForBorrowing.dart';
@@ -14,7 +14,7 @@ import '../models/ListingCard.dart';
 import 'chat_page.dart';
 import 'addListing.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
-import 'package:justsharelah_v1/const_templates.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/models/listings.dart';
@@ -95,12 +95,8 @@ class _FeedPageState extends State<FeedPage> {
     super.dispose();
   }
 
-  Future<void> _signOut() async {
-    final response = await supabase.auth.signOut();
-    final error = response.error;
-    if (error != null) {
-      context.showErrorSnackBar(message: error.message);
-    }
+  _signOut() async {
+    FirebaseAuth.instance.signOut();
   }
 
   @override
@@ -109,7 +105,9 @@ class _FeedPageState extends State<FeedPage> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {},
+          onPressed: () {
+            _signOut();
+          },
         ),
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -1,24 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/components/auth_state.dart';
+// import 'package:flutter/material.dart';
 
-class SplashPage extends StatefulWidget {
-  const SplashPage({Key? key}) : super(key: key);
+// =================NOT IN USE================================== //
 
-  @override
-  _SplashPageState createState() => _SplashPageState();
-}
+// class SplashPage extends StatefulWidget {
+//   const SplashPage({Key? key}) : super(key: key);
 
-class _SplashPageState extends AuthState<SplashPage> {
-  @override
-  void initState() {
-    recoverSupabaseSession();
-    super.initState();
-  }
+//   @override
+//   _SplashPageState createState() => _SplashPageState();
+// }
 
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
-    );
-  }
-}
+// class _SplashPageState extends State<SplashPage> {
+//   @override
+//   void initState() {
+//     super.initState();
+//     WidgetsBinding.instance.addPostFrameCallback(
+//         (_) => Navigator.of(context).pushReplacementNamed("/login"));
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return const Scaffold(
+//       body: Center(child: CircularProgressIndicator()),
+//     );
+//   }
+// }
+
+// =================NOT IN USE================================== //
