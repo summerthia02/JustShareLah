@@ -11,6 +11,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="clinicadasmultas"
         android:icon="@mipmap/ic_launcher">
+        tools:replace="android:label"
+        tools:replace="android:name"
     </application>
 
 </manifest>
