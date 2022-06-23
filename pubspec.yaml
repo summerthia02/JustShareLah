@@ -46,6 +46,7 @@ dependencies:
   firebase_auth: ^3.3.20
   google_sign_in: ^5.3.3
   email_validator: ^2.0.1
+  image_picker: ^0.8.5+3
   cloud_firestore: ^3.1.18
 
 dev_dependencies:
