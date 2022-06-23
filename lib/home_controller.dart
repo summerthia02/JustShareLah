@@ -16,13 +16,8 @@ class HomeController extends StatelessWidget {
     return StreamBuilder(
       stream: auth.onAuthStateChanged,
       builder: (context, AsyncSnapshot<User?> snapshot) {
-        if (snapshot.connectionState == ConnectionState.active) {
-          final bool signedIn = snapshot.hasData;
-          return signedIn ? const FeedPage() : const LoginPage();
-        }
-        return Container(
-          color: Colors.black,
-        );
+        final bool signedIn = snapshot.hasData;
+        return signedIn ? const FeedPage() : const LoginPage();
       },
     );
   }
