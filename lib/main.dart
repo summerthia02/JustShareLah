@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
         navigatorKey: navigatorKey,
         home: const HomeController(),
         routes: <String, WidgetBuilder>{
-          '/forget_password': (_) => const ForgetPassword(),
+          '/forget_password': (_) => const ForgetPasswordPage(),
           '/login': (_) => const LoginPage(),
           '/signup': (_) => const SignupPage(),
           '/feed': (_) => const FeedPage(),

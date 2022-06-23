@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/listings.dart';
+
 import 'package:justsharelah_v1/utils/const_templates.dart';
 
 class EnlargedScreen extends StatelessWidget {

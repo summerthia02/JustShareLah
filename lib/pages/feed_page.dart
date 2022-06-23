@@ -107,6 +107,7 @@ class _FeedPageState extends State<FeedPage> {
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
             _signOut();
+            Navigator.of(context).pop();
           },
         ),
         title: Row(
