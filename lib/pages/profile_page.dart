@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/apptheme.dart';
+import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/test%20data/user_info.dart';
