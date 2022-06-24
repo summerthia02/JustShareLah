@@ -57,6 +57,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 height: 20,
               ),
               buildFormField("Email ", "Edit your Email ", false),
+              const SizedBox(
+                height: 20,
+              ),
+              buildFormField("Bio ", "Edit your Bio ", false),
 
               const SizedBox(
                 height: 20,

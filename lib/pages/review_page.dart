@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/utils/slider.dart';
 import '../utils/appbar.dart';
 import '../utils/bottom_nav_bar.dart';
 
-class ChatPage extends StatelessWidget {
-  const ChatPage({Key? key}) : super(key: key);
+class ReviewPage extends StatelessWidget {
+  const ReviewPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: MyAppBar().buildAppBar(const Text("Chat"), context, '/feed'),
-      body: ListView(
-        children: [
-          Text("Chat"),
-          MySlider(),
-        ],
+      appBar:
+          MyAppBar().buildAppBar(const Text("Leave Review"), context, '/feed'),
+      body: Container(
         // ignore: prefer_const_constructors
+        child: Center(child: Text("Reviews")),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
