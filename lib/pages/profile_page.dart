@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/models/ForBorrowing.dart';
-import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
+import 'package:justsharelah_v1/models/ForBorrowing.dart';
+import 'package:justsharelah_v1/models/ForRenting.dart';
+import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/profile_image.dart';
-
-import '../models/user_data.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -41,15 +40,18 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     _getUserData().then((data) {
       UserData parseUserData = UserData(
-          uid: currentUser?.uid,
-          userName: data["username"],
-          firstName: data["first_name"],
-          lastName: data["last_name"],
-          email: data["username"],
-          phoneNumber: "",
-          about: "",
-          imageUrl: "",
-          listings: []);
+        uid: currentUser?.uid,
+        userName: data["username"],
+        firstName: data["first_name"],
+        lastName: data["last_name"],
+        email: data["username"],
+        phoneNumber: "",
+        about: "",
+        imageUrl: "",
+        listings: [],
+        reviews: [],
+        shareCredits: "",
+      );
       setState(() {
         userData = parseUserData;
       });
