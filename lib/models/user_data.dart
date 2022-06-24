@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:html';
-
 class UserData {
   final String? uid;
   final String? firstName;
