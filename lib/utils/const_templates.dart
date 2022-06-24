@@ -12,12 +12,21 @@ const kJustShareLahStyle = TextStyle(
   fontWeight: FontWeight.w200,
 );
 
+const kBodyTextSmall = TextStyle(
+  fontFamily: 'Lato',
+  fontSize: 18.0,
+  color: Colors.black,
+  height: 1.5,
+);
+
 const kBodyText = TextStyle(
   fontFamily: 'Lato',
   fontSize: 22.0,
   color: Colors.black,
   height: 1.5,
 );
+
+
 
 const kHeadingText = TextStyle(
   fontFamily: 'Lato',

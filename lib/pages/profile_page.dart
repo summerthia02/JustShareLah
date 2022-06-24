@@ -82,6 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             buildName(userData),
             const SizedBox(height: 12),
+            numReviews(10),
+            numShareCredits(135),
             editProfileButton(),
             const SizedBox(height: 24),
             buildAbout(userData),
@@ -93,6 +95,40 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+    );
+  }
+
+  Row numReviews(int numReviews) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          numReviews.toString(),
+          style: kBodyTextSmall.copyWith(
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline),
+        ),
+        Text(
+          " Reviews",
+          style: kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
+        ),
+      ],
+    );
+  }
+
+  Row numShareCredits(int numShareCreds) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "ShareCredits: ",
+          style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
+        ),
+        Text(
+          numShareCreds.toString(),
+          style: kBodyTextSmall,
+        ),
+      ],
     );
   }
 
