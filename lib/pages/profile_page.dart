@@ -70,21 +70,25 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          const SizedBox(height: 30),
-          buildName(userData),
-          const SizedBox(height: 12),
-          editProfileButton(),
-          const SizedBox(height: 24),
-          buildAbout(userData),
-          ProfileImage(),
-          const SizedBox(height: defaultPadding),
-          ForBorrowing(),
-          const SizedBox(height: defaultPadding),
-          ForRenting()
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(left: 10, right: 10),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          children: [
+            const SizedBox(height: 12),
+            ProfileImage(),
+            const SizedBox(height: 20),
+            buildName(userData),
+            const SizedBox(height: 12),
+            editProfileButton(),
+            const SizedBox(height: 24),
+            buildAbout(userData),
+            const SizedBox(height: defaultPadding),
+            ForBorrowing(),
+            const SizedBox(height: defaultPadding),
+            ForRenting()
+          ],
+        ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );

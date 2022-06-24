@@ -12,7 +12,7 @@ class _MySliderState extends State<MySlider> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: MediaQuery.of(context).size.height,
+        height: (MediaQuery.of(context).size.height) / 6,
         child: Scaffold(
             body: SfSlider(
           value: _value,

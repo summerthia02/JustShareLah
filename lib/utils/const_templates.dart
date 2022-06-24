@@ -31,7 +31,7 @@ ElevatedButton buildButtonField(String text, Color color, double length,
   return ElevatedButton(
     onPressed: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => pageName()));
+          context, MaterialPageRoute(builder: (context) => pageName));
     },
     style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: length),
