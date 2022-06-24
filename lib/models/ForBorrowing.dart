@@ -8,10 +8,14 @@ import 'package:justsharelah_v1/models/listings.dart';
 class ForBorrowing extends StatelessWidget {
   const ForBorrowing({
     Key? key,
+    this.userEmail,
   }) : super(key: key);
+
+  final String? userEmail;
 
   @override
   Widget build(BuildContext context) {
+    print("UserEmail: $userEmail");
     return Column(
       children: [
         FeedTitle(

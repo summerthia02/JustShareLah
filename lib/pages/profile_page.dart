@@ -20,10 +20,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   final currentUser = FirebaseAuth.instance.currentUser;
-  late UserData userData = UserData.loadingUserData();
+  late String? userEmail;
+  late UserData userData = UserData.defaultUserData();
 
   Future<Map<String, dynamic>> _getUserData() async {
-    final userEmail = currentUser?.email;
     Map<String, dynamic> userData = <String, dynamic>{};
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
       (res) {
@@ -38,6 +38,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    userEmail = currentUser?.email;
     _getUserData().then((data) {
       UserData parseUserData = UserData(
         uid: currentUser?.uid,
@@ -45,12 +46,12 @@ class _ProfilePageState extends State<ProfilePage> {
         firstName: data["first_name"],
         lastName: data["last_name"],
         email: data["username"],
-        phoneNumber: "",
-        about: "",
-        imageUrl: "",
-        listings: [],
-        reviews: [],
-        shareCredits: "",
+        phoneNumber: data["phone_number"],
+        about: data["about"],
+        imageUrl: data["image_url"],
+        listings: data["listings"],
+        reviews: data["reviews"],
+        shareCredits: data["share_credits"],
       );
       setState(() {
         userData = parseUserData;
@@ -78,14 +79,14 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 30),
           buildName(userData),
           const SizedBox(height: 12),
-          editProfileButton(),
-          const SizedBox(height: 24),
-          buildAbout(userData),
           ProfileImage(),
           const SizedBox(height: defaultPadding),
-          ForBorrowing(),
+          editProfileButton(),
+          buildAbout(userData),
           const SizedBox(height: defaultPadding),
-          ForRenting()
+          ForBorrowing(userEmail: currentUser?.email),
+          const SizedBox(height: defaultPadding),
+          ForRenting(userEmail: currentUser?.email)
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
