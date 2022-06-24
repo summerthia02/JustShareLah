@@ -67,6 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    print(userEmail);
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
@@ -76,14 +77,14 @@ class _ProfilePageState extends State<ProfilePage> {
           const SizedBox(height: 30),
           buildName(userData),
           const SizedBox(height: 12),
-          ProfileImage(),
+          const ProfileImage(),
           const SizedBox(height: defaultPadding),
           editProfileButton(),
           buildAbout(userData),
           const SizedBox(height: defaultPadding),
           ForBorrowing(userEmailToDisplay: userEmail),
           const SizedBox(height: defaultPadding),
-          ForRenting(userEmail: userEmail)
+          ForRenting(userEmailToDisplay: userEmail)
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
@@ -23,15 +22,15 @@ class ForBorrowing extends StatelessWidget {
 
   late String? userEmailToDisplay;
 
-  Future<Iterable<Listing>> _getListingData() async {
+  Future<Iterable<Listing>> _getBorrowListingData() async {
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
     Iterable<Map<String, dynamic>> listingsData = [];
     Query<Map<String, dynamic>> whereQuery = userEmailToDisplay!.isEmpty ||
             userEmailToDisplay == null
-        ? listingsCollection.where('email').where('for_rent', isEqualTo: false)
+        ? listingsCollection.where('created_by_email').where('for_rent', isEqualTo: false)
         : listingsCollection
-            .where('email', isEqualTo: userEmailToDisplay)
+            .where('created_by_email', isEqualTo: userEmailToDisplay)
             .where('for_rent', isEqualTo: false);
     await whereQuery.get().then(
       (res) {
@@ -66,7 +65,7 @@ class ForBorrowing extends StatelessWidget {
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<Iterable<Listing>>(
-              future: _getListingData(),
+              future: _getBorrowListingData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);
