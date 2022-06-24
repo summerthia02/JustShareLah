@@ -4,11 +4,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/models/listings.dart';
-import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:justsharelah_v1/utils/dropdown.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 
 class AddListingPage extends StatefulWidget {
@@ -31,6 +28,10 @@ class _AddListingPageState extends State<AddListingPage> {
   final listingsCollection = FirebaseFirestore.instance.collection('listings');
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
+
+  // for rent or borrow dropdown
+  String dropdownValue = 'Lending';
+  List<String> listingTypes = ['Lending', 'Renting'];
 
   // ================ Image functionalities ====================
 
@@ -99,6 +100,30 @@ class _AddListingPageState extends State<AddListingPage> {
   }
 
   // create class for dropdown menu items
+  DropdownButtonFormField<String> buildRentOrBorrowDropdown() {
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+        Radius.circular(30.0),
+      ))),
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward_rounded),
+      elevation: 2,
+      style: const TextStyle(color: Colors.grey, fontSize: 17),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+        });
+      },
+      items: listingTypes.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
 
   Container buildFormTitle(String text) {
     return Container(
@@ -121,12 +146,22 @@ class _AddListingPageState extends State<AddListingPage> {
       );
       return;
     }
+    if (dropdownValue != 'Lending' && dropdownValue != 'Renting') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Choose a proper listing type, unable to add listing"),
+        ),
+      );
+      return;
+    }
+
+    bool forRent = dropdownValue == 'Renting' ? true : false;
+
     var addedListing = {
       'image_url': "images/logo.png",
       'title': _titleController.text,
       'price': _priceController.text,
-      //TODO: CHANGE FOR RENT TO APPROPRIATE FIELD
-      'for_rent': false,
+      'for_rent': forRent,
       'description': _descriptionController.text,
       'available': true,
       'created_by_email': userEmail
@@ -184,8 +219,7 @@ class _AddListingPageState extends State<AddListingPage> {
                 const SizedBox(
                   width: 10.0,
                 ),
-                //TODO: ADD CONTROLLER TO THE LISTING TYPE
-                Expanded(child: MyDropDownButton()),
+                Expanded(child: buildRentOrBorrowDropdown()),
               ],
             ),
             const SizedBox(height: 10.0),
