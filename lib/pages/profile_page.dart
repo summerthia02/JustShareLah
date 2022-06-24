@@ -4,8 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
-
-import '../models/user_data.dart';
+import 'package:justsharelah_v1/models/ForBorrowing.dart';
+import 'package:justsharelah_v1/models/ForRenting.dart';
+import 'package:justsharelah_v1/models/user_data.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
+import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -78,6 +81,11 @@ class _ProfilePageState extends State<ProfilePage> {
           editProfileButton(),
           const SizedBox(height: 24),
           buildAbout(userData),
+          ProfileImage(),
+          const SizedBox(height: defaultPadding),
+          ForBorrowing(),
+          const SizedBox(height: defaultPadding),
+          ForRenting()
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
