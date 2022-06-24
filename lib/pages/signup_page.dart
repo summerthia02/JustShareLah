@@ -59,10 +59,9 @@ class _SignupPageState extends State<SignupPage> {
         'last_name': _lastnameController.text.trim()
       };
       users
-          
-          .add(userData)
-          .then((value) => print('User Added'))
-          .catchError((err) => print('Failed to add user: $err'));
+        .add(userData)
+        .then((value) => print('User Added'))
+        .catchError((err) => print('Failed to add user: $err'));
     } on FirebaseAuthException catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(

@@ -1,16 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/models/ForBorrowing.dart';
-import 'package:justsharelah_v1/models/ForRenting.dart';
-import 'package:justsharelah_v1/utils/apptheme.dart';
-import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
-import 'package:justsharelah_v1/test%20data/user_info.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
-import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/utils/constants.dart';
-import 'package:justsharelah_v1/utils/profile_image.dart';
+
+import '../models/user_data.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -20,73 +15,43 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  var _loading = false;
-  // Index for bottom nav bar
-  int _selectedIndex = 0;
-  Future<void> _getProfile(String userId) async {
-    // setState(() {
-    //   _loading = true;
-    // });
-    // final response = await supabase
-    //     .from('profiles')
-    //     .select()
-    //     .eq('id', userId)
-    //     .single()
-    //     .execute();
-    // final error = response.error;
-    // if (error != null && response.status != 406) {
-    //   context.showErrorSnackBar(message: error.message);
-    // }
-    // final data = response.data;
-    // if (data != null) {
-    //   _usernameController.text = (data['username'] ?? '') as String;
-    //   _websiteController.text = (data['website'] ?? '') as String;
-    // }
-    // setState(() {
-    //   _loading = false;
-    // });
-  }
+  final usersCollection = FirebaseFirestore.instance.collection('Users');
+  final currentUser = FirebaseAuth.instance.currentUser;
+  late UserData userData = UserData.loadingUserData();
 
-  /// Called when user taps `Update` button
-  Future<void> _updateProfile() async {
-    // setState(() {
-    //   _loading = true;
-    // });
-    // final userName = _usernameController.text;
-    // final website = _websiteController.text;
-    // final user = supabase.auth.currentUser;
-    // final updates = {
-    //   'id': user!.id,
-    //   'username': userName,
-    //   'website': website,
-    //   'updated_at': DateTime.now().toIso8601String(),
-    // };
-    // final response = await supabase.from('profiles').upsert(updates).execute();
-    // final error = response.error;
-    // if (error != null) {
-    //   context.showErrorSnackBar(message: error.message);
-    // } else {
-    //   context.showSnackBar(message: 'Successfully updated profile!');
-    // }
-    // setState(() {
-    //   _loading = false;
-    // });
-  }
+  Future<Map<String, dynamic>> _getUserData() async {
+    final userEmail = currentUser?.email;
+    Map<String, dynamic> userData = <String, dynamic>{};
+    await usersCollection.where('email', isEqualTo: userEmail).get().then(
+      (res) {
+        print("userData query successful");
+        userData = res.docs.first.data();
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
 
-  Future<void> _signOut() async {
-    // final response = await supabase.auth.signOut();
-    // final error = response.error;
-    // if (error != null) {
-    //   context.showErrorSnackBar(message: error.message);
-    // }
+    return userData;
   }
 
   @override
-  void onAuthenticated(Session session) {
-    final user = session.user;
-    if (user != null) {
-      _getProfile(user.id);
-    }
+  void initState() {
+    _getUserData().then((data) {
+      UserData parseUserData = UserData(
+        uid: currentUser?.uid,
+        userName: data["username"],
+        firstName: data["first_name"],
+        lastName: data["last_name"],
+        email: data["username"],
+        phoneNumber: "",
+        about: "",
+        imageUrl: "",
+        listings: []
+      );
+      setState(() {
+        userData = parseUserData;
+      });
+    });
+    super.initState();
   }
 
   @override
@@ -96,10 +61,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // get the current usr
-    // new instance of userfactory
-    final userFactory = UserInfo();
-    final fakeUser = userFactory.generateFake();
+    // final userFactory = UserInfo();
+    // final fakeUser = userFactory.generateFake();
 
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
@@ -107,29 +70,19 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         children: [
-          // ProfileWidget(
-          //   imageUrl: fakeUser.imageUrl,
-          //   onClicked: () async {},
-          // ),
-          const ProfileImage(),
-
           const SizedBox(height: 30),
-          buildName(fakeUser),
+          buildName(userData),
           const SizedBox(height: 12),
           editProfileButton(),
-
           const SizedBox(height: 24),
-          buildAbout(fakeUser),
-          const SizedBox(height: defaultPadding),
-          ForBorrowing(),
-          const SizedBox(height: defaultPadding),
-          ForRenting()
+          buildAbout(userData),
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
 
+  // ===================== Widgets =================================
   Align editProfileButton() {
     return Align(
       alignment: Alignment.center,
@@ -152,21 +105,21 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget buildName(var fakeUser) => Column(
+  Widget buildName(UserData userData) => Column(
         children: [
           Text(
-            fakeUser.userName,
+            userData.userName ?? "Error loading username",
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
           ),
           const SizedBox(height: 4),
           Text(
-            fakeUser.email,
+            userData.email ?? "Error loading email",
             style: const TextStyle(color: Colors.grey),
           )
         ],
       );
 
-  Widget buildAbout(fakeUser) => Container(
+  Widget buildAbout(UserData userData) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 48),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -183,8 +136,6 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       );
-
-  EditProfile() {}
 
   // build user's username, first and last name
 
