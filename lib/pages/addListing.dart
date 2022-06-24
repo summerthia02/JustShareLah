@@ -33,7 +33,7 @@ class _AddListingPageState extends State<AddListingPage> {
   late String? userEmail;
 
   // ================ Image functionalities ====================
-  
+
   // pick image from gallery
   // Implementing the image picker
   Future<void> _galleryImage() async {
@@ -57,7 +57,6 @@ class _AddListingPageState extends State<AddListingPage> {
   }
 
   // from camera
-
 
   // ================ Widgets =============================
 
@@ -86,11 +85,12 @@ class _AddListingPageState extends State<AddListingPage> {
             width: 100,
             height: 40.0,
             child: TextField(
-              onChanged:(value) => print(value),
+              onChanged: (value) => print(value),
               controller: controller,
               decoration: InputDecoration(
                 hintText: hintText,
-                border: const OutlineInputBorder(borderRadius:BorderRadius.all(Radius.circular(30))),
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
                 hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
               ),
             ),
@@ -110,6 +110,32 @@ class _AddListingPageState extends State<AddListingPage> {
     );
   }
 
+  // ================ Firebase interface =============
+
+  void _addListing() {
+    if (userEmail == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error fetching user, unable to add listing"),
+        ),
+      );
+      return;
+    }
+    var addedListing = {
+      'image_url': "images/logo.png",
+      'title': _titleController.text,
+      'price': _priceController.text,
+      //TODO: CHANGE FOR RENT TO APPROPRIATE FIELD
+      'for_rent': false,
+      'description': _descriptionController.text,
+      'available': true,
+      'created_by_email': userEmail
+    };
+    listingsCollection
+        .add(addedListing)
+        .then((value) => print('Listing Added'))
+        .catchError((err) => print('Failed to add listing: $err'));
+  }
 
   @override
   void initState() {
@@ -127,7 +153,7 @@ class _AddListingPageState extends State<AddListingPage> {
     return Scaffold(
       appBar:
           MyAppBar().buildAppBar(const Text("Add Listing"), context, '/feed'),
-      body: SingleChildScrollView( 
+      body: SingleChildScrollView(
         child: Column(
           children: [
             Container(
@@ -194,28 +220,7 @@ class _AddListingPageState extends State<AddListingPage> {
               }),
               const SizedBox(width: 60),
               buildButtonField("ADD LISTING", Colors.green, 30.0, () {
-                if (userEmail == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Error fetching user, unable to add listing"),
-                    ),
-                  );
-                  return;
-                }
-                var addedListing = {
-                  'image_url': "images/logo.png",
-                  'title': _titleController.text,
-                  'price': _priceController.text,
-                  //TODO: CHANGE FOR RENT TO APPROPRIATE FIELD
-                  'for_rent': false,
-                  'description': _descriptionController.text,
-                  'available': true,
-                  'created_by_email': userEmail
-                };
-                listingsCollection
-                    .add(addedListing)
-                    .then((value) => print('Listing Added'))
-                    .catchError((err) => print('Failed to add listing: $err'));
+                _addListing();
                 Navigator.pop(context);
               }),
             ]),
@@ -225,5 +230,4 @@ class _AddListingPageState extends State<AddListingPage> {
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
-
 }
