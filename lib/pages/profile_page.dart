@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/models/ForBorrowing.dart';
+import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/test%20data/user_info.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
+import 'package:justsharelah_v1/utils/profile_image.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 
@@ -103,6 +107,7 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView(
         physics: const BouncingScrollPhysics(),
         children: [
+          const ProfileImage(),
           // ProfileWidget(
           //   imageUrl: fakeUser.imageUrl,
           //   onClicked: () async {},
@@ -115,6 +120,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
           const SizedBox(height: 24),
           buildAbout(fakeUser),
+          const SizedBox(height: defaultPadding),
+          const ForBorrowing(),
+          const SizedBox(height: defaultPadding),
+          const ForRenting()
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
