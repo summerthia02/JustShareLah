@@ -27,7 +27,7 @@ class ForRenting extends StatelessWidget {
                 (index) => Padding(
                   padding: const EdgeInsets.only(right: defaultPadding),
                   child: ListingCard(
-                    image: demoListing[index].image,
+                    image: demoListing[index].imageUrl,
                     title: demoListing[index].title,
                     price: demoListing[index].price,
                     press: () {

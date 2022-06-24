@@ -10,7 +10,7 @@ class EnlargedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: listing.bgColor,
+      backgroundColor: const Color(0xFFEFEFF2),
       appBar: AppBar(
         leading: const BackButton(color: Colors.black),
         actions: [
@@ -29,7 +29,7 @@ class EnlargedScreen extends StatelessWidget {
       body: Column(
         children: [
           Image.asset(
-            listing.image,
+            listing.imageUrl,
             height: MediaQuery.of(context).size.height * 0.4,
             fit: BoxFit.cover,
           ),

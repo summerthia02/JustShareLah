@@ -8,6 +8,8 @@ class UserData {
   final String? about;
   final String? imageUrl;
   final List<String> listings;
+  final List<String> reviews;
+  final String shareCredits;
 
   UserData({
     required this.uid,
@@ -19,6 +21,8 @@ class UserData {
     required this.about,
     required this.imageUrl,
     required this.listings,
+    required this.reviews,
+    required this.shareCredits
   });
 
   static UserData loadingUserData() {
@@ -31,7 +35,9 @@ class UserData {
       phoneNumber: "Loading",
       about: "Loading",
       imageUrl: "Loading",
-      listings: []
+      listings: [],
+      reviews: [],
+      shareCredits: "Loading",
     );
   }
 }
