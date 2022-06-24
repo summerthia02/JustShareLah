@@ -38,4 +38,3 @@ class _MyDropDownButtonState extends State<MyDropDownButton> {
       }).toList(),
     );
   }
-}
