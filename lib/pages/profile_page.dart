@@ -45,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
         userName: data["username"],
         firstName: data["first_name"],
         lastName: data["last_name"],
-        email: data["username"],
+        email: userEmail,
         phoneNumber: data["phone_number"],
         about: data["about"],
         imageUrl: data["image_url"],
@@ -67,9 +67,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final userFactory = UserInfo();
-    // final fakeUser = userFactory.generateFake();
-
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
@@ -84,9 +81,9 @@ class _ProfilePageState extends State<ProfilePage> {
           editProfileButton(),
           buildAbout(userData),
           const SizedBox(height: defaultPadding),
-          ForBorrowing(userEmail: currentUser?.email),
+          ForBorrowing(userEmailToDisplay: userEmail),
           const SizedBox(height: defaultPadding),
-          ForRenting(userEmail: currentUser?.email)
+          ForRenting(userEmail: userEmail)
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),

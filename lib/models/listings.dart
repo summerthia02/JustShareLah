@@ -30,7 +30,7 @@ List<Listing> listOfListings = [
     forRent: false,
     description: "",
     available: true,
-    createdByEmail: "pravedino@gmail.com"
+    createdByEmail: "praveen2@gmail.com"
     // bgColor: const Color(0xFFFEFBF9),
   ),
   Listing(

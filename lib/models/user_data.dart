@@ -7,8 +7,8 @@ class UserData {
   final String? phoneNumber;
   final String? about;
   final String? imageUrl;
-  final List<String> listings;
-  final List<String> reviews;
+  final List<dynamic> listings;
+  final List<dynamic> reviews;
   final String shareCredits;
 
   UserData(

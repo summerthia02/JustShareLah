@@ -6,7 +6,7 @@ import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 
 class ForRenting extends StatelessWidget {
-  const ForRenting({
+  ForRenting({
     Key? key,
     String? userEmail,
   }) : super(key: key);
