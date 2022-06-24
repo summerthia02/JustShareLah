@@ -196,14 +196,14 @@ class _AddListingPageState extends State<AddListingPage> {
               ),
               buildFormField("Enter Price of Listing ", _priceController),
             ]),
-            const SizedBox(height: 10.0),
-            Row(children: <Widget>[
-              buildFormTitle("Brand"),
-              const SizedBox(
-                width: 10.0,
-              ),
-              buildFormField("Enter Brand of Listing ", _brandController),
-            ]),
+            // const SizedBox(height: 10.0),
+            // Row(children: <Widget>[
+            //   buildFormTitle("Brand"),
+            //   const SizedBox(
+            //     width: 10.0,
+            //   ),
+            //   buildFormField("Enter Brand of Listing ", _brandController),
+            // ]),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
               buildFormTitle("Description"),
