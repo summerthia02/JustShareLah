@@ -32,6 +32,8 @@ class _AddListingPageState extends State<AddListingPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
 
+  // ================ Image functionalities ====================
+  
   // pick image from gallery
   // Implementing the image picker
   Future<void> _galleryImage() async {
@@ -55,6 +57,59 @@ class _AddListingPageState extends State<AddListingPage> {
   }
 
   // from camera
+
+
+  // ================ Widgets =============================
+
+  ElevatedButton buildButtonField(
+      String text, Color color, double length, void Function()? onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: length),
+          primary: color,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
+      ),
+    );
+  }
+
+  Expanded buildFormField(String hintText, TextEditingController controller) {
+    return Expanded(
+      child: Container(
+          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
+          child: SizedBox(
+            width: 100,
+            height: 40.0,
+            child: TextField(
+              onChanged:(value) => print(value),
+              controller: controller,
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: const OutlineInputBorder(borderRadius:BorderRadius.all(Radius.circular(30))),
+                hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
+              ),
+            ),
+          )),
+    );
+  }
+
+  // create class for dropdown menu items
+
+  Container buildFormTitle(String text) {
+    return Container(
+      padding: EdgeInsets.only(left: 20, top: 20, right: 20),
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 20),
+      ),
+    );
+  }
+
 
   @override
   void initState() {
@@ -171,52 +226,4 @@ class _AddListingPageState extends State<AddListingPage> {
     );
   }
 
-  ElevatedButton buildButtonField(
-      String text, Color color, double length, void Function()? onPressed) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: length),
-          primary: color,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-      child: Text(
-        text,
-        style: const TextStyle(
-            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
-      ),
-    );
-  }
-
-  Expanded buildFormField(String hintText, TextEditingController controller) {
-    return Expanded(
-      child: Container(
-          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-          child: SizedBox(
-            width: 100,
-            height: 40.0,
-            child: TextField(
-              onChanged:(value) => print(value),
-              controller: controller,
-              decoration: InputDecoration(
-                hintText: hintText,
-                border: const OutlineInputBorder(borderRadius:BorderRadius.all(Radius.circular(30))),
-                hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
-              ),
-            ),
-          )),
-    );
-  }
-
-  // create class for dropdown menu items
-
-  Container buildFormTitle(String text) {
-    return Container(
-      padding: EdgeInsets.only(left: 20, top: 20, right: 20),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 20),
-      ),
-    );
-  }
 }
