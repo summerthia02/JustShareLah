@@ -100,10 +100,10 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditProfilePage(),
+                builder: (context) => const EditProfilePage(),
               ));
         },
-        child: Text('Edit Profile'),
+        child: const Text('Edit Profile'),
         style: ElevatedButton.styleFrom(
             primary: Colors.black,
             elevation: 2,
@@ -132,15 +132,15 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 48),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
+          children: [
+            const Text(
               'About',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              "i like to sell clothes",
-              style: TextStyle(fontSize: 16, height: 1.4),
+              userData.about.toString(),
+              style: const TextStyle(fontSize: 16, height: 1.4),
             ),
           ],
         ),
