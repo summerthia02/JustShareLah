@@ -55,78 +55,111 @@ class _AddListingPageState extends State<AddListingPage> {
     return Scaffold(
       appBar:
           MyAppBar().buildAppBar(const Text("Add Listing"), context, '/feed'),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 30),
-            alignment: Alignment.topCenter,
-            child: ElevatedButton(
-              child: Text(
-                'Add Image',
-                style: TextStyle(fontSize: 15, fontFamily: 'Lato'),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(defaultPadding),
+        child: SizedBox(
+          height: 500,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: EdgeInsets.only(top: 30),
+                alignment: Alignment.topCenter,
+                child: ElevatedButton(
+                  child: Text(
+                    'Add Image',
+                    style: TextStyle(fontSize: 15, fontFamily: 'Lato'),
+                  ),
+                  onPressed: () {
+                    _cameraImage();
+                  },
+                  style: ElevatedButton.styleFrom(primary: Colors.red),
+                ),
               ),
-              onPressed: () {
-                _cameraImage();
-              },
-              style: ElevatedButton.styleFrom(primary: Colors.red),
-            ),
-          ),
-          Row(children: <Widget>[
-            buildFormTitle("Listing Title"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Enter Listing Details",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(
-            children: <Widget>[
-              buildFormTitle("Listing Type"),
-              const SizedBox(
-                width: 10.0,
-              ),
-              Expanded(child: MyDropDownButton()),
+              Expanded(
+                  flex: 4,
+                  child: Container(
+                      child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: buildFormTitle("Listing Title"),
+                          ),
+                          Container(
+                            child: buildFormField("Enter Listing Title"),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: buildFormTitle("Listing Type"),
+                          ),
+                          Container(
+                            child: Expanded(child: MyDropDownButton()),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: buildFormTitle("Price"),
+                          ),
+                          Container(
+                            child: Expanded(
+                              child: buildFormField("Enter Price of Listing"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: buildFormTitle("Description"),
+                          ),
+                          Container(
+                            child: Expanded(
+                              child: buildFormField("Enter Brand of Listing"),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            child: buildFormTitle("Brand"),
+                          ),
+                          Container(
+                            child: Expanded(
+                                child: buildFormField(
+                                    "Give us a brief description of your listing ")),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Spacer(
+                            flex: 4,
+                          )
+                        ],
+                      ),
+                    ],
+                  ))),
+              const SizedBox(height: 10.0),
+              Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                buildButtonField("CANCEL", Colors.red, 20.0),
+                const SizedBox(width: 60),
+                buildButtonField("ADD LISTING", Colors.green, 30.0),
+              ]),
             ],
           ),
-          const SizedBox(height: 10.0),
-          Row(children: <Widget>[
-            buildFormTitle("Price"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Enter Price of Listing ",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(children: <Widget>[
-            buildFormTitle("Brand"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Enter Brand of Listing ",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(children: <Widget>[
-            buildFormTitle("Description"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Give us a brief description of your listing ",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            buildButtonField("CANCEL", Colors.red, 20.0),
-            const SizedBox(width: 60),
-            buildButtonField("ADD LISTING", Colors.green, 30.0),
-          ]),
-        ],
+        ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
@@ -159,13 +192,14 @@ class _AddListingPageState extends State<AddListingPage> {
             width: 100,
             height: 40.0,
             child: TextField(
-                decoration: InputDecoration(
-              hintText: hintText,
-              border: OutlineInputBorder(
-                  borderRadius:
-                      const BorderRadius.all(const Radius.circular(30))),
-              hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
-            )),
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: OutlineInputBorder(
+                    borderRadius:
+                        const BorderRadius.all(const Radius.circular(30))),
+                hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
+              ),
+            ),
           )),
     );
   }
