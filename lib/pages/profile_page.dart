@@ -45,7 +45,9 @@ class _ProfilePageState extends State<ProfilePage> {
         phoneNumber: "",
         about: "",
         imageUrl: "",
-        listings: []
+        listings: [],
+        reviews: [],
+        shareCredits: "",
       );
       setState(() {
         userData = parseUserData;

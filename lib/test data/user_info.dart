@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_const
-
 import 'package:justsharelah_v1/test%20data/model_factory.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 
@@ -15,7 +13,9 @@ class UserInfo extends ModelFactory<UserData> {
       phoneNumber: "",
       about: "",
       imageUrl: faker.internet.httpUrl(),
-      listings: []
+      listings: [],
+      reviews: [],
+      shareCredits: "",
     );
   }
 
