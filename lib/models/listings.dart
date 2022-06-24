@@ -22,7 +22,7 @@ class Listing {
   });
 }
 
-List<Listing> demoListing = [
+List<Listing> listOfListings = [
   Listing(
     imageUrl: "images/iphone_charger.png",
     title: "iPhone 12 Charger",
