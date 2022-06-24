@@ -1,36 +1,55 @@
 import 'package:flutter/material.dart';
 
 class Listing {
-  final String image, title;
+  final String imageUrl;
+  final String title;
   final String price;
-  // final bool forRent;
-  final Color bgColor;
+  final bool forRent;
+  final String description;
+  final bool available;
+  final String createdByEmail;
+  // final Color bgColor;
 
   Listing({
-    required this.image,
+    required this.imageUrl,
     required this.title,
     required this.price,
-    // required this.forRent,
-    this.bgColor = const Color(0xFFEFEFF2),
+    required this.forRent,
+    required this.description,
+    required this.available,
+    required this.createdByEmail,
+    // this.bgColor = const Color(0xFFEFEFF2),
   });
 }
 
-List<Listing> demoListing = [
+List<Listing> listOfListings = [
   Listing(
-    image: "images/iphone_charger.png",
+    imageUrl: "images/iphone_charger.png",
     title: "iPhone 12 Charger",
     price: "0",
-    bgColor: const Color(0xFFFEFBF9),
+    forRent: false,
+    description: "",
+    available: true,
+    createdByEmail: "pravedino@gmail.com"
+    // bgColor: const Color(0xFFFEFBF9),
   ),
   Listing(
-    image: "images/camera_stand.png",
+    imageUrl: "images/camera_stand.png",
     title: "Tripod Stand",
     price: "20 / day",
+    forRent: true,
+    description: "",
+    available: true,
+    createdByEmail: "pravedino@gmail.com"
   ),
   Listing(
-    image: "images/microphone.png",
+    imageUrl: "images/microphone.png",
     title: "Microphone",
     price: "15 / day",
-    bgColor: const Color(0xFFF8FEFB),
+    forRent: true,
+    description: "",
+    available: true,
+    createdByEmail: "pravedino@gmail.com"
+    // bgColor: const Color(0xFFF8FEFB),
   ),
 ];

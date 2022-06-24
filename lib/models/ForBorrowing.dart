@@ -23,19 +23,19 @@ class ForBorrowing extends StatelessWidget {
           child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(
-                demoListing.length,
+                listOfListings.length,
                 (index) => Padding(
                   padding: const EdgeInsets.only(right: defaultPadding),
                   child: ListingCard(
-                    image: demoListing[index].image,
-                    title: demoListing[index].title,
-                    price: demoListing[index].price,
+                    image: listOfListings[index].imageUrl,
+                    title: listOfListings[index].title,
+                    price: listOfListings[index].price,
                     press: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                EnlargedScreen(listing: demoListing[index]),
+                                EnlargedScreen(listing: listOfListings[index]),
                           ));
                     },
                   ),

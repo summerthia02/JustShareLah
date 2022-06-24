@@ -56,7 +56,13 @@ class _SignupPageState extends State<SignupPage> {
         'email': _emailController.text.trim(),
         'username': _usernameController.text.trim(),
         'first_name': _firstnameController.text.trim(),
-        'last_name': _lastnameController.text.trim()
+        'last_name': _lastnameController.text.trim(),
+        'phone_number': "",
+        'about': "Click Edit Profile to add a bio!",
+        'image_url': "",
+        'listings': [],
+        'reviews': [],
+        'share_credits': "",
       };
       users
         .add(userData)
