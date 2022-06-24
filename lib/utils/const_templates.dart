@@ -26,6 +26,25 @@ const kHeadingText = TextStyle(
   height: 1.5,
 );
 
+ElevatedButton buildButtonField(String text, Color color, double length,
+    BuildContext context, dynamic pageName) {
+  return ElevatedButton(
+    onPressed: () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => pageName()));
+    },
+    style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: length),
+        primary: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+    child: Text(
+      text,
+      style: const TextStyle(
+          fontSize: 15, letterSpacing: 2.5, color: Colors.black),
+    ),
+  );
+}
+
 const kTextFormFieldDecoration = InputDecoration(
   hintText: 'Enter a value',
   contentPadding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 22.0),
