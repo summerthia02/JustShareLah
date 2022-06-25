@@ -7,25 +7,24 @@ class UserData {
   final String? phoneNumber;
   final String? about;
   final String? imageUrl;
-  final List<String> listings;
-  final List<String> reviews;
+  final List<dynamic> listings;
+  final List<dynamic> reviews;
   final String shareCredits;
 
-  UserData({
-    required this.uid,
-    required this.userName,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.phoneNumber,
-    required this.about,
-    required this.imageUrl,
-    required this.listings,
-    required this.reviews,
-    required this.shareCredits
-  });
+  UserData(
+      {required this.uid,
+      required this.userName,
+      required this.firstName,
+      required this.lastName,
+      required this.email,
+      required this.phoneNumber,
+      required this.about,
+      required this.imageUrl,
+      required this.listings,
+      required this.reviews,
+      required this.shareCredits});
 
-  static UserData loadingUserData() {
+  static UserData defaultUserData() {
     return UserData(
       uid: "Loading",
       userName: "Loading",

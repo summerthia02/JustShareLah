@@ -1,25 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
-class MyDropDownButton extends StatefulWidget {
-  const MyDropDownButton({Key? key}) : super(key: key);
+class RentOrBorrowButton extends StatefulWidget {
+  const RentOrBorrowButton({Key? key}) : super(key: key);
 
   @override
-  State<MyDropDownButton> createState() => _MyDropDownButtonState();
+  State<RentOrBorrowButton> createState() => _RentOrBorrowButtonState();
 }
 
-class _MyDropDownButtonState extends State<MyDropDownButton> {
+class _RentOrBorrowButtonState extends State<RentOrBorrowButton> {
   String dropdownValue = "Borrowing";
   List<String> listingTypes = ['Borrowing', 'Renting'];
 
   @override
   Widget build(BuildContext context) {
     return DropdownButtonFormField<String>(
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
           border: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(
-        const Radius.circular(30.0),
+              borderRadius: BorderRadius.all(
+        Radius.circular(30.0),
       ))),
       value: dropdownValue,
       icon: const Icon(Icons.arrow_downward_rounded),

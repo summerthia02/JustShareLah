@@ -20,10 +20,10 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   final currentUser = FirebaseAuth.instance.currentUser;
-  late UserData userData = UserData.loadingUserData();
+  late String? userEmail;
+  late UserData userData = UserData.defaultUserData();
 
   Future<Map<String, dynamic>> _getUserData() async {
-    final userEmail = currentUser?.email;
     Map<String, dynamic> userData = <String, dynamic>{};
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
       (res) {
@@ -38,19 +38,20 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    userEmail = currentUser?.email;
     _getUserData().then((data) {
       UserData parseUserData = UserData(
         uid: currentUser?.uid,
         userName: data["username"],
         firstName: data["first_name"],
         lastName: data["last_name"],
-        email: data["username"],
-        phoneNumber: "",
-        about: "",
-        imageUrl: "",
-        listings: [],
-        reviews: [],
-        shareCredits: "",
+        email: userEmail,
+        phoneNumber: data["phone_number"],
+        about: data["about"],
+        imageUrl: data["image_url"],
+        listings: data["listings"],
+        reviews: data["reviews"],
+        shareCredits: data["share_credits"],
       );
       setState(() {
         userData = parseUserData;
@@ -66,9 +67,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    // final userFactory = UserInfo();
-    // final fakeUser = userFactory.generateFake();
-
+    print(userEmail);
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
@@ -88,9 +87,9 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 24),
             buildAbout(userData),
             const SizedBox(height: defaultPadding),
-            ForBorrowing(),
+            ForBorrowing(userEmailToDisplay: userEmail),
             const SizedBox(height: defaultPadding),
-            ForRenting()
+            ForRenting(userEmailToDisplay: userEmail)
           ],
         ),
       ),
@@ -141,10 +140,10 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => EditProfilePage(),
+                builder: (context) => const EditProfilePage(),
               ));
         },
-        child: Text('Edit Profile'),
+        child: const Text('Edit Profile'),
         style: ElevatedButton.styleFrom(
             primary: Colors.black,
             elevation: 2,
@@ -173,15 +172,15 @@ class _ProfilePageState extends State<ProfilePage> {
         padding: const EdgeInsets.symmetric(horizontal: 48),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: const [
-            Text(
+          children: [
+            const Text(
               'About',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Text(
-              "i like to sell clothes",
-              style: TextStyle(fontSize: 16, height: 1.4),
+              userData.about.toString(),
+              style: const TextStyle(fontSize: 16, height: 1.4),
             ),
           ],
         ),

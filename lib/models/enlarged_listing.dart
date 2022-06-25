@@ -63,14 +63,13 @@ class EnlargedScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const Padding(
+                  Padding(
                     padding: EdgeInsets.symmetric(vertical: defaultPadding),
                     child: Text(
-                      "Always have an iPhone charger with me. Am willing to lend someone in need for free!",
+                      listing.description.toString(),
                     ),
                   ),
-                  const SizedBox(height: defaultPadding / 2),
-                  const SizedBox(height: defaultPadding * 2),
+                  const SizedBox(height: (defaultPadding * 2.5)),
                   Center(
                     child: SizedBox(
                       width: 200,

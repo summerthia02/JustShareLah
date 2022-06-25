@@ -1,18 +1,12 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:io';
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/pages/feed_page.dart';
-import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:justsharelah_v1/utils/form_validation.dart';
-import 'package:justsharelah_v1/utils/dropdown.dart';
-
-import '../utils/appbar.dart';
+import 'package:justsharelah_v1/utils/appbar.dart';
 
 class AddListingPage extends StatefulWidget {
   const AddListingPage({Key? key}) : super(key: key);
@@ -22,9 +16,24 @@ class AddListingPage extends StatefulWidget {
 }
 
 class _AddListingPageState extends State<AddListingPage> {
-  File? _image;
+  late TextEditingController _titleController;
+  late TextEditingController _listingTypeController;
+  late TextEditingController _priceController;
+  late TextEditingController _brandController;
+  late TextEditingController _descriptionController;
 
+  File? _image;
   final ImagePicker _picker = ImagePicker();
+
+  final listingsCollection = FirebaseFirestore.instance.collection('listings');
+  final currentUser = FirebaseAuth.instance.currentUser;
+  late String? userEmail;
+
+  // for rent or borrow dropdown
+  String dropdownValue = 'Lending';
+  List<String> listingTypes = ['Lending', 'Renting'];
+
+  // ================ Image functionalities ====================
 
   // pick image from gallery
   // Implementing the image picker
@@ -50,90 +59,26 @@ class _AddListingPageState extends State<AddListingPage> {
 
   // from camera
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar:
-          MyAppBar().buildAppBar(const Text("Add Listing"), context, '/feed'),
-      body: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.only(top: 30),
-            alignment: Alignment.topCenter,
-            child: ElevatedButton(
-              child: Text(
-                'Add Image',
-                style: TextStyle(fontSize: 15, fontFamily: 'Lato'),
-              ),
-              onPressed: () {
-                _cameraImage();
-              },
-              style: ElevatedButton.styleFrom(primary: Colors.red),
-            ),
-          ),
-          Row(children: <Widget>[
-            buildFormTitle("Listing Title"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Enter Listing Details",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(
-            children: <Widget>[
-              buildFormTitle("Listing Type"),
-              const SizedBox(
-                width: 10.0,
-              ),
-              Expanded(child: MyDropDownButton()),
-            ],
-          ),
-          const SizedBox(height: 10.0),
-          Row(children: <Widget>[
-            buildFormTitle("Price"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Enter Price of Listing ",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(children: <Widget>[
-            buildFormTitle("Brand"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Enter Brand of Listing ",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(children: <Widget>[
-            buildFormTitle("Description"),
-            const SizedBox(
-              width: 10.0,
-            ),
-            buildFormField(
-              "Give us a brief description of your listing ",
-            ),
-          ]),
-          const SizedBox(height: 10.0),
-          Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            buildButtonField("CANCEL", Colors.red, 20.0, context, FeedPage()),
-            const SizedBox(width: 60),
-            buildButtonField(
-                "ADD LISTING", Colors.green, 30.0, context, ProfilePage()),
-          ]),
-        ],
+  // ================ Widgets =============================
+
+  ElevatedButton buildButtonField(
+      String text, Color color, double length, void Function()? onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: length),
+          primary: color,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
       ),
-      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
 
-  Expanded buildFormField(String hintText) {
+  Expanded buildFormField(String hintText, TextEditingController controller) {
     return Expanded(
       child: Container(
           padding: EdgeInsets.only(top: 20, right: 20, left: 20),
@@ -141,18 +86,44 @@ class _AddListingPageState extends State<AddListingPage> {
             width: 100,
             height: 40.0,
             child: TextField(
-                decoration: InputDecoration(
-              hintText: hintText,
-              border: OutlineInputBorder(
-                  borderRadius:
-                      const BorderRadius.all(const Radius.circular(30))),
-              hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
-            )),
+              onChanged: (value) => print(value),
+              controller: controller,
+              decoration: InputDecoration(
+                hintText: hintText,
+                border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
+                hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
+              ),
+            ),
           )),
     );
   }
 
   // create class for dropdown menu items
+  DropdownButtonFormField<String> buildRentOrBorrowDropdown() {
+    return DropdownButtonFormField<String>(
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.all(
+        Radius.circular(30.0),
+      ))),
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward_rounded),
+      elevation: 2,
+      style: const TextStyle(color: Colors.grey, fontSize: 17),
+      onChanged: (String? newValue) {
+        setState(() {
+          dropdownValue = newValue!;
+        });
+      },
+      items: listingTypes.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
+    );
+  }
 
   Container buildFormTitle(String text) {
     return Container(
@@ -161,6 +132,136 @@ class _AddListingPageState extends State<AddListingPage> {
         text,
         style: TextStyle(fontSize: 20),
       ),
+    );
+  }
+
+  // ================ Firebase interface =============
+
+  void _addListing() {
+    if (userEmail == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Error fetching user, unable to add listing"),
+        ),
+      );
+      return;
+    }
+    if (dropdownValue != 'Lending' && dropdownValue != 'Renting') {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Choose a proper listing type, unable to add listing"),
+        ),
+      );
+      return;
+    }
+
+    bool forRent = dropdownValue == 'Renting' ? true : false;
+
+    var addedListing = {
+      'image_url': "images/logo.png",
+      'title': _titleController.text,
+      'price': _priceController.text,
+      'for_rent': forRent,
+      'description': _descriptionController.text,
+      'available': true,
+      'created_by_email': userEmail
+    };
+    listingsCollection
+        .add(addedListing)
+        .then((value) => print('Listing Added'))
+        .catchError((err) => print('Failed to add listing: $err'));
+  }
+
+  @override
+  void initState() {
+    userEmail = currentUser?.email;
+    _titleController = TextEditingController();
+    _listingTypeController = TextEditingController();
+    _priceController = TextEditingController();
+    _brandController = TextEditingController();
+    _descriptionController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar:
+          MyAppBar().buildAppBar(const Text("Add Listing"), context, '/feed'),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: EdgeInsets.only(top: 30),
+              alignment: Alignment.topCenter,
+              child: ElevatedButton(
+                onPressed: () {
+                  _cameraImage();
+                },
+                style: ElevatedButton.styleFrom(primary: Colors.red),
+                child: const Text(
+                  'Add Image',
+                  style: TextStyle(fontSize: 15, fontFamily: 'Lato'),
+                ),
+              ),
+            ),
+            Row(children: <Widget>[
+              buildFormTitle("Listing Title"),
+              const SizedBox(
+                width: 10.0,
+              ),
+              buildFormField("Enter Listing Details", _titleController),
+            ]),
+            const SizedBox(height: 10.0),
+            Row(
+              children: <Widget>[
+                buildFormTitle("Listing Type"),
+                const SizedBox(
+                  width: 10.0,
+                ),
+                Expanded(child: buildRentOrBorrowDropdown()),
+              ],
+            ),
+            const SizedBox(height: 10.0),
+            Row(children: <Widget>[
+              buildFormTitle("Price"),
+              const SizedBox(
+                width: 10.0,
+              ),
+              buildFormField("Enter Price of Listing ", _priceController),
+            ]),
+            // const SizedBox(height: 10.0),
+            // Row(children: <Widget>[
+            //   buildFormTitle("Brand"),
+            //   const SizedBox(
+            //     width: 10.0,
+            //   ),
+            //   buildFormField("Enter Brand of Listing ", _brandController),
+            // ]),
+            const SizedBox(height: 10.0),
+            Row(children: <Widget>[
+              buildFormTitle("Description"),
+              const SizedBox(
+                width: 10.0,
+              ),
+              buildFormField("Give us a brief description of your listing",
+                  _descriptionController),
+            ]),
+            const SizedBox(height: 10.0),
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              buildButtonField("CANCEL", Colors.red, 20.0, () {
+                Navigator.pop(context);
+              }),
+              const SizedBox(width: 60),
+              buildButtonField("ADD LISTING", Colors.green, 30.0, () {
+                _addListing();
+                Navigator.pop(context);
+              }),
+            ]),
+          ],
+        ),
+      ),
+      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
 }

@@ -149,17 +149,7 @@ class _FeedPageState extends State<FeedPage> {
           ],
         ),
       ),
-
-      // appBar: MyAppBar().buildAppBar(const Text("Feed"), context, '/login'),
-      // body: Column(
-      //   mainAxisSize: MainAxisSize.max,
-      //   mainAxisAlignment: MainAxisAlignment.center,
-      //   children: const [
-      //     Center(
-      //       child: Text("Items will be displayed here."),
-      //     ),
-      //   ],
-      // ),
+      //TODO: LISTINGS DONT AUTO UPDATE ON FEED PAGE AFTER LISTING IS ADDED
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
