@@ -12,6 +12,13 @@ const kJustShareLahStyle = TextStyle(
   fontWeight: FontWeight.w200,
 );
 
+const kBodyTextSmall = TextStyle(
+  fontFamily: 'Lato',
+  fontSize: 18.0,
+  color: Colors.black,
+  height: 1.5,
+);
+
 const kBodyText = TextStyle(
   fontFamily: 'Lato',
   fontSize: 22.0,
@@ -19,12 +26,33 @@ const kBodyText = TextStyle(
   height: 1.5,
 );
 
+
+
 const kHeadingText = TextStyle(
   fontFamily: 'Lato',
   fontSize: 25.0,
   color: Colors.black,
   height: 1.5,
 );
+
+ElevatedButton buildButtonField(String text, Color color, double length,
+    BuildContext context, dynamic pageName) {
+  return ElevatedButton(
+    onPressed: () {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => pageName));
+    },
+    style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.symmetric(horizontal: length),
+        primary: color,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+    child: Text(
+      text,
+      style: const TextStyle(
+          fontSize: 15, letterSpacing: 2.5, color: Colors.black),
+    ),
+  );
+}
 
 const kTextFormFieldDecoration = InputDecoration(
   hintText: 'Enter a value',

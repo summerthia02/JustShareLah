@@ -71,23 +71,63 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        children: [
-          const SizedBox(height: 30),
-          buildName(userData),
-          const SizedBox(height: 12),
-          const ProfileImage(),
-          const SizedBox(height: defaultPadding),
-          editProfileButton(),
-          buildAbout(userData),
-          const SizedBox(height: defaultPadding),
-          ForBorrowing(userEmailToDisplay: userEmail),
-          const SizedBox(height: defaultPadding),
-          ForRenting(userEmailToDisplay: userEmail)
-        ],
+      body: Padding(
+        padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          children: [
+            const SizedBox(height: 20),
+            ProfileImage(),
+            const SizedBox(height: 20),
+            buildName(userData),
+            const SizedBox(height: 12),
+            numReviews(10),
+            numShareCredits(135),
+            editProfileButton(),
+            const SizedBox(height: 24),
+            buildAbout(userData),
+            const SizedBox(height: defaultPadding),
+            ForBorrowing(userEmailToDisplay: userEmail),
+            const SizedBox(height: defaultPadding),
+            ForRenting(userEmailToDisplay: userEmail)
+          ],
+        ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+    );
+  }
+
+  Row numReviews(int numReviews) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          numReviews.toString(),
+          style: kBodyTextSmall.copyWith(
+              fontWeight: FontWeight.bold,
+              decoration: TextDecoration.underline),
+        ),
+        Text(
+          " Reviews",
+          style: kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
+        ),
+      ],
+    );
+  }
+
+  Row numShareCredits(int numShareCreds) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          "ShareCredits: ",
+          style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
+        ),
+        Text(
+          numShareCreds.toString(),
+          style: kBodyTextSmall,
+        ),
+      ],
     );
   }
 

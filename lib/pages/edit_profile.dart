@@ -57,38 +57,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 height: 20,
               ),
               buildFormField("Email ", "Edit your Email ", false),
+              const SizedBox(
+                height: 20,
+              ),
+              buildFormField("Bio ", "Edit your Bio ", false),
 
               const SizedBox(
                 height: 20,
               ),
               buildFormField("Password", "Edit your Password", true),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                buildButtonField("CANCEL", Colors.red, 20.0),
+                buildButtonField(
+                    "CANCEL", Colors.red, 20.0, context, ProfilePage),
                 const SizedBox(width: 60),
-                buildButtonField("SAVE", Colors.green, 30.0),
+                buildButtonField(
+                    "SAVE", Colors.green, 30.0, context, ProfilePage),
               ]),
             ],
           ),
         ));
-  }
-
-  ElevatedButton buildButtonField(String text, Color color, double length) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => ProfilePage()));
-      },
-      style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: length),
-          primary: color,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-      child: Text(
-        text,
-        style: const TextStyle(
-            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
-      ),
-    );
   }
 
   TextFormField buildFormField(
