@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -121,32 +122,14 @@ class _AddListingPageState extends State<AddListingPage> {
           ]),
           const SizedBox(height: 10.0),
           Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            buildButtonField("CANCEL", Colors.red, 20.0),
+            buildButtonField("CANCEL", Colors.red, 20.0, context, FeedPage()),
             const SizedBox(width: 60),
-            buildButtonField("ADD LISTING", Colors.green, 30.0),
+            buildButtonField(
+                "ADD LISTING", Colors.green, 30.0, context, ProfilePage()),
           ]),
         ],
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
-    );
-  }
-
-  ElevatedButton buildButtonField(String text, Color color, double length) {
-    return ElevatedButton(
-      onPressed: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => FeedPage()));
-      },
-      style: ElevatedButton.styleFrom(
-          padding: EdgeInsets.symmetric(horizontal: length),
-          primary: color,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
-      child: Text(
-        text,
-        style: const TextStyle(
-            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
-      ),
     );
   }
 
