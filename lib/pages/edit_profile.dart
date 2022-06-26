@@ -91,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       showPassword = !showPassword;
                     });
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.remove_red_eye,
                     color: Colors.grey,
                   ),
