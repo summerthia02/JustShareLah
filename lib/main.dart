@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      auth: AuthService(),
+      auth: AuthService(), 
       child: MaterialApp(
         title: 'JustShareLah',
         theme: AppTheme().buildThemeData(),

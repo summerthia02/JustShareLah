@@ -67,7 +67,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    print(userEmail);
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Profile"), context, '/feed'),
       // if add appbar -> two layers of appbar will appear.
@@ -81,8 +80,8 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 20),
             buildName(userData),
             const SizedBox(height: 12),
-            numReviews(10),
-            numShareCredits(135),
+            numReviews(userData.reviews.length),
+            numShareCredits(int.parse(userData.shareCredits.trim())),
             editProfileButton(),
             const SizedBox(height: 24),
             buildAbout(userData),
