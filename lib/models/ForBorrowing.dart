@@ -26,12 +26,16 @@ class ForBorrowing extends StatelessWidget {
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
     Iterable<Map<String, dynamic>> listingsData = [];
-    Query<Map<String, dynamic>> whereQuery = userEmailToDisplay!.isEmpty ||
-            userEmailToDisplay == null
-        ? listingsCollection.where('created_by_email').where('for_rent', isEqualTo: false)
-        : listingsCollection
-            .where('created_by_email', isEqualTo: userEmailToDisplay)
-            .where('for_rent', isEqualTo: false);
+    // if constructor does not take in email -> fetch all items -> to be displayed on feed page
+    // if take in email -> only fetch items that are created by user -> to be displayed on profile page
+    Query<Map<String, dynamic>> whereQuery =
+        userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+            ? listingsCollection
+                .where('created_by_email')
+                .where('for_rent', isEqualTo: false)
+            : listingsCollection
+                .where('created_by_email', isEqualTo: userEmailToDisplay)
+                .where('for_rent', isEqualTo: false);
     await whereQuery.get().then(
       (res) {
         print("listingData query successful");
@@ -76,7 +80,8 @@ class ForBorrowing extends StatelessWidget {
 
                 print("going to cast listing data");
                 Iterable<Listing>? listingDataIterable = snapshot.data;
-                if (listingDataIterable == null || listingDataIterable.isEmpty) {
+                if (listingDataIterable == null ||
+                    listingDataIterable.isEmpty) {
                   return const Text("No such listings :(");
                 }
                 List<Listing> listingData = listingDataIterable.toList();

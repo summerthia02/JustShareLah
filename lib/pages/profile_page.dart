@@ -81,7 +81,9 @@ class _ProfilePageState extends State<ProfilePage> {
             buildName(userData),
             const SizedBox(height: 12),
             numReviews(userData.reviews.length),
-            numShareCredits(int.parse(userData.shareCredits.trim())),
+            numShareCredits(userData.shareCredits.isEmpty
+                ? 0
+                : int.parse(userData.shareCredits)),
             editProfileButton(),
             const SizedBox(height: 24),
             buildAbout(userData),

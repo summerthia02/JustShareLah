@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
@@ -27,6 +28,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
+  late UserData userData = UserData.defaultUserData();
 
   @override
   void initState() {
@@ -35,7 +37,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
     _lastnameController = TextEditingController();
     _usernameController = TextEditingController();
     _bioController = TextEditingController();
+    userEmail = currentUser?.email;
+    _getUserData().then((data) {
+      UserData parseUserData = UserData(
+        uid: currentUser?.uid,
+        userName: data["username"],
+        firstName: data["first_name"],
+        lastName: data["last_name"],
+        email: userEmail,
+        phoneNumber: data["phone_number"],
+        about: data["about"],
+        imageUrl: data["image_url"],
+        listings: data["listings"],
+        reviews: data["reviews"],
+        shareCredits: data["share_credits"],
+      );
+      setState(() {
+        userData = parseUserData;
+      });
+    });
     super.initState();
+  }
+
+  Future<Map<String, dynamic>> _getUserData() async {
+    Map<String, dynamic> userData = <String, dynamic>{};
+    await usersCollection.where('email', isEqualTo: userEmail).get().then(
+      (res) {
+        print("userData query successful");
+        userData = res.docs.first.data();
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return userData;
   }
 
   @override
@@ -58,22 +92,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 20,
               ),
-              buildFormField("First Name", "Edit your First Name", false,
+              buildFormField("First Name", userData.firstName, false,
                   _firstnameController),
               const SizedBox(
                 height: 20,
               ),
-              buildFormField("Last Name", "Edit your Last Name", false,
-                  _lastnameController),
+              buildFormField(
+                  "Last Name", userData.lastName, false, _lastnameController),
               const SizedBox(
                 height: 20,
               ),
-              buildFormField("User Name", "Edit your UserName", false,
-                  _usernameController),
+              buildFormField(
+                  "User Name", userData.userName, false, _usernameController),
               const SizedBox(
                 height: 20,
               ),
-              buildFormField("Bio ", "Edit your Bio ", false, _bioController),
+              buildFormField("Bio ", userData.about, false, _bioController),
               const SizedBox(
                 height: 20,
               ),
@@ -114,6 +148,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return;
     }
 
+    // if empty, remains the same, else take the controller variable
+
     userData!["first_name"] = _firstnameController.text.isEmpty
         ? userData!["first_name"]
         : _firstnameController.text;
@@ -126,13 +162,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
     userData!["about"] =
         _bioController.text.isEmpty ? userData!["about"] : _bioController.text;
 
-    usersCollection.doc(docID).update(userData!)
-      .then((value) => print('Edited Profile'))
-      .catchError((err) => print('Failed to edit profile: $err'));
+    usersCollection
+        .doc(docID)
+        .update(userData!)
+        .then((value) => print('Edited Profile'))
+        .catchError((err) => print('Failed to edit profile: $err'));
   }
 
   // ================ Widgets =============================
-  TextFormField buildFormField(String labelText, String hintText,
+  TextFormField buildFormField(String labelText, dynamic hintText,
       bool isPassword, TextEditingController controller) {
     return TextFormField(
       obscureText: isPassword ? showPassword : false,
