@@ -28,11 +28,7 @@ class EnlargedScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          Image.asset(
-            listing.imageUrl,
-            height: MediaQuery.of(context).size.height * 0.4,
-            fit: BoxFit.cover,
-          ),
+          ListingImage(listing: this.listing),
           const SizedBox(height: defaultPadding * 1.5),
           Expanded(
             child: Container(
@@ -48,27 +44,8 @@ class EnlargedScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          listing.title,
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                      ),
-                      const SizedBox(width: defaultPadding),
-                      Text(
-                        "\$" + listing.price.toString(),
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: defaultPadding),
-                    child: Text(
-                      listing.description.toString(),
-                    ),
-                  ),
+                  // listing title, price, description
+                  ListingCardDetails(listing: this.listing),
                   const SizedBox(height: (defaultPadding * 2.5)),
                   Center(
                     child: SizedBox(
@@ -89,6 +66,53 @@ class EnlargedScreen extends StatelessWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class ListingImage extends StatelessWidget {
+  const ListingImage({Key? key, required this.listing}) : super(key: key);
+
+  final Listing listing;
+  @override
+  Widget build(BuildContext context) {
+    return Image.asset(
+      listing.imageUrl,
+      height: MediaQuery.of(context).size.height * 0.4,
+      fit: BoxFit.cover,
+    );
+  }
+}
+
+class ListingCardDetails extends StatelessWidget {
+  const ListingCardDetails({Key? key, required this.listing}) : super(key: key);
+  final Listing listing;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                listing.title,
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+            const SizedBox(width: defaultPadding),
+            Text(
+              "\$" + listing.price.toString(),
+              style: Theme.of(context).textTheme.headline6,
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(listing.description.toString()),
+      ],
     );
   }
 }
