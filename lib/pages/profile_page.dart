@@ -81,7 +81,7 @@ class _ProfilePageState extends State<ProfilePage> {
             buildName(userData),
             const SizedBox(height: 12),
             numReviews(userData.reviews.length),
-            numShareCredits(int.parse(userData.shareCredits.trim())),
+            numShareCredits(userData.shareCredits),
             editProfileButton(),
             const SizedBox(height: 24),
             buildAbout(userData),
@@ -114,7 +114,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Row numShareCredits(int numShareCreds) {
+  Row numShareCredits(String numShareCreds) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -123,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
           style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
-          numShareCreds.toString(),
+          numShareCreds,
           style: kBodyTextSmall,
         ),
       ],

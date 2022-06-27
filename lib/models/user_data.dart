@@ -36,7 +36,7 @@ class UserData {
       imageUrl: "Loading",
       listings: [],
       reviews: [],
-      shareCredits: "-1",
+      shareCredits: "Loading",
     );
   }
 }
