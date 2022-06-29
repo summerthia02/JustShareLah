@@ -44,13 +44,16 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                 alignment: Alignment.center,
                 children: <Widget>[
                   ListingImage(listing: widget.listing),
-                  showHeart
-                      ? Icon(
-                          Icons.favorite,
-                          color: Colors.red,
-                          size: 100.0,
-                        )
-                      : Column()
+                  AnimatedCrossFade(
+                    firstChild:
+                        Icon(Icons.favorite, color: Colors.red, size: 100.0),
+                    secondChild:
+                        Icon(Icons.favorite_border, color: Colors.transparent),
+                    crossFadeState: showHeart
+                        ? CrossFadeState.showFirst
+                        : CrossFadeState.showSecond,
+                    duration: const Duration(milliseconds: 200),
+                  )
                 ],
               )),
           const SizedBox(height: defaultPadding * 1.5),
