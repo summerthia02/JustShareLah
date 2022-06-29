@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/BigListingCard.dart';
+import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
@@ -16,47 +17,7 @@ class AllRenting extends StatelessWidget {
   }) : super(key: key);
 
   late String? userEmailToDisplay;
-
-  // get the borrowing listing data put into future of the build context UI
-  Future<Iterable<Listing>> _getRentListingData() async {
-    // listingsCollection = listing table from firebase
-    final listingsCollection =
-        FirebaseFirestore.instance.collection('listings');
-
-    Iterable<Map<String, dynamic>> listingsData = [];
-    // if constructor does not take in email -> fetch all items -> to be displayed on feed page
-    // if take in email -> only fetch items that are created by user -> to be displayed on profile page
-    Query<Map<String, dynamic>> whereQuery =
-        userEmailToDisplay!.isEmpty || userEmailToDisplay == null
-            ? listingsCollection
-                .where('created_by_email')
-                .where('for_rent', isEqualTo: true)
-            : listingsCollection
-                .where('created_by_email', isEqualTo: userEmailToDisplay)
-                .where('for_rent', isEqualTo: true);
-    await whereQuery.get().then(
-      (res) {
-        print("listingData query successful");
-        listingsData = res.docs.map((snapshot) => snapshot.data());
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
-
-    Iterable<Listing> parseListingData = listingsData.map((listingMap) {
-      return Listing(
-        imageUrl: listingMap["image_url"],
-        title: listingMap["title"],
-        price: listingMap["price"],
-        forRent: listingMap["for_rent"],
-        description: listingMap["description"],
-        available: listingMap["available"],
-        createdByEmail: listingMap["created_by_email"],
-        likeCount: listingMap['likeCount'],
-      );
-    });
-
-    return parseListingData;
-  }
+  Future<Iterable<Listing>> rentingData = ForRenting().getRentListingData();
 
   @override
   Widget build(BuildContext context) {
@@ -88,21 +49,21 @@ class AllRenting extends StatelessWidget {
                 fontSize: 35, fontWeight: FontWeight.w500),
           ),
           const Text(
-            'Listings For You',
+            'Listings For Rent',
             style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
           ),
           const SizedBox(height: defaultPadding),
           Form(
               child: TextFormField(
             decoration: kTextFormFieldDecoration.copyWith(
-                hintText: "Search for Listings...",
+                hintText: "Search for Listings to Rent",
                 prefixIcon: Icon(Icons.search_rounded)),
           )),
         ]),
         Column(
           children: [
             FutureBuilder<Iterable<Listing>>(
-              future: _getRentListingData(),
+              future: rentingData,
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);

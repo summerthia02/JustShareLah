@@ -17,7 +17,7 @@ class ForBorrowing extends StatelessWidget {
   late String? userEmailToDisplay;
 
   // get the borrowing listing data put into future of the build context UI
-  Future<Iterable<Listing>> _getBorrowListingData() async {
+  Future<Iterable<Listing>> getBorrowListingData() async {
     // listingsCollection = listing table from firebase
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
@@ -74,7 +74,7 @@ class ForBorrowing extends StatelessWidget {
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<Iterable<Listing>>(
-              future: _getBorrowListingData(),
+              future: getBorrowListingData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);

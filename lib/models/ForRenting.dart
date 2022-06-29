@@ -15,7 +15,7 @@ class ForRenting extends StatelessWidget {
 
   late String? userEmailToDisplay;
 
-  Future<Iterable<Listing>> _getRentListingData() async {
+  Future<Iterable<Listing>> getRentListingData() async {
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
     Iterable<Map<String, dynamic>> listingsData = [];
@@ -68,7 +68,7 @@ class ForRenting extends StatelessWidget {
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<Iterable<Listing>>(
-              future: _getRentListingData(),
+              future: getRentListingData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);
