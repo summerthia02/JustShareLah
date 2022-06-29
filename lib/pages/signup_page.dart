@@ -64,10 +64,12 @@ class _SignupPageState extends State<SignupPage> {
         'reviews': [],
         'share_credits': "",
       };
+
+      // add the userData with signup information to the users table
       users
-        .add(userData)
-        .then((value) => print('User Added'))
-        .catchError((err) => print('Failed to add user: $err'));
+          .add(userData)
+          .then((value) => print('User Added'))
+          .catchError((err) => print('Failed to add user: $err'));
     } on FirebaseAuthException catch (e) {
       print(e);
       ScaffoldMessenger.of(context).showSnackBar(

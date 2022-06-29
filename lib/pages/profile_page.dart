@@ -23,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
 
+  // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
@@ -81,7 +82,9 @@ class _ProfilePageState extends State<ProfilePage> {
             buildName(userData),
             const SizedBox(height: 12),
             numReviews(userData.reviews.length),
-            numShareCredits(userData.shareCredits),
+            numShareCredits(userData.shareCredits.isEmpty
+                ? "0"
+                : userData.shareCredits),
             editProfileButton(),
             const SizedBox(height: 24),
             buildAbout(userData),

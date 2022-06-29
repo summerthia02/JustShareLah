@@ -26,12 +26,16 @@ class ForBorrowing extends StatelessWidget {
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
     Iterable<Map<String, dynamic>> listingsData = [];
-    Query<Map<String, dynamic>> whereQuery = userEmailToDisplay!.isEmpty ||
-            userEmailToDisplay == null
-        ? listingsCollection.where('created_by_email').where('for_rent', isEqualTo: false)
-        : listingsCollection
-            .where('created_by_email', isEqualTo: userEmailToDisplay)
-            .where('for_rent', isEqualTo: false);
+    // if constructor does not take in email -> fetch all items -> to be displayed on feed page
+    // if take in email -> only fetch items that are created by user -> to be displayed on profile page
+    Query<Map<String, dynamic>> whereQuery =
+        userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+            ? listingsCollection
+                .where('created_by_email')
+                .where('for_rent', isEqualTo: false)
+            : listingsCollection
+                .where('created_by_email', isEqualTo: userEmailToDisplay)
+                .where('for_rent', isEqualTo: false);
     await whereQuery.get().then(
       (res) {
         print("listingData query successful");
@@ -42,13 +46,15 @@ class ForBorrowing extends StatelessWidget {
 
     Iterable<Listing> parseListingData = listingsData.map((listingMap) {
       return Listing(
-          imageUrl: listingMap["image_url"],
-          title: listingMap["title"],
-          price: listingMap["price"],
-          forRent: listingMap["for_rent"],
-          description: listingMap["description"],
-          available: listingMap["available"],
-          createdByEmail: listingMap["created_by_email"]);
+        imageUrl: listingMap["image_url"],
+        title: listingMap["title"],
+        price: listingMap["price"],
+        forRent: listingMap["for_rent"],
+        description: listingMap["description"],
+        available: listingMap["available"],
+        createdByEmail: listingMap["created_by_email"],
+        likeCount: listingMap['likeCount'],
+      );
     });
 
     return parseListingData;
@@ -76,7 +82,8 @@ class ForBorrowing extends StatelessWidget {
 
                 print("going to cast listing data");
                 Iterable<Listing>? listingDataIterable = snapshot.data;
-                if (listingDataIterable == null || listingDataIterable.isEmpty) {
+                if (listingDataIterable == null ||
+                    listingDataIterable.isEmpty) {
                   return const Text("No such listings :(");
                 }
                 List<Listing> listingData = listingDataIterable.toList();
