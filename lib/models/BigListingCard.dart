@@ -33,10 +33,14 @@ class BigListingCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(right: 40, left: 40),
             child: Row(children: [
-              Expanded(child: Text(title)),
+              Expanded(
+                  child: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+              )),
               Text(
                 '\$' + price.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
               ),
             ]),
           ),

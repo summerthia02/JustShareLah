@@ -20,7 +20,7 @@ class FeedTitle extends StatelessWidget {
           onPressed: pressSeeAll,
           child: const Text(
             "See All",
-            style: TextStyle(color: Colors.black54),
+            style: TextStyle(color: Colors.black),
           ),
         )
       ],
