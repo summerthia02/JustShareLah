@@ -23,6 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
 
+  // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
