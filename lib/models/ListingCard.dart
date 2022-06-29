@@ -20,7 +20,7 @@ class ListingCard extends StatelessWidget {
       onTap: press,
       child: Container(
         padding: const EdgeInsets.all(3),
-        width: 150,
+        width: 160,
         decoration: const BoxDecoration(
             borderRadius:
                 BorderRadius.all(Radius.circular(defaultBorderRadius))),
@@ -32,7 +32,7 @@ class ListingCard extends StatelessWidget {
                   color: Color.fromARGB(255, 162, 202, 197),
                   borderRadius:
                       BorderRadius.all(Radius.circular(defaultBorderRadius))),
-              child: Image.asset(image, width: 160, height: 210),
+              child: Image.asset(image, width: 200, height: 210),
             ),
             // ignore: prefer_const_literals_to_create_immutables
             Row(children: [

@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:justsharelah_v1/models/AllBorrowing.dart';
+import 'package:justsharelah_v1/models/BigListingCard.dart';
+import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 
-// class _ForBorrowingState extends State<ForBorrowing> {
-class ForBorrowing extends StatelessWidget {
-  ForBorrowing({
+// class _AllBorrowingState extends State<AllBorrowing> {
+class AllBorrowing extends StatelessWidget {
+  AllBorrowing({
     Key? key,
     this.userEmailToDisplay = "",
   }) : super(key: key);
@@ -59,21 +60,48 @@ class ForBorrowing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        FeedTitle(
-          title: "For Borrowing",
-          pressSeeAll: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AllBorrowing(),
-                ));
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () {
+            Navigator.pop(context);
           },
         ),
-        SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: FutureBuilder<Iterable<Listing>>(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Image.asset('images/location.png', width: 40, height: 30),
+            const SizedBox(width: 10.0),
+            Text(
+              "NUS, Singapore",
+            )
+          ],
+        ),
+      ),
+      body: ListView(padding: const EdgeInsets.all(defaultPadding), children: [
+        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text(
+            "Explore",
+            textAlign: TextAlign.start,
+            style: kJustShareLahStyle.copyWith(
+                fontSize: 35, fontWeight: FontWeight.w500),
+          ),
+          const Text(
+            'Listings For You',
+            style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
+          ),
+          const SizedBox(height: defaultPadding),
+          Form(
+              child: TextFormField(
+            decoration: kTextFormFieldDecoration.copyWith(
+                hintText: "Search for Listings...",
+                prefixIcon: Icon(Icons.search_rounded)),
+          )),
+        ]),
+        Column(
+          children: [
+            FutureBuilder<Iterable<Listing>>(
               future: _getBorrowListingData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -91,30 +119,34 @@ class ForBorrowing extends StatelessWidget {
                 }
                 List<Listing> listingData = listingDataIterable.toList();
 
-                return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                return Column(
                     children: List.generate(
-                      listingData.length,
-                      (index) => Padding(
-                        padding: const EdgeInsets.only(right: defaultPadding),
-                        child: ListingCard(
-                          image: listingData[index].imageUrl,
-                          title: listingData[index].title,
-                          price: listingData[index].price,
-                          press: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => EnlargedScreen(
-                                      listing: listingData[index]),
-                                ));
-                          },
-                        ),
-                      ),
-                    ));
+                  listingData.length,
+                  (index) => Container(
+                    padding: EdgeInsets.only(bottom: 20, top: 20),
+                    child: BigListingCard(
+                      image: listingData[index].imageUrl,
+                      title: listingData[index].title,
+                      price: listingData[index].price,
+                      press: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EnlargedScreen(listing: listingData[index]),
+                            ));
+                      },
+                    ),
+                  ),
+                ));
               },
-            ))
-      ],
+            )
+          ],
+        )
+      ]),
+
+      //TODO: LISTINGS DONT AUTO UPDATE ON FEED PAGE AFTER LISTING IS ADDED
+      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
 }
