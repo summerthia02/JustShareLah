@@ -13,18 +13,6 @@ class EnlargedScreen extends StatelessWidget {
       backgroundColor: const Color(0xFFEFEFF2),
       appBar: AppBar(
         leading: const BackButton(color: Colors.black),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: CircleAvatar(
-              backgroundColor: Colors.transparent,
-              child: Image.asset(
-                "images/heart.png",
-                height: 22,
-              ),
-            ),
-          )
-        ],
       ),
       body: Column(
         children: [
@@ -45,6 +33,7 @@ class EnlargedScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // listing title, price, description
+                  LikeButton(),
                   ListingCardDetails(listing: this.listing),
                   const SizedBox(height: (defaultPadding * 2.5)),
                   Center(
@@ -67,6 +56,27 @@ class EnlargedScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class LikeButton extends StatefulWidget {
+  const LikeButton({Key? key}) : super(key: key);
+
+  @override
+  State<LikeButton> createState() => _LikeButtonState();
+}
+
+class _LikeButtonState extends State<LikeButton> {
+  bool isLiked = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+        icon: isLiked ? Icon(Icons.favorite) : Icon(Icons.favorite_outline),
+        color: isLiked ? Colors.red : Colors.grey,
+        onPressed: () => setState(() {
+              isLiked = !isLiked;
+            }));
   }
 }
 
