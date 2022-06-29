@@ -1,13 +1,13 @@
-name: "Build & Release"
+name: "Build"
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
 jobs:
   build:
-    name: Build & Release
+    name: Build
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
@@ -30,9 +30,3 @@ jobs:
           ln -s ../Runner.app
           cd ..
           zip -r app.ipa Payload
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/outputs/apk/debug/*,build/ios/iphoneos/app.ipa"
-          tag: v1.0.${{ github.run_number }}
-          token: ${{ secrets.BUILD_TOKEN }}
