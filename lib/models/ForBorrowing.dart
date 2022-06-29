@@ -22,9 +22,12 @@ class ForBorrowing extends StatelessWidget {
 
   late String? userEmailToDisplay;
 
+  // get the borrowing listing data put into future of the build context UI
   Future<Iterable<Listing>> _getBorrowListingData() async {
+    // listingsCollection = listing table from firebase
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
+
     Iterable<Map<String, dynamic>> listingsData = [];
     // if constructor does not take in email -> fetch all items -> to be displayed on feed page
     // if take in email -> only fetch items that are created by user -> to be displayed on profile page
