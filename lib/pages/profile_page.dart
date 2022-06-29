@@ -82,9 +82,8 @@ class _ProfilePageState extends State<ProfilePage> {
             buildName(userData),
             const SizedBox(height: 12),
             numReviews(userData.reviews.length),
-            numShareCredits(userData.shareCredits.isEmpty
-                ? "0"
-                : userData.shareCredits),
+            numShareCredits(
+                userData.shareCredits.isEmpty ? "0" : userData.shareCredits),
             editProfileButton(),
             const SizedBox(height: 24),
             buildAbout(userData),
@@ -126,7 +125,7 @@ class _ProfilePageState extends State<ProfilePage> {
           style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
-          numShareCreds,
+          numShareCreds.toString(),
           style: kBodyTextSmall,
         ),
       ],
