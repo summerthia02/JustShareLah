@@ -18,12 +18,14 @@ class ForRenting extends StatelessWidget {
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
     Iterable<Map<String, dynamic>> listingsData = [];
-    Query<Map<String, dynamic>> whereQuery = userEmailToDisplay!.isEmpty ||
-            userEmailToDisplay == null
-        ? listingsCollection.where('created_by_email').where('for_rent', isEqualTo: true)
-        : listingsCollection
-            .where('created_by_email', isEqualTo: userEmailToDisplay)
-            .where('for_rent', isEqualTo: true);
+    Query<Map<String, dynamic>> whereQuery =
+        userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+            ? listingsCollection
+                .where('created_by_email')
+                .where('for_rent', isEqualTo: true)
+            : listingsCollection
+                .where('created_by_email', isEqualTo: userEmailToDisplay)
+                .where('for_rent', isEqualTo: true);
     await whereQuery.get().then(
       (res) {
         print("listingData query successful");
@@ -34,13 +36,15 @@ class ForRenting extends StatelessWidget {
 
     Iterable<Listing> parseListingData = listingsData.map((listingMap) {
       return Listing(
-          imageUrl: listingMap["image_url"],
-          title: listingMap["title"],
-          price: listingMap["price"],
-          forRent: listingMap["for_rent"],
-          description: listingMap["description"],
-          available: listingMap["available"],
-          createdByEmail: listingMap["created_by_email"]);
+        imageUrl: listingMap["image_url"],
+        title: listingMap["title"],
+        price: listingMap["price"],
+        forRent: listingMap["for_rent"],
+        description: listingMap["description"],
+        available: listingMap["available"],
+        createdByEmail: listingMap["created_by_email"],
+        likeCount: listingMap['likeCount'],
+      );
     });
 
     return parseListingData;
@@ -68,7 +72,8 @@ class ForRenting extends StatelessWidget {
 
                 print("going to cast listing data");
                 Iterable<Listing>? listingDataIterable = snapshot.data;
-                if (listingDataIterable == null || listingDataIterable.isEmpty) {
+                if (listingDataIterable == null ||
+                    listingDataIterable.isEmpty) {
                   return const Text("No such listings :(");
                 }
                 List<Listing> listingData = listingDataIterable.toList();

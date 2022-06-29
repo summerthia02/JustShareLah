@@ -46,13 +46,15 @@ class ForBorrowing extends StatelessWidget {
 
     Iterable<Listing> parseListingData = listingsData.map((listingMap) {
       return Listing(
-          imageUrl: listingMap["image_url"],
-          title: listingMap["title"],
-          price: listingMap["price"],
-          forRent: listingMap["for_rent"],
-          description: listingMap["description"],
-          available: listingMap["available"],
-          createdByEmail: listingMap["created_by_email"]);
+        imageUrl: listingMap["image_url"],
+        title: listingMap["title"],
+        price: listingMap["price"],
+        forRent: listingMap["for_rent"],
+        description: listingMap["description"],
+        available: listingMap["available"],
+        createdByEmail: listingMap["created_by_email"],
+        likeCount: listingMap['likeCount'],
+      );
     });
 
     return parseListingData;

@@ -8,6 +8,7 @@ class Listing {
   final String description;
   final bool available;
   final String createdByEmail;
+  final int? likeCount;
   // final Color bgColor;
 
   Listing({
@@ -18,6 +19,7 @@ class Listing {
     required this.description,
     required this.available,
     required this.createdByEmail,
+    required this.likeCount,
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 }

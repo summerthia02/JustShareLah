@@ -164,7 +164,8 @@ class _AddListingPageState extends State<AddListingPage> {
       'for_rent': forRent,
       'description': _descriptionController.text,
       'available': true,
-      'created_by_email': userEmail
+      'created_by_email': userEmail,
+      'likeCount': 0,
     };
     listingsCollection
         .add(addedListing)
