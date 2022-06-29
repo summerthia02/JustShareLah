@@ -1,11 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
+import 'dart:async';
 
-class EnlargedScreen extends StatelessWidget {
+class EnlargedScreen extends StatefulWidget {
   const EnlargedScreen({Key? key, required this.listing}) : super(key: key);
-
   final Listing listing;
+
+  @override
+  State<EnlargedScreen> createState() => _EnlargedScreenState();
+}
+
+class _EnlargedScreenState extends State<EnlargedScreen> {
+  bool showHeart = false;
+  bool isLiked = false;
+
+  doubleTap() {
+    setState(() {
+      showHeart = true;
+      isLiked = true;
+      if (showHeart) {
+        Timer(const Duration(milliseconds: 400), () {
+          setState(() {
+            showHeart = false;
+          });
+        });
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +38,21 @@ class EnlargedScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          ListingImage(listing: this.listing),
+          GestureDetector(
+              onDoubleTap: () => doubleTap(),
+              child: Stack(
+                alignment: Alignment.center,
+                children: <Widget>[
+                  ListingImage(listing: widget.listing),
+                  showHeart
+                      ? Icon(
+                          Icons.favorite,
+                          color: Colors.red,
+                          size: 100.0,
+                        )
+                      : Column()
+                ],
+              )),
           const SizedBox(height: defaultPadding * 1.5),
           Expanded(
             child: Container(
@@ -33,8 +69,16 @@ class EnlargedScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // listing title, price, description
-                  LikeButton(),
-                  ListingCardDetails(listing: this.listing),
+                  IconButton(
+                    icon: isLiked
+                        ? Icon(Icons.favorite)
+                        : Icon(Icons.favorite_border),
+                    color: isLiked ? Colors.red : Colors.grey,
+                    onPressed: () => setState(() {
+                      isLiked = !isLiked;
+                    }),
+                  ),
+                  ListingCardDetails(listing: widget.listing),
                   const SizedBox(height: (defaultPadding * 2.5)),
                   Center(
                     child: SizedBox(
@@ -56,27 +100,6 @@ class EnlargedScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class LikeButton extends StatefulWidget {
-  const LikeButton({Key? key}) : super(key: key);
-
-  @override
-  State<LikeButton> createState() => _LikeButtonState();
-}
-
-class _LikeButtonState extends State<LikeButton> {
-  bool isLiked = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return IconButton(
-        icon: isLiked ? Icon(Icons.favorite) : Icon(Icons.favorite_outline),
-        color: isLiked ? Colors.red : Colors.grey,
-        onPressed: () => setState(() {
-              isLiked = !isLiked;
-            }));
   }
 }
 
