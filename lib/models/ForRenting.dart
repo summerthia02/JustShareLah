@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/models/AllRenting.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
@@ -14,7 +15,7 @@ class ForRenting extends StatelessWidget {
 
   late String? userEmailToDisplay;
 
-  Future<Iterable<Listing>> _getRentListingData() async {
+  Future<Iterable<Listing>> getRentListingData() async {
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
     Iterable<Map<String, dynamic>> listingsData = [];
@@ -56,12 +57,18 @@ class ForRenting extends StatelessWidget {
       children: [
         FeedTitle(
           title: "For Renting",
-          pressSeeAll: () {},
+          pressSeeAll: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AllRenting(),
+                ));
+          },
         ),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<Iterable<Listing>>(
-              future: _getRentListingData(),
+              future: getRentListingData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);

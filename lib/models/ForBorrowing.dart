@@ -1,17 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/models/AllBorrowing.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
-
-// class ForBorrowing extends StatefulWidget {
-//   const ForBorrowing({Key? key, String? userEmail}) : super(key: key);
-
-//   @override
-//   _ForBorrowingState createState() => _ForBorrowingState();
-// }
 
 // class _ForBorrowingState extends State<ForBorrowing> {
 class ForBorrowing extends StatelessWidget {
@@ -23,7 +17,7 @@ class ForBorrowing extends StatelessWidget {
   late String? userEmailToDisplay;
 
   // get the borrowing listing data put into future of the build context UI
-  Future<Iterable<Listing>> _getBorrowListingData() async {
+  Future<Iterable<Listing>> getBorrowListingData() async {
     // listingsCollection = listing table from firebase
     final listingsCollection =
         FirebaseFirestore.instance.collection('listings');
@@ -69,12 +63,18 @@ class ForBorrowing extends StatelessWidget {
       children: [
         FeedTitle(
           title: "For Borrowing",
-          pressSeeAll: () {},
+          pressSeeAll: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AllBorrowing(),
+                ));
+          },
         ),
         SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: FutureBuilder<Iterable<Listing>>(
-              future: _getBorrowListingData(),
+              future: getBorrowListingData(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
                   print(snapshot.error);
