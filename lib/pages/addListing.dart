@@ -1,5 +1,7 @@
+import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
+import 'package:justsharelah_v1/utils/image_picker.dart';
 
 class AddListingPage extends StatefulWidget {
   const AddListingPage({Key? key}) : super(key: key);
@@ -22,8 +25,7 @@ class _AddListingPageState extends State<AddListingPage> {
   late TextEditingController _brandController;
   late TextEditingController _descriptionController;
 
-  File? _image;
-  final ImagePicker _picker = ImagePicker();
+  Uint8List? _image;
 
   final listingsCollection = FirebaseFirestore.instance.collection('listings');
   final currentUser = FirebaseAuth.instance.currentUser;
@@ -37,25 +39,34 @@ class _AddListingPageState extends State<AddListingPage> {
 
   // pick image from gallery
   // Implementing the image picker
-  Future<void> _galleryImage() async {
-    final XFile? pickedImage = await _picker.pickImage(
-        source: ImageSource.gallery, maxWidth: 1700, maxHeight: 1700);
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-      });
-    }
+
+  //make call the pickImage from the image_picker.dart utils
+  void selectImage() async {
+    final Uint8List? pickedImage = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = pickedImage;
+    });
   }
 
-  Future<void> _cameraImage() async {
-    final XFile? pickedImage = await _picker.pickImage(
-        source: ImageSource.camera, maxWidth: 1700, maxHeight: 1700);
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-      });
-    }
-  }
+  // Future<void> _galleryImage() async {
+  //   final XFile? pickedImage = await _picker.pickImage(
+  //       source: ImageSource.gallery, maxWidth: 1700, maxHeight: 1700);
+  //   if (pickedImage != null) {
+  //     setState(() {
+  //       _image = File(pickedImage.path);
+  //     });
+  //   }
+  // }
+
+  // Future<void> _cameraImage() async {
+  //   final XFile? pickedImage = await _picker.pickImage(
+  //       source: ImageSource.camera, maxWidth: 1700, maxHeight: 1700);
+  //   if (pickedImage != null) {
+  //     setState(() {
+  //       _image = File(pickedImage.path);
+  //     });
+  //   }
+  // }
 
   // from camera
 
@@ -192,19 +203,30 @@ class _AddListingPageState extends State<AddListingPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              padding: EdgeInsets.only(top: 30),
-              alignment: Alignment.topCenter,
-              child: ElevatedButton(
-                onPressed: () {
-                  _cameraImage();
-                },
-                style: ElevatedButton.styleFrom(primary: Colors.red),
-                child: const Text(
-                  'Add Image',
-                  style: TextStyle(fontSize: 15, fontFamily: 'Lato'),
+            Stack(
+              // circular widget to accept and show selected image
+              children: [
+                _image != null
+                    ? CircleAvatar(
+                        radius: 70,
+                        backgroundImage: MemoryImage(_image!),
+                      )
+                    : const CircleAvatar(
+                        radius: 70,
+                        backgroundImage: NetworkImage(
+                            'https://toppng.com/uploads/preview/add-camera-icon-icon-add-11553485583calilemiyg.png'),
+                      ),
+                Positioned(
+                  bottom: -10,
+                  left: 80,
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(
+                      Icons.add_a_photo,
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
             Row(children: <Widget>[
               buildFormTitle("Listing Title"),
