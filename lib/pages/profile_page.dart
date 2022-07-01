@@ -27,18 +27,6 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
   Uint8List? _image;
-  // ================ Image functionalities ====================
-
-  // pick image from gallery
-  // Implementing the image picker
-
-  //make call the pickImage from the image_picker.dart utils
-  void selectImage() async {
-    final Uint8List? pickedImage = await pickImage(ImageSource.gallery);
-    setState(() {
-      _image = pickedImage;
-    });
-  }
 
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
@@ -112,20 +100,20 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 250, height: 200),
                         ),
                       ),
-                Positioned(
-                  bottom: -10,
-                  right: 135,
-                  child: IconButton(
-                    color: Colors.red,
-                    onPressed: () {
-                      selectImage();
-                    },
-                    icon: const Icon(
-                      Icons.edit,
-                      size: 30,
-                    ),
-                  ),
-                ),
+                // Positioned(
+                //   bottom: -10,
+                //   right: 135,
+                //   child: IconButton(
+                //     color: Colors.red,
+                //     onPressed: () {
+                //       selectImage();
+                //     },
+                //     icon: const Icon(
+                //       Icons.edit,
+                //       size: 30,
+                //     ),
+                //   ),
+                // ),
               ],
             ),
             buildName(userData),
