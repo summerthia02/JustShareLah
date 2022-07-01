@@ -1,6 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
@@ -8,6 +11,7 @@ import 'package:justsharelah_v1/models/ForBorrowing.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
+import 'package:justsharelah_v1/utils/image_picker.dart';
 import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -22,6 +26,19 @@ class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
+  Uint8List? _image;
+  // ================ Image functionalities ====================
+
+  // pick image from gallery
+  // Implementing the image picker
+
+  //make call the pickImage from the image_picker.dart utils
+  void selectImage() async {
+    final Uint8List? pickedImage = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = pickedImage;
+    });
+  }
 
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
@@ -76,11 +93,40 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           physics: const BouncingScrollPhysics(),
           children: [
-            const SizedBox(height: 20),
-            ProfileImage(
-              
+            const SizedBox(height: 15),
+            Stack(
+              alignment: Alignment.center,
+              // circular widget to accept and show selected image
+              children: [
+                _image != null
+                    ? CircleAvatar(
+                        radius: 70,
+                        backgroundImage: MemoryImage(_image!),
+                      )
+                    : CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 70,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.zero,
+                          child: Image.asset('images/def_dp.png',
+                              width: 250, height: 200),
+                        ),
+                      ),
+                Positioned(
+                  bottom: 5,
+                  right: 135,
+                  child: IconButton(
+                    color: Colors.cyan,
+                    onPressed: () {
+                      selectImage();
+                    },
+                    icon: const Icon(
+                      Icons.edit,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 20),
             buildName(userData),
             const SizedBox(height: 12),
             numReviews(userData.reviews.length),
