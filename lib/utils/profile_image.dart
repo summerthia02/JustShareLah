@@ -1,11 +1,9 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 class ProfileImage extends StatelessWidget {
-  const ProfileImage({
-    Key? key,
-  }) : super(key: key);
-
-  
+  const ProfileImage({Key? key, Uint8List? image}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,19 +30,23 @@ class ProfileImage extends StatelessWidget {
                         "https://www.pngall.com/wp-content/uploads/5/Profile-Male-PNG.png"))),
           ),
           Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              height: 30,
-              width: 30,
-              decoration: BoxDecoration(
-                border: Border.all(width: 1, color: Colors.black),
-                shape: BoxShape.circle,
-                color: Colors.cyan,
-              ),
-              child: Icon(Icons.edit, color: Colors.black),
-            ),
-          )
+              bottom: 0,
+              right: 0,
+              child: Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Colors.black),
+                  shape: BoxShape.circle,
+                  color: Colors.cyan,
+                ),
+                child: IconButton(
+                  onPressed: () {
+                    // selectImage;
+                  },
+                  icon: const Icon(Icons.add_a_photo, color: Colors.black),
+                ),
+              )),
         ],
       ),
     );
