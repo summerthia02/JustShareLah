@@ -203,6 +203,9 @@ class _AddListingPageState extends State<AddListingPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(
+              height: 20,
+            ),
             Stack(
               // circular widget to accept and show selected image
               children: [
@@ -211,16 +214,22 @@ class _AddListingPageState extends State<AddListingPage> {
                         radius: 70,
                         backgroundImage: MemoryImage(_image!),
                       )
-                    : const CircleAvatar(
+                    : CircleAvatar(
+                        backgroundColor: Color.fromARGB(255, 170, 160, 160),
                         radius: 70,
-                        backgroundImage: NetworkImage(
-                            'https://toppng.com/uploads/preview/add-camera-icon-icon-add-11553485583calilemiyg.png'),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.zero,
+                          child: Image.asset('images/gallery.png',
+                              width: 100, height: 120),
+                        ),
                       ),
                 Positioned(
                   bottom: -10,
                   left: 80,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      selectImage();
+                    },
                     icon: const Icon(
                       Icons.add_a_photo,
                     ),
