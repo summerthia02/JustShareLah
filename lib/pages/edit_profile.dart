@@ -103,9 +103,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 "Edit Profile",
                 style: kHeadingText,
               ),
-              const SizedBox(
-                height: 20,
-              ),
               Stack(
                 alignment: Alignment.center,
                 // circular widget to accept and show selected image
