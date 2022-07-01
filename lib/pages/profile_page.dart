@@ -113,15 +113,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                 Positioned(
-                  bottom: 5,
+                  bottom: -10,
                   right: 135,
                   child: IconButton(
-                    color: Colors.cyan,
+                    color: Colors.red,
                     onPressed: () {
                       selectImage();
                     },
                     icon: const Icon(
                       Icons.edit,
+                      size: 30,
                     ),
                   ),
                 ),
