@@ -1,13 +1,17 @@
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
+import 'package:justsharelah_v1/utils/image_picker.dart';
 import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class EditProfilePage extends StatefulWidget {
@@ -29,6 +33,20 @@ class _EditProfilePageState extends State<EditProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
+
+  Uint8List? _image;
+  // ================ Image functionalities ====================
+
+  // pick image from gallery
+  // Implementing the image picker
+
+  //make call the pickImage from the image_picker.dart utils
+  void selectImage() async {
+    final Uint8List? pickedImage = await pickImage(ImageSource.gallery);
+    setState(() {
+      _image = pickedImage;
+    });
+  }
 
   @override
   void initState() {
@@ -88,7 +106,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
               const SizedBox(
                 height: 20,
               ),
-              const ProfileImage(),
+              Stack(
+                alignment: Alignment.center,
+                // circular widget to accept and show selected image
+                children: [
+                  _image != null
+                      ? CircleAvatar(
+                          radius: 70,
+                          backgroundImage: MemoryImage(_image!),
+                        )
+                      : CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 70,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.zero,
+                            child: Image.asset('images/def_dp.png',
+                                width: 250, height: 200),
+                          ),
+                        ),
+                  Positioned(
+                    bottom: -10,
+                    right: 135,
+                    child: IconButton(
+                      color: Colors.red,
+                      onPressed: () {
+                        selectImage();
+                      },
+                      icon: const Icon(
+                        Icons.edit,
+                        size: 30,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 20,
               ),
