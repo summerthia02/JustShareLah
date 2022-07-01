@@ -77,7 +77,9 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: const BouncingScrollPhysics(),
           children: [
             const SizedBox(height: 20),
-            ProfileImage(),
+            ProfileImage(
+              
+            ),
             const SizedBox(height: 20),
             buildName(userData),
             const SizedBox(height: 12),

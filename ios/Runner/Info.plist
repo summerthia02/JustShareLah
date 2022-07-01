@@ -45,6 +45,12 @@
 	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo Library Usage</string>
+	<key>NSCameraLibraryUsageDescription</key>
+	<string>Camera Library Usage</string>
+	<key>NSMicrophoneLibraryUsageDescription</key>
+	<string>Microphone Library Usage</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
