@@ -98,8 +98,8 @@ The Mobile Application (compatible with both iOS and Android) first brings the u
 
 ### Tech Stack
 *Front-end:* Flutter<br>
-*Back-end:* Supabase<br>
-*User Authorization:* Supabase Auth<br>
+*Back-end:* FireBase<br>
+*User Authorization:* Firebase Auth<br>
 *CI/CD + Deployment:* Github Actions
 <hr>
 
