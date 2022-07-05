@@ -113,12 +113,19 @@ class _FeedPageState extends State<FeedPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Image.asset('images/location.png', width: 40, height: 30),
-            const SizedBox(width: 10.0),
+            const SizedBox(width: 5.0),
             Text(
               "NUS, Singapore",
             )
           ],
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 20, top: 5),
+            child: IconButton(
+                onPressed: _signOut, icon: const Icon(Icons.exit_to_app_sharp)),
+          ),
+        ],
       ),
 
       body: SingleChildScrollView(
