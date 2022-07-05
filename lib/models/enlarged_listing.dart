@@ -161,6 +161,43 @@ class PostedBy extends StatelessWidget {
             'Summer Thia',
             style: kBodyTextSmall,
           ),
+          Container(
+            padding: EdgeInsets.only(left: 176),
+            child: IconButton(
+              iconSize: 30,
+              onPressed: () {
+                showDialog(
+                  useRootNavigator: false,
+                  context: context,
+                  builder: (context) {
+                    return Dialog(
+                      child: ListView(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shrinkWrap: true,
+                          children: ['Edit', 'Delete']
+                              .map(
+                                (e) => InkWell(
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 12, horizontal: 16),
+                                      child: Text(e),
+                                    ),
+                                    onTap: () {
+                                      // deletePost(
+                                      //   widget.snap['postId'].toString(),
+                                      // );
+                                      // // remove the dialog box
+                                      // Navigator.of(context).pop();
+                                    }),
+                              )
+                              .toList()),
+                    );
+                  },
+                );
+              },
+              icon: const Icon(Icons.more_vert),
+            ),
+          )
         ]));
   }
 }
