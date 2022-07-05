@@ -37,6 +37,7 @@ class ForRenting extends StatelessWidget {
 
     Iterable<Listing> parseListingData = listingsData.map((listingMap) {
       return Listing(
+        uid: listingMap["uid"] = listingMap["uid"] ?? "1",
         imageUrl: listingMap["image_url"],
         title: listingMap["title"],
         price: listingMap["price"],
@@ -44,6 +45,11 @@ class ForRenting extends StatelessWidget {
         description: listingMap["description"],
         available: listingMap["available"],
         createdByEmail: listingMap["created_by_email"],
+        usersLiked: listingMap["usersLiked"],
+        dateListed: listingMap["dateListed"] =
+            listingMap["dateListed"] ?? DateTime(2000, 1, 1, 10, 0, 0),
+        profImageUrl: listingMap["profImageUrl"] = listingMap["profImageUrl"] ??
+            "https://www.computerhope.com/jargon/g/guest-user.jpg",
         likeCount: listingMap['likeCount'],
       );
     });
