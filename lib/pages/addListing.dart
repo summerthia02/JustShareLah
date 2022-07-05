@@ -169,7 +169,7 @@ class _AddListingPageState extends State<AddListingPage> {
     bool forRent = dropdownValue == 'Renting' ? true : false;
 
     var addedListing = {
-      'image_url': _image!,
+      'imageUrl': _image!,
       'title': _titleController.text,
       'price': _priceController.text,
       'for_rent': forRent,
