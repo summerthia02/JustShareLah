@@ -14,8 +14,8 @@ class Listing {
   final bool available;
   final String createdByEmail;
   final int? likeCount;
-  final DateTime dateListed;
-  final usersLiked;
+  final dynamic dateListed;
+  final List<dynamic> usersLiked;
 
   // final Color bgColor;
 
@@ -35,13 +35,13 @@ class Listing {
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
-  void likePost(User? user) {
-    if (usersLiked.contains(user?.uid)) {
-      usersLiked.remove(user?.uid);
-    } else {
-      usersLiked.add(user?.uid);
-    }
-  }
+  // void likePost(User? user) {
+  //   if (usersLiked.contains(user?.uid)) {
+  //     usersLiked.remove(user?.uid);
+  //   } else {
+  //     usersLiked.add(user?.uid);
+  //   }
+  // }
 
   // void setId(String id) {
   //   uid = id;
@@ -57,7 +57,9 @@ class Listing {
       'available': available,
       'createdByEmail': createdByEmail,
       'likeCount': likeCount,
-      'usersLiked': usersLiked.toList(),
+      'usersLiked': usersLiked,
+      'profImageUrl': profImageUrl,
+      'dateListed': Timestamp.fromDate(dateListed),
     };
   }
 

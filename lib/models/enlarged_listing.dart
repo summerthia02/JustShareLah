@@ -191,9 +191,10 @@ class ListingImage extends StatelessWidget {
   final Listing listing;
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
+    return Image.network(
       listing.imageUrl,
-      height: MediaQuery.of(context).size.height * 0.4,
+      height: MediaQuery.of(context).size.height * 0.5,
+      scale: 0.5,
       fit: BoxFit.cover,
     );
   }

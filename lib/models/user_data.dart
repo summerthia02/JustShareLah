@@ -35,7 +35,7 @@ class UserData {
       email: "Loading",
       phoneNumber: "Loading",
       about: "Loading",
-      imageUrl: "Loading",
+      imageUrl: "https://google.com",
       listings: [],
       reviews: [],
       shareCredits: "Loading",

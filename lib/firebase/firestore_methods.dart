@@ -90,7 +90,7 @@ class FireStoreMethods {
           'uid': uid,
           'text': text,
           'commentId': commentId,
-          'datePublished': DateTime.now(),
+          'datePublished': Timestamp.fromDate(DateTime.now()),
         });
         res = 'success';
       } else {

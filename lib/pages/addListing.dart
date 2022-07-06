@@ -37,7 +37,7 @@ class _AddListingPageState extends State<AddListingPage> {
   late String? userEmail;
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   late UserData userData = UserData.defaultUserData();
-
+  var parseUserData;
   // for rent or borrow dropdown
   String dropdownValue = 'Lending';
   List<String> listingTypes = ['Lending', 'Renting'];
@@ -184,7 +184,8 @@ class _AddListingPageState extends State<AddListingPage> {
         clearImage();
       }
     } catch (err) {
-      showSnackBar(context, err.toString());
+      print(err);
+      // showSnackBar(context, err.toString());
     }
   }
 
