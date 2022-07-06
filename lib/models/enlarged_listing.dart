@@ -1,7 +1,12 @@
+import 'dart:typed_data';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
 
@@ -21,6 +26,56 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
   late int? likeCount = widget.listing.likeCount;
   int doubleTapCounter = 0;
   bool hasClickedHeart = false;
+  final usersCollection = FirebaseFirestore.instance.collection('Users');
+  final currentUser = FirebaseAuth.instance.currentUser;
+  late String? userEmail;
+  late UserData userData = UserData.defaultUserData();
+  Uint8List? _image;
+
+  // access the usertable, then get the data where email field == current email
+  Future<Map<String, dynamic>> _getUserData() async {
+    Map<String, dynamic> userData = <String, dynamic>{};
+    await usersCollection.where('email', isEqualTo: userEmail).get().then(
+      (res) {
+        print("userData query successful");
+        userData = res.docs.first.data();
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return userData;
+  }
+
+  @override
+  void initState() {
+    // get the email of the current user
+    userEmail = currentUser?.email;
+    // initialize state by calling _getUserData which has curr user email
+    _getUserData().then((data) {
+      UserData parseUserData = UserData(
+        uid: currentUser?.uid,
+        userName: data["username"],
+        firstName: data["first_name"],
+        lastName: data["last_name"],
+        email: userEmail,
+        phoneNumber: data["phone_number"],
+        about: data["about"],
+        imageUrl: data["image_url"],
+        listings: data["listings"],
+        reviews: data["reviews"],
+        shareCredits: data["share_credits"],
+      );
+      setState(() {
+        userData = parseUserData;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   doubleTap() {
     setState(() {
@@ -70,7 +125,10 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(padding: EdgeInsets.all(10)),
-          PostedBy(),
+          PostedBy(
+            username: userData.userName,
+            imageUrl: userData.imageUrl,
+          ),
           GestureDetector(
               onDoubleTap: () => doubleTap(),
               child: Stack(
@@ -142,61 +200,61 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
 }
 
 class PostedBy extends StatelessWidget {
-  const PostedBy({Key? key}) : super(key: key);
+  const PostedBy({Key? key, required this.username, required this.imageUrl})
+      : super(key: key);
 
+  final String? username;
+  final String? imageUrl;
   @override
   Widget build(BuildContext context) {
     return Container(
         padding: EdgeInsets.all(10),
         child: Row(children: <Widget>[
-          ProfileWidget(
-            imageUrl:
-                "https://images.unsplash.com/photo-1525673812761-4e0d45adc0cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bmljZSUyMHBob3RvfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
-            onClicked: () => {},
-          ),
+          CircleAvatar(backgroundImage: NetworkImage(imageUrl!), radius: 30),
           SizedBox(
             width: 10.0,
           ),
           Text(
-            'Summer Thia',
+            username!,
             style: kBodyTextSmall,
           ),
-          Container(
-            padding: EdgeInsets.only(left: 176),
-            child: IconButton(
-              iconSize: 30,
-              onPressed: () {
-                showDialog(
-                  useRootNavigator: false,
-                  context: context,
-                  builder: (context) {
-                    return Dialog(
-                      child: ListView(
-                          padding: const EdgeInsets.symmetric(vertical: 16),
-                          shrinkWrap: true,
-                          children: ['Edit', 'Delete']
-                              .map(
-                                (e) => InkWell(
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 12, horizontal: 16),
-                                      child: Text(e),
-                                    ),
-                                    onTap: () {
-                                      // deletePost(
-                                      //   widget.snap['postId'].toString(),
-                                      // );
-                                      // // remove the dialog box
-                                      // Navigator.of(context).pop();
-                                    }),
-                              )
-                              .toList()),
-                    );
-                  },
-                );
-              },
-              icon: const Icon(Icons.more_vert),
-            ),
+          SizedBox(
+            width: 140.0,
+          ),
+          IconButton(
+            alignment: Alignment.topRight,
+            iconSize: 20,
+            onPressed: () {
+              showDialog(
+                useRootNavigator: false,
+                context: context,
+                builder: (context) {
+                  return Dialog(
+                    child: ListView(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shrinkWrap: true,
+                        children: ['Edit', 'Delete']
+                            .map(
+                              (e) => InkWell(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 16),
+                                    child: Text(e),
+                                  ),
+                                  onTap: () {
+                                    // deletePost(
+                                    //   widget.snap['postId'].toString(),
+                                    // );
+                                    // // remove the dialog box
+                                    // Navigator.of(context).pop();
+                                  }),
+                            )
+                            .toList()),
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.more_vert),
           )
         ]));
   }

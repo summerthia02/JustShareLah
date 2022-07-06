@@ -44,7 +44,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    // get the email of the current user
     userEmail = currentUser?.email;
+    // initialize state by calling _getUserData which has curr user email
     _getUserData().then((data) {
       UserData parseUserData = UserData(
         uid: currentUser?.uid,
