@@ -6,6 +6,7 @@ import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
 
 import 'package:justsharelah_v1/utils/profile_image.dart';
+import 'package:justsharelah_v1/utils/time_helper.dart';
 
 class EnlargedScreen extends StatefulWidget {
   const EnlargedScreen({Key? key, required this.listing}) : super(key: key);
@@ -116,6 +117,8 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     ),
                     LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
                     ListingCardDetails(listing: widget.listing),
+                    Text("Listed on " +
+                        convertedTime(widget.listing.dateListed)),
                     const SizedBox(height: (defaultPadding)),
                     Center(
                       child: SizedBox(
@@ -214,7 +217,7 @@ class ListingCardDetails extends StatelessWidget {
             Expanded(
               child: Text(
                 listing.title,
-                style: Theme.of(context).textTheme.headline6,
+                style: kHeadingText,
               ),
             ),
             const SizedBox(width: defaultPadding),
@@ -227,7 +230,10 @@ class ListingCardDetails extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Text(listing.description.toString()),
+        Text(
+          listing.description.toString(),
+          style: kBodyTextSmall,
+        ),
       ],
     );
   }

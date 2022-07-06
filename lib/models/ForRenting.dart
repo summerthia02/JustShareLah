@@ -6,7 +6,7 @@ import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
-import 'package:justsharelah_v1/utils/timeago.dart';
+import 'package:justsharelah_v1/utils/time_helper.dart';
 
 class ForRenting extends StatelessWidget {
   ForRenting({
