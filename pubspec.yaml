@@ -51,7 +51,7 @@ dependencies:
   cloud_firestore: ^3.1.18
   syncfusion_flutter_sliders: ^20.1.61
   flutter_spinkit: ^5.1.0
-  firebase_storage: ^10.2.3
+  firebase_storage: ^10.3.1
   velocity_x: ^3.5.1
   timeago: ^3.2.2
 
