@@ -6,6 +6,7 @@ import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
+import 'package:justsharelah_v1/utils/timeago.dart';
 
 class ForRenting extends StatelessWidget {
   ForRenting({
@@ -102,6 +103,9 @@ class ForRenting extends StatelessWidget {
                           image: listingData[index].imageUrl,
                           title: listingData[index].title,
                           price: listingData[index].price,
+                          dateListed: timeDisplayed(
+                            listingData[index].dateListed,
+                          ),
                           press: () {
                             Navigator.push(
                                 context,

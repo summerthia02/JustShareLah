@@ -108,6 +108,7 @@ class ForBorrowing extends StatelessWidget {
                           image: listingData[index].imageUrl,
                           title: listingData[index].title,
                           price: listingData[index].price,
+                          dateListed: listingData[index].dateListed,
                           press: () {
                             Navigator.push(
                                 context,
