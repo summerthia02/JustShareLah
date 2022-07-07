@@ -9,10 +9,12 @@ class ListingCard extends StatelessWidget {
     required this.title,
     required this.price,
     required this.press,
+    required this.dateListed,
   }) : super(key: key);
 
   final String image, title, price;
   final VoidCallback press;
+  final dynamic dateListed;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +27,7 @@ class ListingCard extends StatelessWidget {
             borderRadius:
                 BorderRadius.all(Radius.circular(defaultBorderRadius))),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
@@ -32,16 +35,30 @@ class ListingCard extends StatelessWidget {
                   color: Color.fromARGB(255, 162, 202, 197),
                   borderRadius:
                       BorderRadius.all(Radius.circular(defaultBorderRadius))),
-              child: Image.asset(image, width: 200, height: 210),
+              child: Image.network(
+                image,
+                scale: 1.5,
+              ),
             ),
+
             // ignore: prefer_const_literals_to_create_immutables
             Row(children: [
-              Expanded(child: Text(title)),
+              Expanded(
+                  child: Text(
+                title,
+                style: TextStyle(fontWeight: FontWeight.w900, fontSize: 20),
+              )),
               Text(
                 '\$' + price.toString(),
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
               ),
             ]),
+            Text(
+              "Listed " + dateListed.toString(),
+              style: TextStyle(
+                fontSize: 12,
+              ),
+            ),
           ],
         ),
       ),

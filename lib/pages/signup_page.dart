@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
@@ -59,7 +60,7 @@ class _SignupPageState extends State<SignupPage> {
         'last_name': _lastnameController.text.trim(),
         'phone_number': "",
         'about': "Click Edit Profile to add a bio!",
-        'image_url': "",
+        'imageUrl': "",
         'listings': [],
         'reviews': [],
         'share_credits': "",
@@ -231,11 +232,19 @@ class _SignupPageState extends State<SignupPage> {
                                     borderRadius: BorderRadius.circular(20)),
                                 padding: const EdgeInsets.all(15)),
                             onPressed: () async {
-                              if (_isLoading ||
-                                  !_signupFormKey.currentState!.validate())
-                                return;
+                              if (!_signupFormKey.currentState!.validate()) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
+                                String signedUp = await AuthService.signUp(
+                                    _emailController.text.trim(),
+                                    _passwordController.text.trim(),
+                                    _usernameController.text.trim(),
+                                    _firstnameController.text.trim(),
+                                    _lastnameController.text.trim());
+                              if (signedUp == "")
+                              
 
-                              bool signedUp = await _signUp();
                               if (!signedUp) {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(

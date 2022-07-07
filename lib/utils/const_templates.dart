@@ -26,8 +26,6 @@ const kBodyText = TextStyle(
   height: 1.5,
 );
 
-
-
 const kHeadingText = TextStyle(
   fontFamily: 'Lato',
   fontSize: 25.0,
@@ -51,6 +49,12 @@ ElevatedButton buildButtonField(String text, Color color, double length,
       style: const TextStyle(
           fontSize: 15, letterSpacing: 2.5, color: Colors.black),
     ),
+  );
+}
+
+showSnackBar(BuildContext context, String text) {
+  return ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(content: Text(text)),
   );
 }
 

@@ -6,6 +6,7 @@ import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
+import 'package:justsharelah_v1/utils/time_helper.dart';
 
 class ForRenting extends StatelessWidget {
   ForRenting({
@@ -22,11 +23,11 @@ class ForRenting extends StatelessWidget {
     Query<Map<String, dynamic>> whereQuery =
         userEmailToDisplay!.isEmpty || userEmailToDisplay == null
             ? listingsCollection
-                .where('created_by_email')
-                .where('for_rent', isEqualTo: true)
+                .where('createdByEmail')
+                .where('forRent', isEqualTo: true)
             : listingsCollection
-                .where('created_by_email', isEqualTo: userEmailToDisplay)
-                .where('for_rent', isEqualTo: true);
+                .where('createdByEmail', isEqualTo: userEmailToDisplay)
+                .where('forRent', isEqualTo: true);
     await whereQuery.get().then(
       (res) {
         print("listingData query successful");
@@ -37,14 +38,21 @@ class ForRenting extends StatelessWidget {
 
     Iterable<Listing> parseListingData = listingsData.map((listingMap) {
       return Listing(
-        imageUrl: listingMap["image_url"],
-        title: listingMap["title"],
-        price: listingMap["price"],
-        forRent: listingMap["for_rent"],
-        description: listingMap["description"],
+        uid: listingMap["uid"] = listingMap["uid"] ?? "1",
         available: listingMap["available"],
-        createdByEmail: listingMap["created_by_email"],
+        createdByEmail: listingMap["createdByEmail"],
+        dateListed: listingMap["dateListed"] =
+            listingMap["dateListed"] ?? DateTime(2000, 1, 1, 10, 0, 0),
+        description: listingMap["description"],
+        forRent: listingMap["forRent"],
+        imageUrl: listingMap["imageUrl"] = listingMap["imageUrl"] ??
+            "https://www.computerhope.com/jargon/g/guest-user.jpg",
         likeCount: listingMap['likeCount'],
+        price: listingMap["price"],
+        profImageUrl: listingMap["profImageUrl"] = listingMap["profImageUrl"] ??
+            "https://www.computerhope.com/jargon/g/guest-user.jpg",
+        title: listingMap["title"],
+        usersLiked: listingMap["usersLiked"],
       );
     });
 
@@ -95,6 +103,9 @@ class ForRenting extends StatelessWidget {
                           image: listingData[index].imageUrl,
                           title: listingData[index].title,
                           price: listingData[index].price,
+                          dateListed: timeDisplayed(
+                            listingData[index].dateListed,
+                          ),
                           press: () {
                             Navigator.push(
                                 context,

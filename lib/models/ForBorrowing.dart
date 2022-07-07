@@ -28,28 +28,35 @@ class ForBorrowing extends StatelessWidget {
     Query<Map<String, dynamic>> whereQuery =
         userEmailToDisplay!.isEmpty || userEmailToDisplay == null
             ? listingsCollection
-                .where('created_by_email')
-                .where('for_rent', isEqualTo: false)
+                .where('createdByEmail')
+                .where('forRent', isEqualTo: false)
             : listingsCollection
-                .where('created_by_email', isEqualTo: userEmailToDisplay)
-                .where('for_rent', isEqualTo: false);
+                .where('createdByEmail', isEqualTo: userEmailToDisplay)
+                .where('forRent', isEqualTo: false);
     await whereQuery.get().then(
       (res) {
         print("listingData query successful");
         listingsData = res.docs.map((snapshot) => snapshot.data());
+        print(listingsData);
       },
       onError: (e) => print("Error completing: $e"),
     );
 
     Iterable<Listing> parseListingData = listingsData.map((listingMap) {
       return Listing(
-        imageUrl: listingMap["image_url"],
+        uid: listingMap["uid"] = listingMap["uid"] ?? "1",
+        imageUrl: listingMap["imageUrl"],
         title: listingMap["title"],
         price: listingMap["price"],
-        forRent: listingMap["for_rent"],
+        forRent: listingMap["forRent"],
         description: listingMap["description"],
         available: listingMap["available"],
-        createdByEmail: listingMap["created_by_email"],
+        createdByEmail: listingMap["createdByEmail"],
+        usersLiked: listingMap["usersLiked"],
+        dateListed: listingMap["dateListed"] =
+            listingMap["dateListed"] ?? DateTime(2000, 1, 1, 10, 0, 0),
+        profImageUrl: listingMap["profImageUrl"] = listingMap["profImageUrl"] ??
+            "https://www.computerhope.com/jargon/g/guest-user.jpg",
         likeCount: listingMap['likeCount'],
       );
     });
@@ -101,6 +108,7 @@ class ForBorrowing extends StatelessWidget {
                           image: listingData[index].imageUrl,
                           title: listingData[index].title,
                           price: listingData[index].price,
+                          dateListed: listingData[index].dateListed,
                           press: () {
                             Navigator.push(
                                 context,

@@ -76,6 +76,7 @@ class AllBorrowing extends StatelessWidget {
                 }
 
                 print("going to cast listing data");
+                print(snapshot);
                 Iterable<Listing>? listingDataIterable = snapshot.data;
                 if (listingDataIterable == null ||
                     listingDataIterable.isEmpty) {

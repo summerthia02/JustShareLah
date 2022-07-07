@@ -2,6 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
@@ -15,16 +16,6 @@ class ForgetPasswordPage extends StatefulWidget {
 
 class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
-
-  void _resetPassword() async {
-    try {
-      await FirebaseAuth.instance
-          .sendPasswordResetEmail(email: _emailController.text.trim());
-      Navigator.of(context).pop();
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +65,11 @@ class _ForgetPasswordPageState extends State<ForgetPasswordPage> {
                       height: 20,
                     ),
                     ElevatedButton(
-                        onPressed: _resetPassword, child: Text('Send')),
+                        onPressed: () {
+                          AuthService.resetPassword(
+                              _emailController.text.trim());
+                        },
+                        child: Text('Send')),
                   ],
                 ),
               )

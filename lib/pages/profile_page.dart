@@ -2,8 +2,10 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
@@ -26,7 +28,6 @@ class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
-  Uint8List? _image;
 
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
@@ -54,7 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
         email: userEmail,
         phoneNumber: data["phone_number"],
         about: data["about"],
-        imageUrl: data["image_url"],
+        imageUrl: data["imageUrl"],
         listings: data["listings"],
         reviews: data["reviews"],
         shareCredits: data["share_credits"],
@@ -86,10 +87,10 @@ class _ProfilePageState extends State<ProfilePage> {
               alignment: Alignment.center,
               // circular widget to accept and show selected image
               children: [
-                _image != null
+                userData.imageUrl != null
                     ? CircleAvatar(
-                        radius: 70,
-                        backgroundImage: MemoryImage(_image!),
+                        radius: 60,
+                        backgroundImage: NetworkImage(userData.imageUrl!),
                       )
                     : CircleAvatar(
                         backgroundColor: Colors.white,
@@ -265,4 +266,3 @@ class _ProfilePageState extends State<ProfilePage> {
 //       ),
 //     );
 //   }
-// }

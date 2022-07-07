@@ -84,7 +84,7 @@ class AllRenting extends StatelessWidget {
                     children: List.generate(
                   listingData.length,
                   (index) => Container(
-                    padding: EdgeInsets.only(bottom: 20, top: 20),
+                    padding: const EdgeInsets.only(bottom: 20, top: 20),
                     child: BigListingCard(
                       image: listingData[index].imageUrl,
                       title: listingData[index].title,
@@ -105,8 +105,6 @@ class AllRenting extends StatelessWidget {
           ],
         )
       ]),
-
-      //TODO: LISTINGS DONT AUTO UPDATE ON FEED PAGE AFTER LISTING IS ADDED
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }

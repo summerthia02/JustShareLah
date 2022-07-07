@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
@@ -95,10 +96,6 @@ class _FeedPageState extends State<FeedPage> {
     super.dispose();
   }
 
-  _signOut() async {
-    FirebaseAuth.instance.signOut();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -106,7 +103,7 @@ class _FeedPageState extends State<FeedPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
-            _signOut();
+            AuthService.signOut();
           },
         ),
         title: Row(

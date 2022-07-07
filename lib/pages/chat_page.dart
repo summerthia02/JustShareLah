@@ -83,7 +83,7 @@ class _ChatPageState extends State<ChatPage> {
                               width: 20,
                             ),
                             Text(
-                              list[index].lastMessageTime! + " hours ago",
+                              list[index].lastMessageTime!,
                               style: kBodyTextSmall,
                             )
                           ]),
