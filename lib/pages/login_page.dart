@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/main.dart';
-import 'package:justsharelah_v1/utils/constants.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -25,10 +24,8 @@ class _LoginPageState extends State<LoginPage> {
 
     bool success = await AuthService.signIn(
         _emailController.text.trim(), _passwordController.text.trim());
-
-    if (!success) {
-      context.showErrorSnackBar(message: "Error Signing In");
-    }
+    successFailSnackBar(
+        success, "Log In Successful", "Error signing in", context);
 
     setState(() {
       _isLoading = false;

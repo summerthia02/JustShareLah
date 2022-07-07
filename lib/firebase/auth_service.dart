@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:justsharelah_v1/firebase/auth_data.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/jslUser.dart';
 
 class AuthService {
@@ -36,20 +36,26 @@ class AuthService {
 
   // register function
 
-  static Future<String> signUp(String email, String password, String userName,
+  static Future<String?> signUp(String email, String password, String userName,
       String firstName, String lastName) async {
+    String? uid;
     try {
       final response = await _firebaseAuth.createUserWithEmailAndPassword(
           email: email, password: password);
       // get the user
       User? newUser = response.user;
-      await AuthData(uid: newUser!.uid)
-          .createUser(email, userName, firstName, lastName);
-      return "Success!";
+      if (newUser == null) {
+        return null;
+      }
+      uid = newUser.uid;
+      // await AuthData(uid: newUser!.uid)
+      //     .createUser(email, userName, firstName, lastName);
     } catch (e) {
       print(e);
-      return e.toString();
+      return null;
     }
+
+    return uid;
   }
 
   // sign out function
@@ -73,6 +79,7 @@ class AuthService {
   }
 
   // edit profile function
+  
 
   // GET UID
   Future<String?> getCurrentUID() async {

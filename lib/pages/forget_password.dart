@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
 
 class ForgetPasswordPage extends StatefulWidget {

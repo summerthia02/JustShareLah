@@ -7,6 +7,7 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
@@ -177,50 +178,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // =================== Firestore interface =============
   void _editProfile() async {
-    Map<String, dynamic>? userData;
-    String? docID;
-    await usersCollection.where("email", isEqualTo: userEmail).get().then(
-      (res) {
-        print("userData query successful");
-        userData = res.docs.first.data();
-        docID = res.docs.first.id;
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
+    String userName, firstName, lastName, bio;
 
-    if (userEmail == null || userData == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("Error fetching user, unable to edit profile"),
-        ),
-      );
-      return;
-    }
-
-    // profile image
-    String? photoUrl = await StorageMethods()
-        .uploadPicToStorage('profilePictures', _image!, false);
-
-    // if empty, remains the same, else take the controller variable
-    userData!["imageUrl"] = _image == null ? userData!["imageUrl"] : photoUrl;
-
-    userData!["first_name"] = _firstnameController.text.isEmpty
-        ? userData!["first_name"]
-        : _firstnameController.text;
-    userData!["last_name"] = _lastnameController.text.isEmpty
-        ? userData!["last_name"]
-        : _lastnameController.text;
-    userData!["username"] = _usernameController.text.isEmpty
-        ? userData!["username"]
-        : _usernameController.text;
-    userData!["about"] =
-        _bioController.text.isEmpty ? userData!["about"] : _bioController.text;
-
-    usersCollection
-        .doc(docID)
-        .update(userData!)
-        .then((value) => print('Edited Profile'))
-        .catchError((err) => print('Failed to edit profile: $err'));
+    userName = _usernameController.text.trim();
+    firstName = _firstnameController.text.trim();
+    lastName = _lastnameController.text.trim();
+    bio = _bioController.text.trim();
+    bool dataSaved = await UserDataService(uid: currentUser!.uid)
+        .editProfile(userEmail!, _image, firstName, lastName, userName, bio);
+    successFailSnackBar(dataSaved, "Edit Profile Successful",
+        "Error Editing Profile, Please try again.", context);
   }
 
   // ================ Widgets =============================

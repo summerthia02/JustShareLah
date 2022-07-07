@@ -4,10 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/form_validation.dart';
 import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -31,59 +31,38 @@ class _SignupPageState extends State<SignupPage> {
 
   CollectionReference users = FirebaseFirestore.instance.collection('Users');
 
-  Future<bool> _signUp() async {
+  Future<void> _signUp() async {
+    if (!_signupFormKey.currentState!.validate()) {
+      return;
+    }
     setState(() {
       _isLoading = true;
     });
-    void returnState() {
-      setState(() {
-        _isLoading = false;
-      });
+    String email, userName, firstName, lastName, password;
+    email = _emailController.text.trim();
+    password = _passwordController.text.trim();
+    userName = _usernameController.text.trim();
+    firstName = _firstnameController.text.trim();
+    lastName = _lastnameController.text.trim();
+
+    String? newUserUid = await AuthService.signUp(
+        email, password, userName, firstName, lastName);
+
+    if (newUserUid == null) {
+      showSnackBar(context, 'Error signing up. Try Again.');
+      return;
     }
 
-    try {
-      final response =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
+    await UserDataService(uid: newUserUid)
+        .createUser(email, userName, firstName, lastName);
 
-      if (response.user == null) {
-        returnState();
-        return false;
-      }
+    showSnackBar(context, 'SIgned up Successfully! ');
 
-      var userData = {
-        'email': _emailController.text.trim(),
-        'username': _usernameController.text.trim(),
-        'first_name': _firstnameController.text.trim(),
-        'last_name': _lastnameController.text.trim(),
-        'phone_number': "",
-        'about': "Click Edit Profile to add a bio!",
-        'imageUrl': "",
-        'listings': [],
-        'reviews': [],
-        'share_credits': "",
-      };
+    Navigator.of(context).pop();
 
-      // add the userData with signup information to the users table
-      users
-          .add(userData)
-          .then((value) => print('User Added'))
-          .catchError((err) => print('Failed to add user: $err'));
-    } on FirebaseAuthException catch (e) {
-      print(e);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(e.message ?? "Error displaying error message"),
-        ),
-      );
-      returnState();
-      return false;
-    }
-
-    returnState();
-    return true;
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
@@ -232,32 +211,7 @@ class _SignupPageState extends State<SignupPage> {
                                     borderRadius: BorderRadius.circular(20)),
                                 padding: const EdgeInsets.all(15)),
                             onPressed: () async {
-                              if (!_signupFormKey.currentState!.validate()) {
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                String signedUp = await AuthService.signUp(
-                                    _emailController.text.trim(),
-                                    _passwordController.text.trim(),
-                                    _usernameController.text.trim(),
-                                    _firstnameController.text.trim(),
-                                    _lastnameController.text.trim());
-                              if (signedUp == "")
-                              
-
-                              if (!signedUp) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Error signing up. Try Again.')));
-                                return;
-                              }
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content:
-                                          Text('Signed Up Successfully!')));
-                              Navigator.of(context).pop();
+                              _signUp();
                             },
                             child: Text(_isLoading ? 'Loading' : 'Register'),
                           ),

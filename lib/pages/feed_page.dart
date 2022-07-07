@@ -8,7 +8,6 @@ import 'package:justsharelah_v1/utils/apptheme.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:supabase/supabase.dart';
-import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import '../models/ForBorrowing.dart';
 import '../models/ListingCard.dart';

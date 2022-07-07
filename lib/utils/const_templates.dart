@@ -52,10 +52,20 @@ ElevatedButton buildButtonField(String text, Color color, double length,
   );
 }
 
+//=========================Snackbar Methods=============================
+
 showSnackBar(BuildContext context, String text) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text(text)),
   );
+}
+
+void successFailSnackBar(
+    bool cond, String successText, String failText, BuildContext context) {
+  return cond
+  ? showSnackBar(context, successText)
+  : showSnackBar(context, failText);
+  
 }
 
 const kTextFormFieldDecoration = InputDecoration(
