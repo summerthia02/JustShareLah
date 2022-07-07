@@ -184,8 +184,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
     firstName = _firstnameController.text.trim();
     lastName = _lastnameController.text.trim();
     bio = _bioController.text.trim();
-    bool dataSaved = await UserDataService(uid: currentUser!.uid)
-        .editProfile(userEmail!, _image, firstName, lastName, userName, bio);
+    bool dataSaved = await UserDataService().editProfile(currentUser!.uid,
+        userEmail!, _image, firstName, lastName, userName, bio);
     successFailSnackBar(dataSaved, "Edit Profile Successful",
         "Error Editing Profile, Please try again.", context);
   }

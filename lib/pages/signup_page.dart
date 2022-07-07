@@ -53,8 +53,8 @@ class _SignupPageState extends State<SignupPage> {
       return;
     }
 
-    await UserDataService(uid: newUserUid)
-        .createUser(email, userName, firstName, lastName);
+    await UserDataService.createUser(
+        newUserUid, email, userName, firstName, lastName);
 
     showSnackBar(context, 'SIgned up Successfully! ');
 

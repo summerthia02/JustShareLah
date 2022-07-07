@@ -5,14 +5,14 @@ import 'package:justsharelah_v1/firebase/storage_methods.dart';
 
 // user data under the 'Users' table
 class UserDataService {
-  final String uid;
-  UserDataService({required this.uid});
+  UserDataService();
 
   // get the Users table
   final users = FirebaseFirestore.instance.collection('Users');
 
-  Future<void> createUser(
-      String email, String userName, String firstName, String lastName) async {
+  static Future<void> createUser(String uid, String email, String userName,
+      String firstName, String lastName) async {
+    final users = FirebaseFirestore.instance.collection('Users');
     return await users.doc(uid).set({
       'email': email,
       'user_name': userName,
@@ -28,8 +28,8 @@ class UserDataService {
   }
 
   // edit profile
-  Future<bool> editProfile(String userEmail, Uint8List? image, String firstName,
-      String lastName, String userName, String bio) async {
+  Future<bool> editProfile(String uid, String userEmail, Uint8List? image,
+      String firstName, String lastName, String userName, String bio) async {
     Map<String, dynamic>? userData;
     String? docID;
     await users.where("email", isEqualTo: userEmail).get().then(

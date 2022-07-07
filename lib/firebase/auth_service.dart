@@ -9,9 +9,14 @@ class AuthService {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   // createing jsluser
-  // JslUser? _firebaseUser(User? user) {
-  //   return user != null ? JslUser(uid: user.uid) : null;
-  // }
+  JslUser? _firebaseUser(User? user) {
+    return user != null ? JslUser(uid: user.uid) : null;
+  }
+
+  // getting the current user - use firebase's currentUser method
+  JslUser? get currentUser {
+    return _firebaseUser(_firebaseAuth.currentUser);
+  }
 
   // sign in function
   static Future<bool> signIn(
@@ -48,8 +53,6 @@ class AuthService {
         return null;
       }
       uid = newUser.uid;
-      // await AuthData(uid: newUser!.uid)
-      //     .createUser(email, userName, firstName, lastName);
     } catch (e) {
       print(e);
       return null;
@@ -79,7 +82,6 @@ class AuthService {
   }
 
   // edit profile function
-  
 
   // GET UID
   Future<String?> getCurrentUID() async {
