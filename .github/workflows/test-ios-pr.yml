@@ -1,0 +1,30 @@
+name: "Test-ios-PR"
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Test-ios-PR
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+      - uses: subosito/flutter-action@v1
+        with:
+          flutter-version: '2.2.0'
+      - run: flutter channel beta
+      - run: flutter upgrade
+      - run: flutter pub get
+      - run: |
+          flutter build ios --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload
