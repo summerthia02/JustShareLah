@@ -45,8 +45,8 @@ class _SignupPageState extends State<SignupPage> {
     firstName = _firstnameController.text.trim();
     lastName = _lastnameController.text.trim();
 
-    String? newUserUid = await AuthService.signUp(
-        email, password, userName, firstName, lastName);
+    String? newUserUid = await AuthService()
+        .signUp(email, password, userName, firstName, lastName);
 
     if (newUserUid == null) {
       showSnackBar(context, 'Error signing up. Try Again.');

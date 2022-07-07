@@ -102,7 +102,7 @@ class _FeedPageState extends State<FeedPage> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_rounded),
           onPressed: () {
-            AuthService.signOut();
+            AuthService().signOut();
           },
         ),
         title: Row(

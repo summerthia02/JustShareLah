@@ -54,6 +54,7 @@ dependencies:
   firebase_storage: ^10.3.1
   velocity_x: ^3.5.1
   timeago: ^3.2.2
+  provider: ^6.0.3
 
 dev_dependencies:
   flutter_test:
@@ -68,6 +69,9 @@ dev_dependencies:
   mockito: ^5.2.0
   rxdart: 
   firebase_auth_mocks: ^0.8.4
+  test: ^1.21.1
+  integration_test:
+    sdk: flutter
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

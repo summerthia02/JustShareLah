@@ -1,12 +1,27 @@
+// ignore_for_file: avoid_print
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/jslUser.dart';
+import 'auth_provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class AuthService {
-  static final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  Stream<User?> get onAuthStateChanged => _firebaseAuth.authStateChanges();
+  FirebaseAuth auth = FirebaseAuth.instance;
+  Stream<User?> get onAuthStateChanged => auth.authStateChanges();
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  Status _status = Status.Uninitialized;
+  late User _user;
+
+  // AuthService.instance({required this.auth}) {
+  //   auth.authStateChanges().listen(onAuthStateChanged);
+  // }
+
+  Status get status => _status;
+  User get user => _user;
 
   // createing jsluser
   JslUser? _firebaseUser(User? user) {
@@ -15,16 +30,17 @@ class AuthService {
 
   // getting the current user - use firebase's currentUser method
   JslUser? get currentUser {
-    return _firebaseUser(_firebaseAuth.currentUser);
+    return _firebaseUser(auth.currentUser);
   }
 
   // sign in function
-  static Future<bool> signIn(
+  Future<bool> signIn(
     String email,
     String password,
   ) async {
     try {
-      final response = await _firebaseAuth.signInWithEmailAndPassword(
+      _status = Status.Authenticating;
+      final response = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -33,6 +49,7 @@ class AuthService {
         return false;
       }
     } catch (e) {
+      _status = Status.Unauthenticated;
       print(e);
       return false;
     }
@@ -41,11 +58,11 @@ class AuthService {
 
   // register function
 
-  static Future<String?> signUp(String email, String password, String userName,
+  Future<String?> signUp(String email, String password, String userName,
       String firstName, String lastName) async {
     String? uid;
     try {
-      final response = await _firebaseAuth.createUserWithEmailAndPassword(
+      final response = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
       // get the user
       User? newUser = response.user;
@@ -62,9 +79,11 @@ class AuthService {
   }
 
   // sign out function
-  static Future signOut() async {
+  Future signOut() async {
     try {
-      return await _firebaseAuth.signOut();
+      auth.signOut();
+      _status = Status.Unauthenticated;
+      return Future.delayed(Duration.zero);
     } catch (e) {
       return false;
     }
@@ -81,10 +100,8 @@ class AuthService {
     }
   }
 
-  // edit profile function
-
-  // GET UID
+//   // GET UID
   Future<String?> getCurrentUID() async {
-    return _firebaseAuth.currentUser?.uid;
+    return auth.currentUser?.uid;
   }
 }
