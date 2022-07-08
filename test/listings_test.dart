@@ -13,7 +13,7 @@ class MockFirebaseUser extends Mock implements User {
 }
 
 void main() {
-  // adding to mock users
+  // adding to mock users 
   MockFirebaseUser testuser = MockFirebaseUser(uid: "testUser");
   MockFirebaseUser testuser2 = MockFirebaseUser(uid: "testUser2");
 
