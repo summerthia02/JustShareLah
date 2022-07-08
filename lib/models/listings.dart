@@ -70,7 +70,7 @@ class Listing {
 
   static Listing createListing(record) {
     Map<String, dynamic> attributes = {
-      'imageUrl': 'images/logo.png',
+      'imageUrl': 'https://static.thenounproject.com/png/1913842-200.png',
       'title': '',
       'price': '',
       'forRent': '',

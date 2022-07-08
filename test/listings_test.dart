@@ -13,6 +13,7 @@ class MockFirebaseUser extends Mock implements User {
 }
 
 void main() {
+  // adding to mock users
   MockFirebaseUser testuser = MockFirebaseUser(uid: "testUser");
   MockFirebaseUser testuser2 = MockFirebaseUser(uid: "testUser2");
 
@@ -61,7 +62,7 @@ void main() {
     int likeCount;
     List<dynamic> usersLiked;
 
-    imageUrl = 'images/logo.png';
+    imageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
     title = "testTitle";
     price = "NA";
     description = "test record!";
