@@ -30,6 +30,18 @@ class Listing {
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
+  static Listing defaultListing(bool forRent) {
+    return Listing(
+        imageUrl: "images/logo.png",
+        title: "default",
+        price: "NA",
+        forRent: forRent,
+        description: "default",
+        available: true,
+        createdByEmail: "default@test.com",
+        likeCount: 0);
+  }
+
   void likePost(User? user) {
     if (usersLiked.contains(user?.uid)) {
       usersLiked.remove(user?.uid);
@@ -56,9 +68,9 @@ class Listing {
     };
   }
 
-  Listing createListing(record) {
+  static Listing createListing(record) {
     Map<String, dynamic> attributes = {
-      'imageUrl': 'images/logo.png',
+      'imageUrl': 'https://static.thenounproject.com/png/1913842-200.png',
       'title': '',
       'price': '',
       'forRent': '',
