@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>10879165640-q602g5sl8aupgj1vmh1mfj22u8qp9vf6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.10879165640-q602g5sl8aupgj1vmh1mfj22u8qp9vf6</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>10879165640-ipqeaemtarv9h5kpgsr216su9r9pueqk.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDQsTMIfIVUGUi9bfyHjBpgQPzo-4vHPhc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>10879165640</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.justsharelahV1</string>
+	<key>PROJECT_ID</key>
+	<string>justsharelah-6dca5</string>
+	<key>STORAGE_BUCKET</key>
+	<string>justsharelah-6dca5.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:10879165640:ios:f463674769a076dadff1fd</string>
+</dict>
+</plist>
