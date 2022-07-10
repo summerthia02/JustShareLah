@@ -66,10 +66,16 @@ class AllBorrowing extends StatelessWidget {
             )),
           ]),
           StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('listings')
-                .where('forRent', isEqualTo: false)
-                .snapshots(),
+            stream: userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+                ? FirebaseFirestore.instance
+                    .collection('listings')
+                    .where('forRent', isEqualTo: false)
+                    .snapshots()
+                : FirebaseFirestore.instance
+                    .collection('listings')
+                    .where('createdByEmail', isEqualTo: userEmailToDisplay)
+                    .where('forRent', isEqualTo: false)
+                    .snapshots(),
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -81,6 +87,8 @@ class AllBorrowing extends StatelessWidget {
               } else if (snapshot.hasError) {
                 print(snapshot.error);
                 return const Text("Error Loading Borrowing Items");
+              } else if (snapshot.data == null) {
+                return const Text("No such Listing");
               }
 
               // Iterable<Listing>? listingDataIterable = snapshot.data!;
