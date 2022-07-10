@@ -106,7 +106,7 @@ class ForRenting extends StatelessWidget {
             // }
             // List<Listing> listingData = listingDataIterable.toList();
             return SizedBox(
-              height: 400,
+              height: 500,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   // docs method gives us list of document id of the listings

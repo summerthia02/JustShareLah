@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -8,6 +10,7 @@ import 'dart:async';
 
 import 'package:justsharelah_v1/utils/profile_image.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
+import 'package:justsharelah_v1/widget/like_helper.dart';
 
 class EnlargedScreen extends StatefulWidget {
   const EnlargedScreen({Key? key, required this.snap}) : super(key: key);
@@ -18,48 +21,15 @@ class EnlargedScreen extends StatefulWidget {
 }
 
 class _EnlargedScreenState extends State<EnlargedScreen> {
-  bool showHeart = false;
-  bool isLiked = false;
-  // late int? likeCount = snap["ikeCount"];
-  int doubleTapCounter = 0;
-  bool hasClickedHeart = false;
+  bool isLiking = false;
+  final currentUser = FirebaseAuth.instance.currentUser;
+  late String? userId;
 
-  // doubleTap() {
-  //   setState(() {
-  //     showHeart = true;
-  //     isLiked = true;
-  //     doubleTapCounter++;
-
-  //     if (showHeart) {
-  //       Timer(const Duration(milliseconds: 400), () {
-  //         setState(() {
-  //           showHeart = false;
-  //           if (likeCount != null &&
-  //               doubleTapCounter == 1 &&
-  //               !hasClickedHeart) {
-  //             likeCount = likeCount! + 1;
-  //           } else {
-  //             likeCount = 1;
-  //           }
-  //         });
-  //       });
-  //     }
-  //   });
-  // }
-
-  // clickHeart() {
-  //   setState(() {
-  //     hasClickedHeart = true;
-  //     isLiked = !isLiked;
-  //     if (!isLiked && likeCount != null) {
-  //       likeCount = likeCount! - 1;
-  //     } else if (isLiked && likeCount != null) {
-  //       likeCount = likeCount! + 1;
-  //     } else {
-  //       likeCount = 1;
-  //     }
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    userId = currentUser?.uid;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,23 +44,37 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
           Padding(padding: EdgeInsets.all(10)),
           PostedBy(snap: widget.snap),
           GestureDetector(
-              onDoubleTap: () {},
+              onDoubleTap: () async {
+                // await FireStoreMethods().likelisting(
+                //     widget.snap["uid"], userId!, widget.snap["usersLiked"]);
+
+                setState(() {
+                  isLiking = true;
+                });
+              },
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
                   ListingImage(
                     snap: widget.snap,
                   ),
-                  AnimatedCrossFade(
-                    firstChild:
-                        Icon(Icons.favorite, color: Colors.red, size: 100.0),
-                    secondChild:
-                        Icon(Icons.favorite_border, color: Colors.transparent),
-                    crossFadeState: showHeart
-                        ? CrossFadeState.showFirst
-                        : CrossFadeState.showSecond,
-                    duration: const Duration(milliseconds: 200),
-                  )
+                  AnimatedOpacity(
+                    duration: const Duration(milliseconds: 150),
+                    opacity: isLiking ? 1 : 0,
+                    child: LikeHelper(
+                      isLiking: isLiking,
+                      child: const Icon(Icons.favorite,
+                          color: Colors.white, size: 100),
+                      duration: const Duration(
+                        milliseconds: 350,
+                      ),
+                      onEnd: () {
+                        setState(() {
+                          isLiking = false;
+                        });
+                      },
+                    ),
+                  ),
                 ],
               )),
           const SizedBox(height: defaultPadding * 1.5),
@@ -109,15 +93,29 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // listing title, price, description
-                    IconButton(
-                      alignment: Alignment.topLeft,
-                      icon: isLiked
-                          ? Icon(Icons.favorite)
-                          : Icon(Icons.favorite_border),
-                      color: isLiked ? Colors.red : Colors.grey,
-                      onPressed: () {},
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        LikeHelper(
+                            child: IconButton(
+                              onPressed: () {},
+                              icon:
+                                  const Icon(Icons.favorite, color: Colors.red),
+                            ),
+                            isLiking:
+                                widget.snap["usersLiked"].contains(userId)),
+                      ],
                     ),
+                    // listing title, price, description
+                    // IconButton(
+                    //   alignment: Alignment.topLeft,
+                    //   icon: isLiked
+                    //       ? Icon(Icons.favorite)
+                    //       : Icon(Icons.favorite_border),
+                    //   color: isLiked ? Colors.red : Colors.grey,
+                    //   onPressed: () {},
+                    // ),
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
                     ListingCardDetails(snap: widget.snap),
                     Text(
@@ -268,7 +266,10 @@ class ListingCardDetails extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Text(snap["description"].toString(), style: kBodyTextSmall,),
+        Text(
+          snap["description"].toString(),
+          style: kBodyTextSmall,
+        ),
       ],
     );
   }

@@ -1,9 +1,14 @@
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/firebase/auth_provider.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
+import 'package:justsharelah_v1/provider/user_provider.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
+import 'package:justsharelah_v1/widget/like_helper.dart';
 
 import '../utils/const_templates.dart';
 
@@ -20,6 +25,10 @@ class ListingCard extends StatefulWidget {
 }
 
 class _ListingCardState extends State<ListingCard> {
+  final currentUser = FirebaseAuth.instance.currentUser;
+  late String? userId;
+  bool isLiking = false;
+
   String name = "";
 
   Future<String> getUserName() async {
@@ -49,6 +58,7 @@ class _ListingCardState extends State<ListingCard> {
   void initState() {
     super.initState();
     getUserName();
+    userId = currentUser?.uid;
   }
 
   @override
@@ -73,30 +83,34 @@ class _ListingCardState extends State<ListingCard> {
           onTap: widget.press,
           child: Container(
             padding: const EdgeInsets.all(6),
-            height: 350,
+            height: 400,
             width: 250,
             decoration: const BoxDecoration(
                 borderRadius:
                     BorderRadius.all(Radius.circular(defaultBorderRadius))),
             child: Column(
               children: [
-                AspectRatio(
-                  aspectRatio: 90 / 100,
-                  child: Container(
-                    width: 500,
-                    height: 500,
-                    decoration: BoxDecoration(
-                        color: Color.fromARGB(255, 162, 202, 197),
-                        borderRadius: BorderRadius.all(
-                            Radius.circular(defaultBorderRadius))),
-                    child: Image.network(widget.snap["imageUrl"].toString(),
-                        scale: 1.5, fit: BoxFit.scaleDown),
-                  ),
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    AspectRatio(
+                      aspectRatio: 90 / 100,
+                      child: Container(
+                        width: 500,
+                        height: 500,
+                        decoration: BoxDecoration(
+                            color: Color.fromARGB(255, 162, 202, 197),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(defaultBorderRadius))),
+                        child: Image.network(widget.snap["imageUrl"].toString(),
+                            scale: 1.5, fit: BoxFit.scaleDown),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+
                 // ignore: prefer_const_literals_to_create_immutables
+
                 Row(children: [
                   Expanded(
                       child: Text(
