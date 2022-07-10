@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/models/listings.dart';
@@ -6,6 +7,7 @@ import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
 
 import 'package:justsharelah_v1/utils/profile_image.dart';
+import 'package:justsharelah_v1/utils/time_helper.dart';
 
 class EnlargedScreen extends StatefulWidget {
   const EnlargedScreen({Key? key, required this.snap}) : super(key: key);
@@ -70,7 +72,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Padding(padding: EdgeInsets.all(10)),
-          PostedBy(),
+          PostedBy(snap: widget.snap),
           GestureDetector(
               onDoubleTap: () {},
               child: Stack(
@@ -118,6 +120,9 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     ),
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
                     ListingCardDetails(snap: widget.snap),
+                    Text(
+                      "Listed on " + convertedTime(widget.snap["dateListed"]),
+                    ),
                     const SizedBox(height: (defaultPadding)),
                     Center(
                       child: SizedBox(
@@ -143,8 +148,44 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
   }
 }
 
-class PostedBy extends StatelessWidget {
-  const PostedBy({Key? key}) : super(key: key);
+class PostedBy extends StatefulWidget {
+  const PostedBy({Key? key, required this.snap}) : super(key: key);
+
+  final snap;
+  @override
+  State<PostedBy> createState() => _PostedByState();
+}
+
+class _PostedByState extends State<PostedBy> {
+  String name = "";
+
+  Future<String> getUserName() async {
+    String email = widget.snap["createdByEmail"].toString();
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    DocumentReference username = users.doc("userName");
+    Iterable<Map<String, dynamic>> userData = [];
+    // get username
+    Query userDoc = users.where("email", isEqualTo: email);
+    // String userName = userDoc.print("hi");
+    await userDoc.get().then(
+      (res) {
+        print("listingData query successful");
+        // userData = res.docs.map((snapshot) => snapshot.data());
+
+        setState(() {
+          name = res.docs[0]["username"];
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return name;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getUserName();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,16 +193,14 @@ class PostedBy extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: Row(children: <Widget>[
           ProfileWidget(
-            imageUrl:
-                "https://images.unsplash.com/photo-1525673812761-4e0d45adc0cc?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8bmljZSUyMHBob3RvfGVufDB8fDB8fA%3D%3D&w=1000&q=80",
+            imageUrl: widget.snap["profImageUrl"],
             onClicked: () => {},
           ),
           SizedBox(
-            width: 10.0,
+            width: 20.0,
           ),
           Text(
-            'Summer Thia',
-            style: kBodyTextSmall,
+            name,
           ),
         ]));
   }
@@ -216,7 +255,7 @@ class ListingCardDetails extends StatelessWidget {
             Expanded(
               child: Text(
                 snap["title"],
-                style: Theme.of(context).textTheme.headline6,
+                style: kHeadingText,
               ),
             ),
             const SizedBox(width: defaultPadding),
@@ -229,7 +268,7 @@ class ListingCardDetails extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Text(snap["description"].toString()),
+        Text(snap["description"].toString(), style: kBodyTextSmall,),
       ],
     );
   }

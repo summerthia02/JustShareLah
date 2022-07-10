@@ -55,7 +55,7 @@ class FireStoreMethods {
     String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
-        // if the likes list contains the user uid, we need to remove it
+        // if the likes list contains current uid, then remove it (unlike)
         listingsCollection.doc(listingId).update({
           'likes': FieldValue.arrayRemove([uid])
         });
@@ -90,7 +90,7 @@ class FireStoreMethods {
           'uid': uid,
           'text': text,
           'commentId': commentId,
-          'datePublished': Timestamp.fromDate(DateTime.now()),
+          'dateCreated': Timestamp.fromDate(DateTime.now()),
         });
         res = 'success';
       } else {

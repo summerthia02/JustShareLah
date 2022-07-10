@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
+import 'package:justsharelah_v1/utils/time_helper.dart';
 
 import '../utils/const_templates.dart';
 
@@ -113,6 +114,16 @@ class _ListingCardState extends State<ListingCard> {
                   //     ? '${snap['usersLiked'].length!} likes'
                   //     : "0 Likes"),
                 ]),
+                Row(
+                  children: [
+                    Text(
+                      "Listed " + timeDisplayed(widget.snap['dateListed']),
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
+                    )
+                  ],
+                )
               ],
             ),
           ),
