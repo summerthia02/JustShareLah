@@ -20,7 +20,7 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = true;
     });
-    
+
     try {
       final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
@@ -118,7 +118,13 @@ class _LoginPageState extends State<LoginPage> {
                         : () {
                             _signIn();
                           },
-                    child: Text(_isLoading ? 'Loading' : 'Log In'),
+                    child: _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
+                          )
+                        : Text('Log In'),
                   ),
                 ),
               ],

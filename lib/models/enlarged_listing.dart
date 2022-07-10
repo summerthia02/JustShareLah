@@ -8,8 +8,8 @@ import 'dart:async';
 import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class EnlargedScreen extends StatefulWidget {
-  const EnlargedScreen({Key? key, required this.listing}) : super(key: key);
-  final Listing listing;
+  const EnlargedScreen({Key? key, required this.snap}) : super(key: key);
+  final snap;
 
   @override
   State<EnlargedScreen> createState() => _EnlargedScreenState();
@@ -18,46 +18,46 @@ class EnlargedScreen extends StatefulWidget {
 class _EnlargedScreenState extends State<EnlargedScreen> {
   bool showHeart = false;
   bool isLiked = false;
-  late int? likeCount = widget.listing.likeCount;
+  // late int? likeCount = snap["ikeCount"];
   int doubleTapCounter = 0;
   bool hasClickedHeart = false;
 
-  doubleTap() {
-    setState(() {
-      showHeart = true;
-      isLiked = true;
-      doubleTapCounter++;
+  // doubleTap() {
+  //   setState(() {
+  //     showHeart = true;
+  //     isLiked = true;
+  //     doubleTapCounter++;
 
-      if (showHeart) {
-        Timer(const Duration(milliseconds: 400), () {
-          setState(() {
-            showHeart = false;
-            if (likeCount != null &&
-                doubleTapCounter == 1 &&
-                !hasClickedHeart) {
-              likeCount = likeCount! + 1;
-            } else {
-              likeCount = 1;
-            }
-          });
-        });
-      }
-    });
-  }
+  //     if (showHeart) {
+  //       Timer(const Duration(milliseconds: 400), () {
+  //         setState(() {
+  //           showHeart = false;
+  //           if (likeCount != null &&
+  //               doubleTapCounter == 1 &&
+  //               !hasClickedHeart) {
+  //             likeCount = likeCount! + 1;
+  //           } else {
+  //             likeCount = 1;
+  //           }
+  //         });
+  //       });
+  //     }
+  //   });
+  // }
 
-  clickHeart() {
-    setState(() {
-      hasClickedHeart = true;
-      isLiked = !isLiked;
-      if (!isLiked && likeCount != null) {
-        likeCount = likeCount! - 1;
-      } else if (isLiked && likeCount != null) {
-        likeCount = likeCount! + 1;
-      } else {
-        likeCount = 1;
-      }
-    });
-  }
+  // clickHeart() {
+  //   setState(() {
+  //     hasClickedHeart = true;
+  //     isLiked = !isLiked;
+  //     if (!isLiked && likeCount != null) {
+  //       likeCount = likeCount! - 1;
+  //     } else if (isLiked && likeCount != null) {
+  //       likeCount = likeCount! + 1;
+  //     } else {
+  //       likeCount = 1;
+  //     }
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -72,11 +72,13 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
           Padding(padding: EdgeInsets.all(10)),
           PostedBy(),
           GestureDetector(
-              onDoubleTap: () => doubleTap(),
+              onDoubleTap: () {},
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
-                  ListingImage(listing: widget.listing),
+                  ListingImage(
+                    snap: widget.snap,
+                  ),
                   AnimatedCrossFade(
                     firstChild:
                         Icon(Icons.favorite, color: Colors.red, size: 100.0),
@@ -112,10 +114,10 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                           ? Icon(Icons.favorite)
                           : Icon(Icons.favorite_border),
                       color: isLiked ? Colors.red : Colors.grey,
-                      onPressed: () => clickHeart(),
+                      onPressed: () {},
                     ),
-                    LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
-                    ListingCardDetails(listing: widget.listing),
+                    // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
+                    ListingCardDetails(snap: widget.snap),
                     const SizedBox(height: (defaultPadding)),
                     Center(
                       child: SizedBox(
@@ -186,22 +188,23 @@ class _LikeCountsState extends State<LikeCounts> {
 }
 
 class ListingImage extends StatelessWidget {
-  const ListingImage({Key? key, required this.listing}) : super(key: key);
+  const ListingImage({Key? key, required this.snap}) : super(key: key);
 
-  final Listing listing;
+  final snap;
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      listing.imageUrl,
-      height: MediaQuery.of(context).size.height * 0.4,
+    return Image.network(
+      snap["imageUrl"],
+      height: MediaQuery.of(context).size.height * 0.5,
+      scale: 0.5,
       fit: BoxFit.cover,
     );
   }
 }
 
 class ListingCardDetails extends StatelessWidget {
-  const ListingCardDetails({Key? key, required this.listing}) : super(key: key);
-  final Listing listing;
+  const ListingCardDetails({Key? key, required this.snap}) : super(key: key);
+  final snap;
 
   @override
   Widget build(BuildContext context) {
@@ -212,13 +215,13 @@ class ListingCardDetails extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                listing.title,
+                snap["title"],
                 style: Theme.of(context).textTheme.headline6,
               ),
             ),
             const SizedBox(width: defaultPadding),
             Text(
-              "\$" + listing.price.toString(),
+              "\$" + snap["price"].toString(),
               style: Theme.of(context).textTheme.headline6,
             ),
           ],
@@ -226,7 +229,7 @@ class ListingCardDetails extends StatelessWidget {
         SizedBox(
           height: 10,
         ),
-        Text(listing.description.toString()),
+        Text(snap["description"].toString()),
       ],
     );
   }
