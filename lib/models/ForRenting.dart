@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/AllBorrowing.dart';
+import 'package:justsharelah_v1/models/AllRenting.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
@@ -16,55 +17,6 @@ class ForRenting extends StatelessWidget {
 
   late String? userEmailToDisplay;
 
-  // get the borrowing listing data put into future of the build context UI
-  // Future<Iterable<Listing>> getBorrowListingData() async {
-  //   // listingsCollection = listing table from firebase
-  //   final listingsCollection =
-  //       FirebaseFirestore.instance.collection('listings');
-
-  //   Iterable<Map<String, dynamic>> listingsData = [];
-  //   // if constructor does not take in email -> fetch all items -> to be displayed on feed page
-  //   // if take in email -> only fetch items that are created by user -> to be displayed on profile page
-  //   Query<Map<String, dynamic>> whereQuery =
-  //       userEmailToDisplay!.isEmpty || userEmailToDisplay == null
-  //           ? listingsCollection
-  //               .where('createdByEmail')
-  //               .where('forRent', isEqualTo: true)
-  //           : listingsCollection
-  //               .where('createdByEmail', isEqualTo: userEmailToDisplay)
-  //               .where('forRent', isEqualTo: true);
-  //   await whereQuery.get().then(
-  //     (res) {
-  //       print("listingData query successful");
-  //       listingsData = res.docs.map((snapshot) => snapshot.data());
-  //       print(listingsData);
-  //     },
-  //     onError: (e) => print("Error completing: $e"),
-  //   );
-
-  //   Iterable<Listing> parseListingData = listingsData.map((listingMap) {
-  //     return Listing(
-  //       uid: listingMap["uid"] = listingMap["uid"] ?? "1",
-  //       imageUrl: listingMap["imageUrl"] = listingMap["imageUrl"] ??
-  //           "https://www.computerhope.com/jargon/g/guest-user.jpg",
-  //       title: listingMap["title"],
-  //       price: listingMap["price"],
-  //       forRent: listingMap["forRent"],
-  //       description: listingMap["description"],
-  //       available: listingMap["available"],
-  //       createdByEmail: listingMap["createdByEmail"],
-  //       usersLiked: listingMap["usersLiked"],
-  //       dateListed: listingMap["dateListed"] =
-  //           listingMap["dateListed"] ?? DateTime(2000, 1, 1, 10, 0, 0),
-  //       profImageUrl: listingMap["profImageUrl"] = listingMap["profImageUrl"] ??
-  //           "https://www.computerhope.com/jargon/g/guest-user.jpg",
-  //       likeCount: listingMap['likeCount'],
-  //     );
-  //   });
-
-  //   return parseListingData;
-  // }
-
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -77,15 +29,23 @@ class ForRenting extends StatelessWidget {
             Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AllBorrowing(),
+                  builder: (context) => AllRenting(
+                    userEmailToDisplay: userEmailToDisplay,
+                  ),
                 ));
           },
         ),
         StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('listings')
-              .where('forRent', isEqualTo: true)
-              .snapshots(),
+          stream: userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+              ? FirebaseFirestore.instance
+                  .collection('listings')
+                  .where('forRent', isEqualTo: true)
+                  .snapshots()
+              : FirebaseFirestore.instance
+                  .collection('listings')
+                  .where('createdByEmail', isEqualTo: userEmailToDisplay)
+                  .where('forRent', isEqualTo: true)
+                  .snapshots(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -106,7 +66,7 @@ class ForRenting extends StatelessWidget {
             // }
             // List<Listing> listingData = listingDataIterable.toList();
             return SizedBox(
-              height: 500,
+              height: 450,
               child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   // docs method gives us list of document id of the listings

@@ -28,10 +28,12 @@ class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
+  var profileData = {};
 
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
+    // get 
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
       (res) {
         print("userData query successful");
@@ -65,6 +67,19 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     });
     super.initState();
+  }
+
+  getProfileData() async {
+    try {
+      var snap = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(currentUser?.uid)
+          .get();
+      profileData = snap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
   }
 
   @override
