@@ -123,9 +123,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                       "Listed on " + convertedTime(widget.snap["dateListed"]),
                     ),
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
-                    ListingCardDetails(listing: widget.listing),
-                    Text("Listed on " +
-                        convertedTime(widget.listing.dateListed)),
+        
 
                     const SizedBox(height: (defaultPadding)),
                     Center(
