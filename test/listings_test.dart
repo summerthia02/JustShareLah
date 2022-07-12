@@ -19,9 +19,7 @@ void main() {
 
   group('test forRent value', () {
     test('testing listing for rent', () {
-      Listing mockListingForRent = Listing.
-        
-        Listing(true);
+      Listing mockListingForRent = Listing.defaultListing(true);
       expect(mockListingForRent.forRent, true);
     });
     test('testing listing for lending', () {
@@ -59,11 +57,14 @@ void main() {
   });
 
   group('test createListing and toJson', () {
-    String imageUrl, title, price, description, createdByEmail;
+    String imageUrl, title, price, description, createdByEmail, profImageUrl, uid, dateListed
     bool forRent, available;
     int likeCount;
     List<dynamic> usersLiked;
-
+    
+    uid = "1";
+    dateListed = "23 July"
+    profImageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
     imageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
     title = "testTitle";
     price = "NA";
