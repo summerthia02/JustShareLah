@@ -19,7 +19,9 @@ void main() {
 
   group('test forRent value', () {
     test('testing listing for rent', () {
-      Listing mockListingForRent = Listing.defaultListing(true);
+      Listing mockListingForRent = Listing.
+        
+        Listing(true);
       expect(mockListingForRent.forRent, true);
     });
     test('testing listing for lending', () {
@@ -73,6 +75,7 @@ void main() {
     usersLiked = ["testuser", "anotheruid"];
 
     Map<String, dynamic> testRecord = {
+      'uid':uid,
       'imageUrl': imageUrl,
       'title': title,
       'price': price,
@@ -81,7 +84,9 @@ void main() {
       'available': available,
       'createdByEmail': createdByEmail,
       'likeCount': likeCount,
-      'usersLiked': usersLiked
+      'usersLiked': usersLiked,
+      'profImageUrl': profImageUrl,
+      'dateListed': dateListed,
     };
 
     Listing listing = Listing.createListing(testRecord);
