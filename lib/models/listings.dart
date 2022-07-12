@@ -35,13 +35,13 @@ class Listing {https://github.com/praveenkrishna0512/JustShareLah/blob/merging-t
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
-  // void likePost(User? user) {
-  //   if (usersLiked.contains(user?.uid)) {
-  //     usersLiked.remove(user?.uid);
-  //   } else {
-  //     usersLiked.add(user?.uid);
-  //   }
-  // }
+  void likePost(User? user) {
+    if (usersLiked.contains(user?.uid)) {
+      usersLiked.remove(user?.uid);
+    } else {
+      usersLiked.add(user?.uid);
+    }
+  }
   static Listing defaultListing(bool forRent) {
     return Listing(
         imageUrl: "images/logo.png",
