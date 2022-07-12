@@ -35,17 +35,17 @@ class Listing {
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
-  // void likePost(User? user) {
-  //   if (usersLiked.contains(user?.uid)) {
-  //     usersLiked.remove(user?.uid);
-  //   } else {
-  //     usersLiked.add(user?.uid);
-  //   }
-  // }
+  void likePost(User? user) {
+    if (usersLiked.contains(user?.uid)) {
+      usersLiked.remove(user?.uid);
+    } else {
+      usersLiked.add(user?.uid);
+    }
+  }
 
-  // void setId(String id) {
-  //   uid = id;
-  // }
+  void setId(String id) {
+    uid = id;
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -63,35 +63,39 @@ class Listing {
     };
   }
 
-  // Listing createListing(record) {
-  //   Map<String, dynamic> attributes = {
-  //     'imageUrl': "",
-  //     'title': '',
-  //     'price': '',
-  //     'forRent': '',
-  //     'description': '',
-  //     'available': true,
-  //     'createdByEmail': '',
-  //     'likeCount': 0,
-  //     'usersLiked': []
-  //   };
+  Listing createListing(record) {
+    Map<String, dynamic> attributes = {
+      'imageUrl': "",
+      'profImageUrl':"",
+      'uid': '',
+      'title': '',
+      'price': '',
+      'forRent': '',
+      'description': '',
+      'available': true,
+      'createdByEmail': '',
+      'dateListed': '',
+      'likeCount': 0,
+      'usersLiked': []
+    };
 
-  //   record.forEach((key, value) => attributes[key] = value);
+    record.forEach((key, value) => attributes[key] = value);
 
-  //   Listing listing = Listing(
-  //       available: attributes['available'],
-  //       imageUrl: attributes['imageUrl'],
-  //       title: attributes['title'],
-  //       price: attributes['price'],
-  //       forRent: attributes['forRent'],
-  //       description: attributes['description'],
-  //       createdByEmail: attributes['createdByEmail'],
-  //       uid: attributes['uid'],
-  //       dateListed: attributes['dateListed'],
-  //       likeCount: attributes['likeCount'],
-  //       profImageUrl: attributes['profImageUrl']);
+    Listing listing = Listing(
+        uid: attributes['uid'],
+        available: attributes['available'],
+        imageUrl: attributes['imageUrl'],
+        title: attributes['title'],
+        price: attributes['price'],
+        forRent: attributes['forRent'],
+        description: attributes['description'],
+        createdByEmail: attributes['createdByEmail'],
+        uid: attributes['uid'],
+        dateListed: attributes['dateListed'],
+        likeCount: attributes['likeCount'],
+        profImageUrl: attributes['profImageUrl']);
 
-  //   listing.usersLiked = Set.from(attributes['usersLiked']);
-  //   return listing;
-  // }
+    listing.usersLiked = Set.from(attributes['usersLiked']);
+    return listing;
+  }
 }
