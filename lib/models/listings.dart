@@ -37,14 +37,19 @@ class Listing {
   
   static Listing defaultListing(bool forRent) {
     return Listing(
-        imageUrl: "images/logo.png",
-        title: "default",
-        price: "NA",
-        forRent: forRent,
-        description: "default",
-        available: true,
-        createdByEmail: "default@test.com",
-        likeCount: 0);
+      uid = "1";
+      dateListed = "23 July"
+      profImageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
+      imageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
+      title = "testTitle";
+      price = "NA";
+      description = "test record!";
+      createdByEmail = "test@gmail.com";
+      forRent = false;
+      available = true;
+      likeCount = 5;
+      usersLiked = ["testuser", "anotheruid"];
+    );
   }
 
 
