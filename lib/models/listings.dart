@@ -34,6 +34,20 @@ class Listing {
     required this.likeCount,
     // this.bgColor = const Color(0xFFEFEFF2),
   });
+  
+  static Listing defaultListing(bool forRent) {
+    return Listing(
+        imageUrl: "images/logo.png",
+        title: "default",
+        price: "NA",
+        forRent: forRent,
+        description: "default",
+        available: true,
+        createdByEmail: "default@test.com",
+        likeCount: 0);
+  }
+
+
 
   void likePost(User? user) {
     if (usersLiked.contains(user?.uid)) {
@@ -47,8 +61,11 @@ class Listing {
     uid = id;
   }
 
+
+
   Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'imageUrl': imageUrl,
       'title': title,
       'price': price,
@@ -65,8 +82,8 @@ class Listing {
 
   Listing createListing(record) {
     Map<String, dynamic> attributes = {
-      'imageUrl': "",
-      'profImageUrl':"",
+      'imageUrl':'https://static.thenounproject.com/png/1913842-200.png',
+      'profImageUrl':'https://static.thenounproject.com/png/1913842-200.png',
       'uid': '',
       'title': '',
       'price': '',
