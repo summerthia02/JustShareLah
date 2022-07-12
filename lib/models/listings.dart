@@ -42,6 +42,19 @@ class Listing {
   //     usersLiked.add(user?.uid);
   //   }
   // }
+  static Listing defaultListing(bool forRent) {
+    return Listing(
+        imageUrl: "images/logo.png",
+        title: "default",
+        price: "NA",
+        forRent: forRent,
+        description: "default",
+        available: true,
+        createdByEmail: "default@test.com",
+        likeCount: 0);
+  }
+
+ 
 
   // void setId(String id) {
   //   uid = id;
@@ -63,18 +76,18 @@ class Listing {
     };
   }
 
-  // Listing createListing(record) {
-  //   Map<String, dynamic> attributes = {
-  //     'imageUrl': "",
-  //     'title': '',
-  //     'price': '',
-  //     'forRent': '',
-  //     'description': '',
-  //     'available': true,
-  //     'createdByEmail': '',
-  //     'likeCount': 0,
-  //     'usersLiked': []
-  //   };
+  static Listing createListing(record) {
+    Map<String, dynamic> attributes = {
+      'imageUrl': 'https://static.thenounproject.com/png/1913842-200.png',
+      'title': '',
+      'price': '',
+      'forRent': '',
+      'description': '',
+      'available': true,
+      'createdByEmail': '',
+      'likeCount': 0,
+      'usersLiked': []
+    };
 
   //   record.forEach((key, value) => attributes[key] = value);
 
