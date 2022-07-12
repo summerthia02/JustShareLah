@@ -56,9 +56,9 @@ class Listing {https://github.com/praveenkrishna0512/JustShareLah/blob/merging-t
 
  
 
-  // void setId(String id) {
-  //   uid = id;
-  // }
+  void setId(String id) {
+    uid = id;
+  }
 
   Map<String, dynamic> toJson() {
     return {
@@ -92,22 +92,22 @@ class Listing {https://github.com/praveenkrishna0512/JustShareLah/blob/merging-t
   }
   
 
-  //   record.forEach((key, value) => attributes[key] = value);
+    record.forEach((key, value) => attributes[key] = value);
 
-  //   Listing listing = Listing(
-  //       available: attributes['available'],
-  //       imageUrl: attributes['imageUrl'],
-  //       title: attributes['title'],
-  //       price: attributes['price'],
-  //       forRent: attributes['forRent'],
-  //       description: attributes['description'],
-  //       createdByEmail: attributes['createdByEmail'],
-  //       uid: attributes['uid'],
-  //       dateListed: attributes['dateListed'],
-  //       likeCount: attributes['likeCount'],
-  //       profImageUrl: attributes['profImageUrl']);
+    Listing listing = Listing(
+        available: attributes['available'],
+        imageUrl: attributes['imageUrl'],
+        title: attributes['title'],
+        price: attributes['price'],
+        forRent: attributes['forRent'],
+        description: attributes['description'],
+        createdByEmail: attributes['createdByEmail'],
+        uid: attributes['uid'],
+        dateListed: attributes['dateListed'],
+        likeCount: attributes['likeCount'],
+        profImageUrl: attributes['profImageUrl']);
 
-  //   listing.usersLiked = Set.from(attributes['usersLiked']);
-  //   return listing;
-  // }
+    listing.usersLiked = Set.from(attributes['usersLiked']);
+    return listing;
+  }
 }
