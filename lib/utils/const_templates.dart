@@ -54,6 +54,7 @@ ElevatedButton buildButtonField(String text, Color color, double length,
 
 //=========================Snackbar Methods=============================
 
+
 showSnackBar(BuildContext context, String text) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text(text)),

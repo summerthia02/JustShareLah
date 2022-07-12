@@ -29,9 +29,12 @@ class _ProfilePageState extends State<ProfilePage> {
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
 
+  var profileData = {};
+
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
+    // get 
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
       (res) {
         print("userData query successful");
@@ -65,6 +68,19 @@ class _ProfilePageState extends State<ProfilePage> {
       });
     });
     super.initState();
+  }
+
+  getProfileData() async {
+    try {
+      var snap = await FirebaseFirestore.instance
+          .collection("Users")
+          .doc(currentUser?.uid)
+          .get();
+      profileData = snap.data()!;
+      setState(() {});
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
   }
 
   @override
@@ -101,20 +117,6 @@ class _ProfilePageState extends State<ProfilePage> {
                               width: 250, height: 200),
                         ),
                       ),
-                // Positioned(
-                //   bottom: -10,
-                //   right: 135,
-                //   child: IconButton(
-                //     color: Colors.red,
-                //     onPressed: () {
-                //       selectImage();
-                //     },
-                //     icon: const Icon(
-                //       Icons.edit,
-                //       size: 30,
-                //     ),
-                //   ),
-                // ),
               ],
             ),
             buildName(userData),

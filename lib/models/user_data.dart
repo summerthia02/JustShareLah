@@ -35,7 +35,8 @@ class UserData {
       email: "Loading",
       phoneNumber: "Loading",
       about: "Loading",
-      imageUrl: "https://google.com",
+
+      imageUrl: "https://www.computerhope.com/jargon/g/guest-user.jpg",
       listings: [],
       reviews: [],
       shareCredits: "Loading",

@@ -53,17 +53,19 @@ class FireStoreMethods {
 
   // uid of the users that liked the listing
   Future<String> likelisting(String listingId, String uid, List likes) async {
+
     String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
         // if the likes list contains current uid, then remove it (unlike)
-        listingsCollection.doc(listingId).update({
-          'likes': FieldValue.arrayRemove([uid])
+
+        await listingsCollection.doc(listingId).update({
+          'usersLiked': FieldValue.arrayRemove([uid])
         });
       } else {
-        // does not contain -> add to the likes array
-        listingsCollection.doc(listingId).update({
-          'likes': FieldValue.arrayUnion([uid])
+        // else we need to add uid to the likes array
+        await listingsCollection.doc(listingId).update({
+          'usersLiked': FieldValue.arrayUnion([uid])
         });
       }
       res = 'success';

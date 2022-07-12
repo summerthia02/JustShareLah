@@ -14,66 +14,82 @@ class AllBorrowing extends StatelessWidget {
   AllBorrowing({
     Key? key,
     this.userEmailToDisplay = "",
+    snap,
   }) : super(key: key);
 
   late String? userEmailToDisplay;
-  Future<Iterable<Listing>> borrowingData =
-      ForBorrowing().getBorrowListingData();
+  // Future<Iterable<Listing>> borrowingData =
+  //     ForBorrowing().getBorrowListingData();
 
   // get the borrowing listing data put into future of the build context UI
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_rounded),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('images/location.png', width: 40, height: 30),
+              const SizedBox(width: 10.0),
+              Text(
+                "NUS, Singapore",
+              )
+            ],
+          ),
         ),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('images/location.png', width: 40, height: 30),
-            const SizedBox(width: 10.0),
+        body:
+            ListView(padding: const EdgeInsets.all(defaultPadding), children: [
+          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text(
-              "NUS, Singapore",
-            )
-          ],
-        ),
-      ),
-      body: ListView(padding: const EdgeInsets.all(defaultPadding), children: [
-        Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text(
-            "Explore",
-            textAlign: TextAlign.start,
-            style: kJustShareLahStyle.copyWith(
-                fontSize: 35, fontWeight: FontWeight.w500),
-          ),
-          const Text(
-            'Listings For Borrowing',
-            style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
-          ),
-          const SizedBox(height: defaultPadding),
-          Form(
-              child: TextFormField(
-            decoration: kTextFormFieldDecoration.copyWith(
-                hintText: "Search for Listings to Borrow",
-                prefixIcon: Icon(Icons.search_rounded)),
-          )),
-        ]),
-        Column(
-          children: [
-            FutureBuilder<Iterable<Listing>>(
-              future: borrowingData,
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  print(snapshot.error);
-                  return const Text("Error loading borrowing items");
-                } else if (!snapshot.hasData) {
-                  return const Text("Awaiting result...");
-                }
+              "Explore",
+              textAlign: TextAlign.start,
+              style: kJustShareLahStyle.copyWith(
+                  fontSize: 35, fontWeight: FontWeight.w500),
+            ),
+            const Text(
+              'Listings For Borrowing',
+              style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
+            ),
+            const SizedBox(height: defaultPadding),
+            Form(
+                child: TextFormField(
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: "Search for Listings to Borrow",
+                  prefixIcon: Icon(Icons.search_rounded)),
+            )),
+          ]),
+          StreamBuilder(
+            stream: userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+                ? FirebaseFirestore.instance
+                    .collection('listings')
+                    .where('forRent', isEqualTo: false)
+                    .snapshots()
+                : FirebaseFirestore.instance
+                    .collection('listings')
+                    .where('createdByEmail', isEqualTo: userEmailToDisplay)
+                    .where('forRent', isEqualTo: false)
+                    .snapshots(),
+            builder: (context,
+                AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (!snapshot.hasData) {
+                return const Text("Awaiting result...");
+              } else if (snapshot.hasError) {
+                print(snapshot.error);
+                return const Text("Error Loading Borrowing Items");
+              } else if (snapshot.data == null) {
+                return const Text("No such Listing");
+              }
 
                 print("going to cast listing data");
                 print(snapshot);
@@ -82,36 +98,57 @@ class AllBorrowing extends StatelessWidget {
                     listingDataIterable.isEmpty) {
                   return const Text("No such listings :(");
                 }
-                List<Listing> listingData = listingDataIterable.toList();
 
-                return Column(
-                    children: List.generate(
-                  listingData.length,
-                  (index) => Container(
-                    padding: EdgeInsets.only(bottom: 20, top: 20),
-                    child: BigListingCard(
-                      image: listingData[index].imageUrl,
-                      title: listingData[index].title,
-                      price: listingData[index].price,
-                      press: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EnlargedScreen(listing: listingData[index]),
-                            ));
-                      },
-                    ),
-                  ),
-                ));
-              },
-            )
-          ],
-        )
-      ]),
+              return SizedBox(
+                height: 500,
+                child: ListView.builder(
+                    scrollDirection: Axis.vertical,
+                    // docs method gives us list of document id of the listings
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) => Container(
+                          alignment: Alignment.center,
+                          child: ListingCard(
+                            // collect the data for each indiviudal document at the index
+                            snap: snapshot.data!.docs[index].data(),
 
-      //TODO: LISTINGS DONT AUTO UPDATE ON FEED PAGE AFTER LISTING IS ADDED
-      bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
-    );
+                            press: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => EnlargedScreen(
+                                        snap:
+                                            snapshot.data!.docs[index].data()),
+                                  ));
+                            },
+                          ),
+                        )),
+              );
+
+              // // print("going to cast listing data");
+
+              // // return Row(
+              // //     crossAxisAlignment: CrossAxisAlignment.start,
+              // //     children: List.generate(
+              // //       listingData.length,
+              // //       (index) => Padding(
+              // //         padding: const EdgeInsets.only(right: defaultPadding),
+              // //         child: ListingCard(
+              // //           image: listingData[index].imageUrl,
+              // //           title: listingData[index].title,
+              // //           price: listingData[index].price,
+              // //           press: () {
+              // //             Navigator.push(
+              // //                 context,
+              // //                 MaterialPageRoute(
+              // //                   builder: (context) => EnlargedScreen(
+              // //                       listing: listingData[index]),
+              // //                 ));
+              // //           },
+              //         ),
+              //       ),
+              //     ));
+            },
+          )
+        ]));
   }
 }

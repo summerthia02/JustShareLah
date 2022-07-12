@@ -35,6 +35,7 @@ class _LoginPageState extends State<LoginPage> {
       _isLoading = true;
     });
 
+
     bool success = await AuthService()
         .signIn(_emailController.text.trim(), _passwordController.text.trim());
     successFailSnackBar(
@@ -106,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                 key: Key("Email"),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) => EmailFieldValidation.validate(value!),
+
                 textAlign: TextAlign.center,
                 controller: _emailController,
                 decoration: kTextFormFieldDecoration.copyWith(
@@ -118,6 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                 key: Key("Password"),
                 obscureText: true,
                 validator: (value) => PasswordFieldValidation.validate(value!),
+
                 textAlign: TextAlign.center,
                 controller: _passwordController,
                 decoration: kTextFormFieldDecoration.copyWith(
@@ -134,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _isLoading
                           ? null
                           : () async {
+
                               _signIn();
                             },
                       child: _isLoading

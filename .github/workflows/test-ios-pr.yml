@@ -1,14 +1,13 @@
-name: "Build"
+name: "Test-ios-PR"
 
 on:
   pull_request:
     branches:
-      - '**'
       - master
 
 jobs:
   build:
-    name: Build
+    name: Test-ios-PR
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
@@ -21,13 +20,11 @@ jobs:
       - run: flutter channel beta
       - run: flutter upgrade
       - run: flutter pub get
-      - run: flutter test
-      - run: flutter build apk --debug --split-per-abi
-#       - run: |
-#           flutter build ios --no-codesign
-#           cd build/ios/iphoneos
-#           mkdir Payload
-#           cd Payload
-#           ln -s ../Runner.app
-#           cd ..
-#           zip -r app.ipa Payload
+      - run: |
+          flutter build ios --no-codesign
+          cd build/ios/iphoneos
+          mkdir Payload
+          cd Payload
+          ln -s ../Runner.app
+          cd ..
+          zip -r app.ipa Payload

@@ -8,6 +8,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
@@ -188,6 +189,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         userEmail!, _image, firstName, lastName, userName, bio);
     successFailSnackBar(dataSaved, "Edit Profile Successful",
         "Error Editing Profile, Please try again.", context);
+
   }
 
   // ================ Widgets =============================

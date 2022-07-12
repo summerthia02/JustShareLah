@@ -56,6 +56,7 @@ class _SignupPageState extends State<SignupPage> {
     await UserDataService.createUser(
         newUserUid, email, userName, firstName, lastName);
 
+
     showSnackBar(context, 'SIgned up Successfully! ');
 
     Navigator.of(context).pop();
