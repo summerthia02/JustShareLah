@@ -16,6 +16,7 @@ class ForBorrowing extends StatelessWidget {
 
   late String? userEmailToDisplay;
 
+
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
@@ -58,12 +59,7 @@ class ForBorrowing extends StatelessWidget {
               return const Text("Error Loading Borrowing Items");
             }
 
-            // Iterable<Listing>? listingDataIterable = snapshot.data!;
-            // if (listingDataIterable == null ||
-            //     listingDataIterable.isEmpty) {
-            //   return const Text("No such listings :(");
-            // }
-            // List<Listing> listingData = listingDataIterable.toList();
+
             return Container(
               height: 450,
               child: ListView.builder(
@@ -93,29 +89,7 @@ class ForBorrowing extends StatelessWidget {
                       )),
             );
 
-            // // print("going to cast listing data");
 
-            // // return Row(
-            // //     crossAxisAlignment: CrossAxisAlignment.start,
-            // //     children: List.generate(
-            // //       listingData.length,
-            // //       (index) => Padding(
-            // //         padding: const EdgeInsets.only(right: defaultPadding),
-            // //         child: ListingCard(
-            // //           image: listingData[index].imageUrl,
-            // //           title: listingData[index].title,
-            // //           price: listingData[index].price,
-            // //           press: () {
-            // //             Navigator.push(
-            // //                 context,
-            // //                 MaterialPageRoute(
-            // //                   builder: (context) => EnlargedScreen(
-            // //                       listing: listingData[index]),
-            // //                 ));
-            // //           },
-            //         ),
-            //       ),
-            //     ));
           },
         )
       ],

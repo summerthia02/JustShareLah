@@ -28,6 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
+
   var profileData = {};
 
   // access the usertable, then get the data where email field == current email

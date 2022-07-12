@@ -7,10 +7,9 @@ class AppTheme {
       primaryColor: Colors.teal,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal),
       textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
-        headline1: TextStyle().copyWith(
-          fontSize: 72,
-        )
-      ),
+          headline1: TextStyle().copyWith(
+        fontSize: 72,
+      )),
       scaffoldBackgroundColor: Colors.white,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -19,10 +18,9 @@ class AppTheme {
         ),
       ),
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-        backgroundColor: Colors.teal,
-        unselectedItemColor: Colors.white,
-        selectedItemColor: Colors.white,
-      ),
+          backgroundColor: Colors.teal,
+          unselectedItemColor: Colors.black,
+          selectedItemColor: Colors.black),
     );
 
     // ThemeData(

@@ -7,6 +7,7 @@ import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
+import 'package:justsharelah_v1/utils/time_helper.dart';
 
 // class _ForBorrowingState extends State<ForBorrowing> {
 class ForRenting extends StatelessWidget {
@@ -74,12 +75,10 @@ class ForRenting extends StatelessWidget {
                   itemBuilder: (context, index) => Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         child: ListingCard(
+
                           // collect the data for each indiviudal document at the index
                           snap: snapshot.data!.docs[index].data(),
-                          // image: listingData[index].imageUrl,
-                          // title: listingData[index].title,
-                          // price: listingData[index].price,
-                          press: () {
+                                   press: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -91,29 +90,7 @@ class ForRenting extends StatelessWidget {
                       )),
             );
 
-            // // print("going to cast listing data");
 
-            // // return Row(
-            // //     crossAxisAlignment: CrossAxisAlignment.start,
-            // //     children: List.generate(
-            // //       listingData.length,
-            // //       (index) => Padding(
-            // //         padding: const EdgeInsets.only(right: defaultPadding),
-            // //         child: ListingCard(
-            // //           image: listingData[index].imageUrl,
-            // //           title: listingData[index].title,
-            // //           price: listingData[index].price,
-            // //           press: () {
-            // //             Navigator.push(
-            // //                 context,
-            // //                 MaterialPageRoute(
-            // //                   builder: (context) => EnlargedScreen(
-            // //                       listing: listingData[index]),
-            // //                 ));
-            // //           },
-            //         ),
-            //       ),
-            //     ));
           },
         )
       ],

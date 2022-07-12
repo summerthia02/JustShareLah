@@ -1,8 +1,21 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/firebase/auth_provider.dart';
+import 'package:justsharelah_v1/firebase/auth_service.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/main.dart';
-import 'package:justsharelah_v1/utils/constants.dart';
+
+class EmailFieldValidation {
+  static String? validate(String value) {
+    return value.isEmpty ? "Email cannot be empty" : null;
+  }
+}
+
+class PasswordFieldValidation {
+  static String? validate(String value) {
+    return value.isEmpty ? "Password cannot be empty" : null;
+  }
+}
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,23 +29,17 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
+  // local signin function
   Future<void> _signIn() async {
     setState(() {
       _isLoading = true;
     });
 
-    try {
-      final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: _emailController.text.trim(),
-        password: _passwordController.text.trim(),
-      );
 
-      if (response.user == null) {
-        context.showErrorSnackBar(message: "Error Signing In");
-      }
-    } on FirebaseAuthException catch (e) {
-      print(e);
-    }
+    bool success = await AuthService()
+        .signIn(_emailController.text.trim(), _passwordController.text.trim());
+    successFailSnackBar(
+        success, "Log In Successful", "Error signing in", context);
 
     setState(() {
       _isLoading = false;
@@ -97,7 +104,10 @@ class _LoginPageState extends State<LoginPage> {
                 height: 20.0,
               ),
               TextFormField(
+                key: Key("Email"),
                 keyboardType: TextInputType.emailAddress,
+                validator: (value) => EmailFieldValidation.validate(value!),
+
                 textAlign: TextAlign.center,
                 controller: _emailController,
                 decoration: kTextFormFieldDecoration.copyWith(
@@ -107,7 +117,10 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 18),
               TextFormField(
+                key: Key("Password"),
                 obscureText: true,
+                validator: (value) => PasswordFieldValidation.validate(value!),
+
                 textAlign: TextAlign.center,
                 controller: _passwordController,
                 decoration: kTextFormFieldDecoration.copyWith(
@@ -120,9 +133,11 @@ class _LoginPageState extends State<LoginPage> {
                 children: [
                   Expanded(
                     child: ElevatedButton(
+                      key: Key("LogIn"),
                       onPressed: _isLoading
                           ? null
-                          : () {
+                          : () async {
+
                               _signIn();
                             },
                       child: _isLoading

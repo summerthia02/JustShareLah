@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/BigListingCard.dart';
-import 'package:justsharelah_v1/models/ForRenting.dart';
+import 'package:justsharelah_v1/models/ForBorrowing.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
@@ -9,17 +9,19 @@ import 'package:justsharelah_v1/models/enlarged_listing.dart';
 import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 
-// class _AllRentingState extends State<AllRenting> {
+// class _AllBorrowingState extends State<AllRenting> {
 class AllRenting extends StatelessWidget {
   AllRenting({
     Key? key,
     this.userEmailToDisplay = "",
+    snap,
   }) : super(key: key);
 
   late String? userEmailToDisplay;
-  // CollectionReference listings =
-  //     FirebaseFirestore.instance.collection('listings');
-  // Future<Iterable<Listing>> rentingData = ForRenting().getRentListingData();
+  // Future<Iterable<Listing>> borrowingData =
+  //     ForBorrowing().getBorrowListingData();
+
+  // get the borrowing listing data put into future of the build context UI
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class AllRenting extends StatelessWidget {
                   fontSize: 35, fontWeight: FontWeight.w500),
             ),
             const Text(
-              'Listings For Rent',
+              'Listings For Borrowing',
               style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
             ),
             const SizedBox(height: defaultPadding),
@@ -64,16 +66,10 @@ class AllRenting extends StatelessWidget {
             )),
           ]),
           StreamBuilder(
-            stream: userEmailToDisplay!.isEmpty || userEmailToDisplay == null
-                ? FirebaseFirestore.instance
-                    .collection('listings')
-                    .where('forRent', isEqualTo: true)
-                    .snapshots()
-                : FirebaseFirestore.instance
-                    .collection('listings')
-                    .where('createdByEmail', isEqualTo: userEmailToDisplay)
-                    .where('forRent', isEqualTo: true)
-                    .snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('listings')
+                .where('forRent', isEqualTo: true)
+                .snapshots(),
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
@@ -84,7 +80,7 @@ class AllRenting extends StatelessWidget {
                 return const Text("Awaiting result...");
               } else if (snapshot.hasError) {
                 print(snapshot.error);
-                return const Text("Error Loading Renting Items");
+                return const Text("Error Loading Borrowing Items");
               }
 
               // Iterable<Listing>? listingDataIterable = snapshot.data!;
@@ -119,6 +115,30 @@ class AllRenting extends StatelessWidget {
                           ),
                         )),
               );
+
+              // // print("going to cast listing data");
+
+              // // return Row(
+              // //     crossAxisAlignment: CrossAxisAlignment.start,
+              // //     children: List.generate(
+              // //       listingData.length,
+              // //       (index) => Padding(
+              // //         padding: const EdgeInsets.only(right: defaultPadding),
+              // //         child: ListingCard(
+              // //           image: listingData[index].imageUrl,
+              // //           title: listingData[index].title,
+              // //           price: listingData[index].price,
+              // //           press: () {
+              // //             Navigator.push(
+              // //                 context,
+              // //                 MaterialPageRoute(
+              // //                   builder: (context) => EnlargedScreen(
+              // //                       listing: listingData[index]),
+              // //                 ));
+              // //           },
+              //         ),
+              //       ),
+              //     ));
             },
           )
         ]));
