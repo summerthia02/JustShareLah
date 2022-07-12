@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class Listing {
+class Listing {https://github.com/praveenkrishna0512/JustShareLah/blob/merging-testingv2.1/lib/models/listings.dart
   final String uid;
   final String imageUrl;
   final String profImageUrl;
@@ -87,7 +87,10 @@ class Listing {
       'createdByEmail': '',
       'likeCount': 0,
       'usersLiked': []
+    
     };
+  }
+  
 
   //   record.forEach((key, value) => attributes[key] = value);
 
