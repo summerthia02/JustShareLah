@@ -12,7 +12,6 @@ import 'package:justsharelah_v1/widget/like_helper.dart';
 
 import '../utils/const_templates.dart';
 
-
 class ListingCard extends StatefulWidget {
   const ListingCard({Key? key, this.snap, required this.press})
       : super(key: key);
@@ -20,7 +19,6 @@ class ListingCard extends StatefulWidget {
   final snap;
   // final String image, title, price;
   final VoidCallback press;
-  final dynamic dateListed;
 
   @override
   State<ListingCard> createState() => _ListingCardState();
