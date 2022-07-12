@@ -91,14 +91,12 @@ class AllBorrowing extends StatelessWidget {
                 return const Text("No such Listing");
               }
 
-                print("going to cast listing data");
-                print(snapshot);
-                Iterable<Listing>? listingDataIterable = snapshot.data;
-                if (listingDataIterable == null ||
-                    listingDataIterable.isEmpty) {
-                  return const Text("No such listings :(");
-                }
-
+              // Iterable<Listing>? listingDataIterable = snapshot.data!;
+              // if (listingDataIterable == null ||
+              //     listingDataIterable.isEmpty) {
+              //   return const Text("No such listings :(");
+              // }
+              // List<Listing> listingData = listingDataIterable.toList();
               return SizedBox(
                 height: 500,
                 child: ListView.builder(
@@ -110,7 +108,9 @@ class AllBorrowing extends StatelessWidget {
                           child: ListingCard(
                             // collect the data for each indiviudal document at the index
                             snap: snapshot.data!.docs[index].data(),
-
+                            // image: listingData[index].imageUrl,
+                            // title: listingData[index].title,
+                            // price: listingData[index].price,
                             press: () {
                               Navigator.push(
                                   context,
