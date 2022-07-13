@@ -10,6 +10,7 @@ import 'dart:async';
 
 import 'package:justsharelah_v1/utils/profile_image.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
+
 import 'package:justsharelah_v1/widget/like_helper.dart';
 
 class EnlargedScreen extends StatefulWidget {
@@ -121,6 +122,9 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     Text(
                       "Listed on " + convertedTime(widget.snap["dateListed"]),
                     ),
+                    // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
+        
+
                     const SizedBox(height: (defaultPadding)),
                     Center(
                       child: SizedBox(
@@ -252,6 +256,7 @@ class ListingCardDetails extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
+
                 snap["title"],
                 style: kHeadingText,
               ),
@@ -267,6 +272,7 @@ class ListingCardDetails extends StatelessWidget {
           height: 10,
         ),
         Text(
+
           snap["description"].toString(),
           style: kBodyTextSmall,
         ),
