@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:justsharelah_v1/models/listings.dart';
@@ -13,7 +14,7 @@ class MockFirebaseUser extends Mock implements User {
 }
 
 void main() {
-  // adding to mock users 
+  // adding to mock users
   MockFirebaseUser testuser = MockFirebaseUser(uid: "testUser");
   MockFirebaseUser testuser2 = MockFirebaseUser(uid: "testUser2");
 
@@ -47,23 +48,30 @@ void main() {
     });
   });
 
-  group('test setId', () {
-    Listing mockListing = Listing.defaultListing(true);
-    test('testing if setID sets ID', () {
-      String testId = "test";
-      mockListing.setId(testId);
-      expect(mockListing.uid, testId);
-    });
-  });
+  // group('test setId', () {
+  //   Listing mockListing = Listing.defaultListing(true);
+  //   test('testing if setID sets ID', () {
+  //     String testId = "test";
+  //     mockListing.setId(testId);
+  //     expect(mockListing.uid, testId);
+  //   });
+  // });
 
   group('test createListing and toJson', () {
-    String imageUrl, title, price, description, createdByEmail, profImageUrl, uid, dateListed
+    String imageUrl,
+        title,
+        price,
+        description,
+        createdByEmail,
+        profImageUrl,
+        uid;
+    DateTime dateListed;
     bool forRent, available;
     int likeCount;
     List<dynamic> usersLiked;
-    
+
     uid = "1";
-    dateListed = "23 July"
+    dateListed = DateTime(2022);
     profImageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
     imageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
     title = "testTitle";
@@ -76,7 +84,7 @@ void main() {
     usersLiked = ["testuser", "anotheruid"];
 
     Map<String, dynamic> testRecord = {
-      'uid':uid,
+      'uid': uid,
       'imageUrl': imageUrl,
       'title': title,
       'price': price,

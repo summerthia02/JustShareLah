@@ -14,7 +14,7 @@ class Listing {
   final bool available;
   final String createdByEmail;
   final int? likeCount;
-  final dynamic dateListed;
+  final DateTime dateListed;
   final List<dynamic> usersLiked;
 
   // final Color bgColor;
@@ -37,18 +37,18 @@ class Listing {
   
   static Listing defaultListing(bool forRent) {
     return Listing(
-      uid = "1";
-      dateListed = "23 July"
-      profImageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
-      imageUrl = 'https://static.thenounproject.com/png/1913842-200.png';
-      title = "testTitle";
-      price = "NA";
-      description = "test record!";
-      createdByEmail = "test@gmail.com";
-      forRent = false;
-      available = true;
-      likeCount = 5;
-      usersLiked = ["testuser", "anotheruid"];
+      uid: "1",
+      dateListed: DateTime(2022),
+      profImageUrl: 'https://static.thenounproject.com/png/1913842-200.png',
+      imageUrl: 'https://static.thenounproject.com/png/1913842-200.png',
+      title: "testTitle",
+      price: "NA",
+      description: "test record!",
+      createdByEmail: "test@gmail.com",
+      forRent: forRent,
+      available: true,
+      likeCount: 5,
+      usersLiked: [],
     );
   }
 
@@ -60,10 +60,6 @@ class Listing {
     } else {
       usersLiked.add(user?.uid);
     }
-  }
-
-  void setId(String id) {
-    uid = id;
   }
 
 
@@ -81,11 +77,11 @@ class Listing {
       'likeCount': likeCount,
       'usersLiked': usersLiked,
       'profImageUrl': profImageUrl,
-      'dateListed': Timestamp.fromDate(dateListed),
+      'dateListed': dateListed,
     };
   }
 
-  Listing createListing(record) {
+  static Listing createListing(record) {
     Map<String, dynamic> attributes = {
       'imageUrl':'https://static.thenounproject.com/png/1913842-200.png',
       'profImageUrl':'https://static.thenounproject.com/png/1913842-200.png',
@@ -96,7 +92,7 @@ class Listing {
       'description': '',
       'available': true,
       'createdByEmail': '',
-      'dateListed': '',
+      'dateListed': DateTime(2022),
       'likeCount': 0,
       'usersLiked': []
     };
@@ -112,12 +108,10 @@ class Listing {
         forRent: attributes['forRent'],
         description: attributes['description'],
         createdByEmail: attributes['createdByEmail'],
-        uid: attributes['uid'],
         dateListed: attributes['dateListed'],
         likeCount: attributes['likeCount'],
-        profImageUrl: attributes['profImageUrl']);
-
-    listing.usersLiked = Set.from(attributes['usersLiked']);
+        profImageUrl: attributes['profImageUrl'],
+        usersLiked: attributes['usersLiked']);
     return listing;
   }
 }
