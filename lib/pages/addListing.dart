@@ -1,6 +1,7 @@
 import 'dart:ffi';
 import 'dart:io';
 import 'dart:async';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -226,52 +227,63 @@ class _AddListingPageState extends State<AddListingPage> {
     );
   }
 
-  Expanded buildFormField(String hintText, TextEditingController controller) {
-    return Expanded(
-      child: Container(
-          padding: EdgeInsets.only(top: 20, right: 20, left: 20),
-          child: SizedBox(
-            width: 100,
-            height: 40.0,
-            child: TextField(
-              onChanged: (value) => print(value),
-              controller: controller,
-              decoration: InputDecoration(
-                hintText: hintText,
-                border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(30))),
-                hintStyle: TextStyle(fontSize: 17, color: Colors.grey),
-              ),
-            ),
-          )),
+  Container buildFormField(String hintText, TextEditingController controller,
+    {double height = 40.0, int numLines = 1}) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20, right: 20),
+      child: SizedBox(
+        width: 230,
+        height: height,
+        child: TextField(
+          minLines: numLines,
+          maxLines: numLines,
+          onChanged: (value) => print(value),
+          controller: controller,
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            hintText: hintText,
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            hintStyle: const TextStyle(fontSize: 17, color: Colors.grey),
+          ),
+        ),
+      ),
     );
   }
 
   // create class for dropdown menu items
-  DropdownButtonFormField<String> buildRentOrBorrowDropdown() {
-    return DropdownButtonFormField<String>(
-      decoration: const InputDecoration(
-          border: OutlineInputBorder(
-              borderRadius: BorderRadius.all(
-        Radius.circular(30.0),
-      ))),
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward_rounded),
-      elevation: 2,
-      style: const TextStyle(color: Colors.grey, fontSize: 17),
-      onChanged: (String? newValue) {
-        if (mounted) {
-          setState(() {
-            dropdownValue = newValue!;
-          });
-        }
-      },
-      items: listingTypes.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+  Container buildRentOrBorrowDropdown() {
+    return Container(
+      padding: const EdgeInsets.only(top: 20, right: 20),
+      child: SizedBox(
+        width: 230,
+        height: 40,
+        child: DropdownButtonFormField<String>(
+          decoration: const InputDecoration(
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+            Radius.circular(30.0),
+          ))),
+          value: dropdownValue,
+          icon: const Icon(Icons.arrow_downward_rounded),
+          style: const TextStyle(color: Colors.grey, fontSize: 17),
+          onChanged: (String? newValue) {
+            if (mounted) {
+              setState(() {
+                dropdownValue = newValue!;
+              });
+            }
+          },
+          items: listingTypes.map<DropdownMenuItem<String>>((String value) {
+            return DropdownMenuItem<String>(
+              value: value,
+              child: Text(value),
+            );
+          }).toList(),
+        )
+      )
     );
   }
 
@@ -285,22 +297,6 @@ class _AddListingPageState extends State<AddListingPage> {
     );
   }
 
-  // void _addListing() {
-  // var addedListing = {
-  //   'imageUrl': _image!,
-  //   'title': _titleController.text,
-  //   'price': _priceController.text,
-  //   'for_rent': forRent,
-  //   'description': _descriptionController.text,
-  //   'available': true,
-  //   'created_by_email': userEmail,
-  //   'likeCount': 0,
-  // };
-  // listingsCollection
-  //     .add(addedListing)
-  //     .then((value) => print('Listing Added'))
-  //     .catchError((err) => print('Failed to add listing: $err'));
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -309,7 +305,7 @@ class _AddListingPageState extends State<AddListingPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Stack(
@@ -320,7 +316,7 @@ class _AddListingPageState extends State<AddListingPage> {
                         radius: 70, backgroundImage: MemoryImage(_image!))
                     : CircleAvatar(
                         radius: 70,
-                        backgroundColor: Color.fromARGB(255, 226, 224, 224),
+                        backgroundColor: const Color.fromARGB(255, 226, 224, 224),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset('images/gallery.png',
@@ -343,45 +339,30 @@ class _AddListingPageState extends State<AddListingPage> {
             ),
             Row(children: <Widget>[
               buildFormTitle("Listing Title"),
-              const SizedBox(
-                width: 10.0,
-              ),
+              const Expanded(child: SizedBox()),
               buildFormField("Enter Listing Details", _titleController),
             ]),
             const SizedBox(height: 10.0),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 buildFormTitle("Listing Type"),
-                const SizedBox(
-                  width: 10.0,
-                ),
-                Expanded(child: buildRentOrBorrowDropdown()),
+                const Expanded(child: SizedBox()),
+                buildRentOrBorrowDropdown(),
               ],
             ),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
               buildFormTitle("Price"),
-              const SizedBox(
-                width: 10.0,
-              ),
+              const Expanded(child: SizedBox()),
               buildFormField("Enter Price of Listing ", _priceController),
             ]),
-            // const SizedBox(height: 10.0),
-            // Row(children: <Widget>[
-            //   buildFormTitle("Brand"),
-            //   const SizedBox(
-            //     width: 10.0,
-            //   ),
-            //   buildFormField("Enter Brand of Listing ", _brandController),
-            // ]),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
               buildFormTitle("Description"),
-              const SizedBox(
-                width: 10.0,
-              ),
+              const Expanded(child: SizedBox()),
               buildFormField("Give us a brief description of your listing",
-                  _descriptionController),
+                  _descriptionController, height: 100, numLines: 5),
             ]),
             const SizedBox(height: 10.0),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
