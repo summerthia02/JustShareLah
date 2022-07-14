@@ -9,7 +9,7 @@ import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:supabase/supabase.dart';
 import 'package:justsharelah_v1/utils/constants.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import '../models/ForBorrowing.dart';
+import 'package:justsharelah_v1/models/ForBorrowing.dart';
 import '../models/ListingCard.dart';
 import 'chat_page.dart';
 import 'addListing.dart';
@@ -121,31 +121,37 @@ class _FeedPageState extends State<FeedPage> {
         ),
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(defaultPadding),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      body: Padding(
+        padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(defaultPadding),
           children: [
-            Text(
-              "Explore",
-              style: kJustShareLahStyle.copyWith(
-                  fontSize: 35, fontWeight: FontWeight.w500),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Explore",
+                  style: kJustShareLahStyle.copyWith(
+                      fontSize: 35, fontWeight: FontWeight.w500),
+                ),
+                const Text(
+                  'Listings For You',
+                  style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
+                ),
+                const SizedBox(height: defaultPadding),
+                Form(
+                    child: TextFormField(
+                  decoration: kTextFormFieldDecoration.copyWith(
+                      hintText: "Search for Listings...",
+                      prefixIcon: Icon(Icons.search_rounded)),
+                )),
+                const SizedBox(height: defaultPadding),
+                ForBorrowing(),
+                const SizedBox(height: defaultPadding),
+                ForRenting()
+              ],
             ),
-            const Text(
-              'Listings For You',
-              style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
-            ),
-            const SizedBox(height: defaultPadding),
-            Form(
-                child: TextFormField(
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: "Search for Listings...",
-                  prefixIcon: Icon(Icons.search_rounded)),
-            )),
-            const SizedBox(height: defaultPadding),
-            ForBorrowing(),
-            const SizedBox(height: defaultPadding),
-            ForRenting()
           ],
         ),
       ),

@@ -81,5 +81,4 @@ void main() {
       expect(FormValidation.formFieldEmpty(testVal), null);
     });
   });
-
 }

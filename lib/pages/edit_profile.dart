@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
@@ -65,7 +66,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
         email: userEmail,
         phoneNumber: data["phone_number"],
         about: data["about"],
-        imageUrl: data["image_url"],
+        imageUrl: data["imageUrl"],
         listings: data["listings"],
         reviews: data["reviews"],
         shareCredits: data["share_credits"],
@@ -196,7 +197,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       return;
     }
 
+    // profile image
+    String? photoUrl = await StorageMethods()
+        .uploadPicToStorage('profilePictures', _image!, false);
+
     // if empty, remains the same, else take the controller variable
+    userData!["imageUrl"] = _image == null ? userData!["imageUrl"] : photoUrl;
 
     userData!["first_name"] = _firstnameController.text.isEmpty
         ? userData!["first_name"]

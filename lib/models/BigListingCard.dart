@@ -27,7 +27,10 @@ class BigListingCard extends StatelessWidget {
                 color: Color.fromARGB(255, 162, 202, 197),
                 borderRadius:
                     BorderRadius.all(Radius.circular(defaultBorderRadius))),
-            child: Image.asset(image, width: 200, height: 210),
+            child: Image.network(
+              image,
+              scale: 1.1,
+            ),
           ),
           // ignore: prefer_const_literals_to_create_immutables
           Container(
