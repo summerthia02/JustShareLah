@@ -37,8 +37,7 @@ class _AddListingPageState extends State<AddListingPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   final usersCollection = FirebaseFirestore.instance.collection('Users');
-  late UserData userData = UserData.defaultUserData();
-  var parseUserData;
+  late UserData userData;
   // for rent or borrow dropdown
   String dropdownValue = 'Lending';
   List<String> listingTypes = ['Lending', 'Renting'];
@@ -155,7 +154,7 @@ class _AddListingPageState extends State<AddListingPage> {
 
   // ================ Firebase interface =============
 
-  void addListing(String uid, String profImgUrl, String email) async {
+  void addListing() async {
     if (userEmail == null) {
       showSnackBar(context, "Error fetching user, unable to add listing");
 
@@ -175,9 +174,9 @@ class _AddListingPageState extends State<AddListingPage> {
           _titleController.text,
           _descriptionController.text,
           _image!,
-          uid,
-          email,
-          profImgUrl,
+          userData.uid!,
+          userData.email!,
+          userData.imageUrl!,
           forRent,
           _priceController.text);
       if (res == "success") {
@@ -228,7 +227,7 @@ class _AddListingPageState extends State<AddListingPage> {
   }
 
   Container buildFormField(String hintText, TextEditingController controller,
-    {double height = 40.0, int numLines = 1}) {
+      {double height = 40.0, int numLines = 1}) {
     return Container(
       padding: const EdgeInsets.only(top: 20, right: 20),
       child: SizedBox(
@@ -255,36 +254,35 @@ class _AddListingPageState extends State<AddListingPage> {
   // create class for dropdown menu items
   Container buildRentOrBorrowDropdown() {
     return Container(
-      padding: const EdgeInsets.only(top: 20, right: 20),
-      child: SizedBox(
-        width: 230,
-        height: 40,
-        child: DropdownButtonFormField<String>(
-          decoration: const InputDecoration(
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(
-            Radius.circular(30.0),
-          ))),
-          value: dropdownValue,
-          icon: const Icon(Icons.arrow_downward_rounded),
-          style: const TextStyle(color: Colors.grey, fontSize: 17),
-          onChanged: (String? newValue) {
-            if (mounted) {
-              setState(() {
-                dropdownValue = newValue!;
-              });
-            }
-          },
-          items: listingTypes.map<DropdownMenuItem<String>>((String value) {
-            return DropdownMenuItem<String>(
-              value: value,
-              child: Text(value),
-            );
-          }).toList(),
-        )
-      )
-    );
+        padding: const EdgeInsets.only(top: 20, right: 20),
+        child: SizedBox(
+            width: 230,
+            height: 40,
+            child: DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                  contentPadding:
+                      EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                    Radius.circular(30.0),
+                  ))),
+              value: dropdownValue,
+              icon: const Icon(Icons.arrow_downward_rounded),
+              style: const TextStyle(color: Colors.grey, fontSize: 17),
+              onChanged: (String? newValue) {
+                if (mounted) {
+                  setState(() {
+                    dropdownValue = newValue!;
+                  });
+                }
+              },
+              items: listingTypes.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            )));
   }
 
   Container buildFormTitle(String text) {
@@ -316,7 +314,8 @@ class _AddListingPageState extends State<AddListingPage> {
                         radius: 70, backgroundImage: MemoryImage(_image!))
                     : CircleAvatar(
                         radius: 70,
-                        backgroundColor: const Color.fromARGB(255, 226, 224, 224),
+                        backgroundColor:
+                            const Color.fromARGB(255, 226, 224, 224),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.asset('images/gallery.png',
@@ -362,7 +361,8 @@ class _AddListingPageState extends State<AddListingPage> {
               buildFormTitle("Description"),
               const Expanded(child: SizedBox()),
               buildFormField("Give us a brief description of your listing",
-                  _descriptionController, height: 100, numLines: 5),
+                  _descriptionController,
+                  height: 100, numLines: 5),
             ]),
             const SizedBox(height: 10.0),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -371,11 +371,7 @@ class _AddListingPageState extends State<AddListingPage> {
               }),
               const SizedBox(width: 60),
               buildButtonField("ADD LISTING", Colors.green, 30.0, () {
-                addListing(
-                  userData.uid!,
-                  userData.imageUrl!,
-                  userData.email!,
-                );
+                addListing();
                 Navigator.pop(context);
               }),
             ]),

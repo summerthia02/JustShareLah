@@ -34,7 +34,7 @@ class _ProfilePageState extends State<ProfilePage> {
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
-    // get 
+    // get
     await usersCollection.where('email', isEqualTo: userEmail).get().then(
       (res) {
         print("userData query successful");
@@ -99,26 +99,7 @@ class _ProfilePageState extends State<ProfilePage> {
           physics: const BouncingScrollPhysics(),
           children: [
             const SizedBox(height: 15),
-            Stack(
-              alignment: Alignment.center,
-              // circular widget to accept and show selected image
-              children: [
-                userData.imageUrl != null
-                    ? CircleAvatar(
-                        radius: 60,
-                        backgroundImage: NetworkImage(userData.imageUrl!),
-                      )
-                    : CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 70,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.zero,
-                          child: Image.asset('images/def_dp.png',
-                              width: 250, height: 200),
-                        ),
-                      ),
-              ],
-            ),
+            buildProfPic(),
             buildName(userData),
             const SizedBox(height: 12),
             numReviews(userData.reviews.length),
@@ -135,6 +116,29 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
+    );
+  }
+
+  Stack buildProfPic() {
+    return Stack(
+      alignment: Alignment.center,
+      // circular widget to accept and show selected image
+      children: [
+        userData.imageUrl != null && userData.imageUrl != ""
+        ? CircleAvatar(
+          radius: 60,
+          backgroundImage: NetworkImage(userData.imageUrl!),
+        )
+        : CircleAvatar(
+          backgroundColor: Colors.white,
+          radius: 70,
+          child: ClipRRect(
+            borderRadius: BorderRadius.zero,
+            child:
+                Image.asset('images/def_dp.png', width: 250, height: 200),
+          ),
+        ),
+      ],
     );
   }
 
