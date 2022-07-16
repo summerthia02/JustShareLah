@@ -16,6 +16,7 @@ class Listing {
   final int? likeCount;
   final dynamic dateListed;
   final List<dynamic> usersLiked;
+  final List<String> searchIndex;
 
   // final Color bgColor;
 
@@ -32,6 +33,7 @@ class Listing {
     required this.dateListed,
     required this.profImageUrl,
     required this.likeCount,
+    required this.searchIndex,
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
