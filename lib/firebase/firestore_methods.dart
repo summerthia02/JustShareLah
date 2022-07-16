@@ -22,10 +22,18 @@ class FireStoreMethods {
   ) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
+
     try {
       String imageUrl =
           await StorageMethods().uploadPicToStorage('listings', file, true);
+      List<String> splitTitle = title.split(' ');
+      List<String> indexTitle = [];
 
+      for (int i = 0; i < splitTitle.length; i++) {
+        for (int j = 0; j < splitTitle[i].length + i; j++) {
+          indexTitle.add(splitTitle[i].substring(0, j).toLowerCase());
+        }
+      }
       // to create uniqud id based on time, won't have the same id
       String listingId = const Uuid().v1(); // creates unique id based on time
       Listing listing = Listing(
@@ -41,9 +49,11 @@ class FireStoreMethods {
         dateListed: DateTime.now(),
         imageUrl: imageUrl,
         profImageUrl: profImageUrl,
+        searchIndex: indexTitle,
       );
 
       listingsCollection.doc(listingId).set(listing.toJson());
+      listingsCollection.add({'title': title, 'searchIndex': indexTitle});
       res = "success";
     } catch (err) {
       res = err.toString();
@@ -53,7 +63,6 @@ class FireStoreMethods {
 
   // uid of the users that liked the listing
   Future<String> likelisting(String listingId, String uid, List likes) async {
-
     String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
@@ -73,6 +82,13 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  // searching for listing
+  searchListing(String listingTitle) async {
+    return await listingsCollection
+        .where("title", isEqualTo: listingTitle)
+        .get();
   }
 
   // listing comment

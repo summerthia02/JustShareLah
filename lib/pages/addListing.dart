@@ -329,6 +329,8 @@ class _AddListingPageState extends State<AddListingPage> {
 
   @override
   Widget build(BuildContext context) {
+    // to add the search split into the listing fields (title)
+
     return Scaffold(
       appBar:
           MyAppBar().buildAppBar(const Text("Add Listing"), context, '/feed'),

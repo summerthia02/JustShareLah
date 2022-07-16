@@ -136,13 +136,6 @@ class _FeedPageState extends State<FeedPage> {
                   style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
                 ),
                 const SizedBox(height: defaultPadding),
-                Form(
-                    child: TextFormField(
-                  decoration: kTextFormFieldDecoration.copyWith(
-                      hintText: "Search for Listings...",
-                      prefixIcon: Icon(Icons.search_rounded)),
-                )),
-                const SizedBox(height: defaultPadding),
                 ForBorrowing(),
                 const SizedBox(height: defaultPadding),
                 ForRenting()
