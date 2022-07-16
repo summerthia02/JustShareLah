@@ -32,7 +32,7 @@ class FireStoreMethods {
         description: description,
         title: title,
         uid: listingId,
-        available: false,
+        available: true,
         price: price,
         forRent: forRent,
         createdByEmail: createdByEmail,
