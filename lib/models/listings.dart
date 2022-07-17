@@ -62,6 +62,7 @@ class Listing {
       'usersLiked': usersLiked,
       'profImageUrl': profImageUrl,
       'dateListed': Timestamp.fromDate(dateListed),
+      'searchIndex': searchIndex,
     };
   }
 
