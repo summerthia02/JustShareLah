@@ -13,10 +13,12 @@ import 'package:justsharelah_v1/widget/like_helper.dart';
 import '../utils/const_templates.dart';
 
 class ListingCard extends StatefulWidget {
-  const ListingCard({Key? key, this.snap, required this.press})
+  const ListingCard({Key? key, this.snap, this.uid, required this.press})
       : super(key: key);
 
   final snap;
+  final uid;
+
   // final String image, title, price;
   final VoidCallback press;
 
@@ -104,11 +106,33 @@ class _ListingCardState extends State<ListingCard> {
                               scale: 1.5, fit: BoxFit.scaleDown)
                       ),
                     ),
+                    Positioned(
+                      top: 20,
+                      right: 0,
+                      child: Container(
+                        height: 30,
+                        width: 30,
+                        child: widget.snap["usersLiked"].contains(userId)
+                            ? const Icon(
+                                Icons.favorite,
+                                color: Colors.red,
+                                size: 30,
+                              )
+                            : Container(),
+                      ),
+                    ),
                   ],
                 ),
 
                 // ignore: prefer_const_literals_to_create_immutables
-
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    widget.snap["usersLiked"].length != 1
+                        ? "${widget.snap["usersLiked"].length} likes"
+                        : "1 like",
+                  ),
+                ),
                 Row(children: [
                   Expanded(
                       child: Text(
