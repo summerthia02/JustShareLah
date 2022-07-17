@@ -99,12 +99,20 @@ class _FeedPageState extends State<FeedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded),
-          onPressed: () {
-            AuthService().signOut();
-          },
-        ),
+        actions: [
+          Stack(children: [
+            IconButton(
+              icon: const Icon(Icons.logout),
+              onPressed: () {
+                AuthService().signOut();
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 20, top: 35),
+              child: Text("Logout"),
+            ),
+          ]),
+        ],
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
