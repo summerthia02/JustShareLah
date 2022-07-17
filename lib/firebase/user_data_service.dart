@@ -1,7 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
+import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
+import 'package:justsharelah_v1/models/user_data.dart';
 
 // user data under the 'Users' table
 class UserDataService {
@@ -25,6 +28,47 @@ class UserDataService {
       'reviews': [],
       'share_credits': "",
     });
+  }
+
+  static UserData fromDocument(DocumentSnapshot snapshot) {
+    String email = "";
+    String username = "";
+    String firstName = "";
+    String lastName = "";
+    String phoneNumber = "";
+    String about = "";
+    String imageUrl = "";
+    String shareCredits = "";
+    List<dynamic> listings = [];
+    List<dynamic> reviews = [];
+
+    try {
+      email = snapshot.get(FirestoreUserKeys.email);
+      username = snapshot.get(FirestoreUserKeys.username);
+      firstName = snapshot.get(FirestoreUserKeys.firstName);
+      lastName = snapshot.get(FirestoreUserKeys.lastName);
+      phoneNumber = snapshot.get(FirestoreUserKeys.phoneNumber);
+      about = snapshot.get(FirestoreUserKeys.about);
+      imageUrl = snapshot.get(FirestoreUserKeys.imageUrl);
+      shareCredits = snapshot.get(FirestoreUserKeys.shareCredits);
+      listings = snapshot.get(FirestoreUserKeys.listings);
+      reviews = snapshot.get(FirestoreUserKeys.reviews);
+    } catch (e) {
+      print(e);
+    }
+
+    return UserData(
+        uid: snapshot.id,
+        userName: username,
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        phoneNumber: phoneNumber,
+        about: about,
+        imageUrl: imageUrl,
+        listings: listings,
+        reviews: reviews,
+        shareCredits: shareCredits);
   }
 
   // edit profile

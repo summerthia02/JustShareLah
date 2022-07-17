@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:justsharelah_v1/firebase/firestore_constants.dart';
+import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/models/chats/chat_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,10 +32,10 @@ class ChatProvider {
 
   Stream<QuerySnapshot> getChatMessage(String groupChatId, int limit) {
     return firebaseFirestore
-        .collection(FirestoreChatConstants.pathMessageCollection)
+        .collection(FirestoreChatKeys.pathMessageCollection)
         .doc(groupChatId)
         .collection(groupChatId)
-        .orderBy(FirestoreChatConstants.timestamp, descending: true)
+        .orderBy(FirestoreChatKeys.timestamp, descending: true)
         .limit(limit)
         .snapshots();
   }
@@ -43,23 +43,22 @@ class ChatProvider {
   void sendChatMessage(String content, int type, String groupChatId,
       String currentUserId, String peerId) {
     DocumentReference documentReference = firebaseFirestore
-        .collection(FirestoreChatConstants.pathMessageCollection)
+        .collection(FirestoreChatKeys.pathMessageCollection)
         .doc(groupChatId)
         .collection(groupChatId)
         .doc(DateTime.now().millisecondsSinceEpoch.toString());
 
     ChatMessage chatMessages = ChatMessage(
-     idFrom: currentUserId,
-     idTo: peerId,
-     timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
-     content: content,
-     type: type);
+        idFrom: currentUserId,
+        idTo: peerId,
+        timestamp: DateTime.now().millisecondsSinceEpoch.toString(),
+        content: content,
+        type: type);
 
     FirebaseFirestore.instance.runTransaction((transaction) async {
       transaction.set(documentReference, chatMessages.toJson());
     });
   }
-  
 }
 
 class MessageType {
