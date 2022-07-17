@@ -2,12 +2,14 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:uuid/uuid.dart';
 
 class FireStoreMethods {
   // listings folder in firebase
+  static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
   final listingsCollection = FirebaseFirestore.instance.collection('listings');
 
   Future<String> uploadlisting(
@@ -49,7 +51,7 @@ class FireStoreMethods {
         description: description,
         title: title,
         uid: listingId,
-        available: false,
+        available: true,
         price: price,
         forRent: forRent,
         createdByEmail: createdByEmail,
@@ -72,6 +74,7 @@ class FireStoreMethods {
   // uid of the users that liked the listing
   Future<String> likelisting(
       String listingId, String? uid, List<dynamic> likes) async {
+
     String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
@@ -140,5 +143,29 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  static Future<void> updateFirestoreData(
+      String collectionPath, String path, Map<String, dynamic> updateData) {
+    return firebaseFirestore
+        .collection(collectionPath)
+        .doc(path)
+        .update(updateData);
+  }
+
+  static Stream<QuerySnapshot> getFirestoreChatData(
+      String collectionPath, int limit, String? textSearch) {
+    if (textSearch?.isNotEmpty == true) {
+      return firebaseFirestore
+          .collection(collectionPath)
+          .limit(limit)
+          .where(FirestoreUserKeys.username, isEqualTo: textSearch)
+          .snapshots();
+    } else {
+      return firebaseFirestore
+          .collection(collectionPath)
+          .limit(limit)
+          .snapshots();
+    }
   }
 }

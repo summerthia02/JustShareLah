@@ -46,9 +46,7 @@ class _ListingCardState extends State<ListingCard> {
         print("listingData query successful");
         // userData = res.docs.map((snapshot) => snapshot.data());
 
-        setState(() {
-          name = res.docs[0]["username"];
-        });
+        name = res.docs[0]["username"];
       },
       onError: (e) => print("Error completing: $e"),
     );
@@ -59,7 +57,7 @@ class _ListingCardState extends State<ListingCard> {
   @override
   void initState() {
     super.initState();
-    getUserName();
+    getUserName().then((value) => setState(() {},));
     userId = currentUser?.uid;
   }
 
@@ -75,10 +73,10 @@ class _ListingCardState extends State<ListingCard> {
               backgroundImage:
                   NetworkImage(widget.snap['profImageUrl'].toString()),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
-            Text(name, style: TextStyle(fontWeight: FontWeight.w700)),
+            Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
           ],
         ),
         GestureDetector(
@@ -100,12 +98,12 @@ class _ListingCardState extends State<ListingCard> {
                       child: Container(
                         width: 500,
                         height: 500,
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 162, 202, 197),
                             borderRadius: BorderRadius.all(
                                 Radius.circular(defaultBorderRadius))),
                         child: Image.network(widget.snap["imageUrl"].toString(),
-                            scale: 1.5, fit: BoxFit.scaleDown),
+                              scale: 1.5, fit: BoxFit.scaleDown)
                       ),
                     ),
                     Positioned(

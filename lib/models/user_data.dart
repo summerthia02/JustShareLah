@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 
 class UserData {
   final String? uid;
@@ -35,7 +36,6 @@ class UserData {
       email: "Loading",
       phoneNumber: "Loading",
       about: "Loading",
-
       imageUrl: "https://www.computerhope.com/jargon/g/guest-user.jpg",
       listings: [],
       reviews: [],
@@ -44,20 +44,21 @@ class UserData {
   }
 
   static UserData fromSnap(DocumentSnapshot snap) {
+    print("snap: $snap");
     var snapshot = snap.data() as Map<String, dynamic>;
 
     return UserData(
-      userName: snapshot["userName"],
+      userName: snapshot[FirestoreUserKeys.username],
       uid: snapshot["uid"],
-      firstName: snapshot["firstName"],
-      lastName: snapshot["lastName"],
-      phoneNumber: snapshot["phoneNumber"],
-      about: snapshot["about"],
-      email: snapshot["email"],
-      imageUrl: snapshot["imageUrl"],
-      listings: snapshot["listings"],
-      reviews: snapshot["reviews"],
-      shareCredits: snapshot["shareCredits"],
+      firstName: snapshot[FirestoreUserKeys.firstName],
+      lastName: snapshot[FirestoreUserKeys.lastName],
+      phoneNumber: snapshot[FirestoreUserKeys.phoneNumber],
+      about: snapshot[FirestoreUserKeys.about],
+      email: snapshot[FirestoreUserKeys.email],
+      imageUrl: snapshot[FirestoreUserKeys.imageUrl],
+      listings: snapshot[FirestoreUserKeys.listings],
+      reviews: snapshot[FirestoreUserKeys.reviews],
+      shareCredits: snapshot[FirestoreUserKeys.shareCredits],
     );
   }
 

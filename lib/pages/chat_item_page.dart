@@ -1,205 +1,529 @@
+import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:justsharelah_v1/firebase/firestore_keys.dart';
+import 'package:justsharelah_v1/models/chats/chat_message.dart';
+import 'package:justsharelah_v1/provider/chat_provider.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
+import 'package:provider/provider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:justsharelah_v1/models/Chats/ChatBubble.dart';
-import 'package:justsharelah_v1/models/Chats/ChatWidget.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'login_page.dart';
 
 class ChatItemPage extends StatefulWidget {
+  final String otherId;
+  final String otherAvatar;
+  final String otherNickname;
+  final String userProfPicUrl;
+  final String otherPhoneNumber;
+
+  const ChatItemPage({
+    Key? key,
+    required this.otherNickname,
+    required this.otherAvatar,
+    required this.otherId,
+    required this.userProfPicUrl,
+    required this.otherPhoneNumber,
+  }) : super(key: key);
+
   @override
-  _ChatItemPageState createState() => _ChatItemPageState();
+  State<ChatItemPage> createState() => _ChatItemPageState();
 }
 
 class _ChatItemPageState extends State<ChatItemPage> {
-  ChatWidget currentChat = ChatWidget.list.elementAt(0);
-  String currentUser = "1";
-  String pairId = "2";
-  List<ChatBubble> chatItems = ChatBubble.list;
+  late String currentUserId;
+
+  List<QueryDocumentSnapshot> listMessages = [];
+
+  int _limit = 20;
+  final int _limitIncrement = 20;
+  String groupChatId = '';
+
+  File? imageFile;
+  bool isLoading = false;
+  bool isShowSticker = false;
+  String imageUrl = '';
+
+  final TextEditingController textEditingController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
+  final FocusNode focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    focusNode.addListener(onFocusChanged);
+    scrollController.addListener(_scrollListener);
+    readLocal();
+  }
+
+  _scrollListener() {
+    if (scrollController.offset >= scrollController.position.maxScrollExtent &&
+        !scrollController.position.outOfRange) {
+      setState(() {
+        _limit += _limitIncrement;
+      });
+    }
+  }
+
+  void onFocusChanged() {
+    if (focusNode.hasFocus) {
+      setState(() {
+        isShowSticker = false;
+      });
+    }
+  }
+
+  void readLocal() {
+    if (FirebaseAuth.instance.currentUser != null) {
+      currentUserId = FirebaseAuth.instance.currentUser!.uid;
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+          (Route<dynamic> route) => false);
+    }
+    if (currentUserId.compareTo(widget.otherId) > 0) {
+      groupChatId = '$currentUserId - ${widget.otherId}';
+    } else {
+      groupChatId = '${widget.otherId} - $currentUserId';
+    }
+    ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
+        currentUserId, {FirestoreUserKeys.chattingWith: widget.otherId});
+  }
+
+  Future getImage() async {
+    ImagePicker imagePicker = ImagePicker();
+    XFile? pickedFile;
+    pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      imageFile = File(pickedFile.path);
+      if (imageFile != null) {
+        setState(() {
+          isLoading = true;
+        });
+        uploadImageFile();
+      }
+    }
+  }
+
+  void getSticker() {
+    focusNode.unfocus();
+    setState(() {
+      isShowSticker = !isShowSticker;
+    });
+  }
+
+  Future<bool> onBackPressed() {
+    if (isShowSticker) {
+      setState(() {
+        isShowSticker = false;
+      });
+    } else {
+      ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
+          currentUserId, {FirestoreUserKeys.chattingWith: null});
+    }
+    return Future.value(false);
+  }
+
+  void _callPhoneNumber(String phoneNumber) async {
+    var url = 'tel://$phoneNumber';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Error Occurred';
+    }
+  }
+
+  void uploadImageFile() async {
+    String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+    UploadTask uploadTask = ChatProvider.uploadImageFile(imageFile!, fileName);
+    try {
+      TaskSnapshot snapshot = await uploadTask;
+      imageUrl = await snapshot.ref.getDownloadURL();
+      setState(() {
+        isLoading = false;
+        onSendMessage(imageUrl, MessageType.image);
+      });
+    } on FirebaseException catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      Fluttertoast.showToast(msg: e.message ?? e.toString());
+    }
+  }
+
+  void onSendMessage(String content, int type) {
+    if (content.trim().isNotEmpty) {
+      textEditingController.clear();
+      ChatProvider.sendChatMessage(
+          content, type, groupChatId, currentUserId, widget.otherId);
+      scrollController.animateTo(0,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeOut);
+    } else {
+      Fluttertoast.showToast(
+          msg: 'Nothing to send', backgroundColor: Colors.grey);
+    }
+  }
+
+  // checking if received message
+  bool isMessageReceived(int index) {
+    if ((index > 0 &&
+            listMessages[index - 1].get(FirestoreChatKeys.idFrom) ==
+                currentUserId) ||
+        index == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // checking if sent message
+  bool isMessageSent(int index) {
+    if ((index > 0 &&
+            listMessages[index - 1].get(FirestoreChatKeys.idFrom) !=
+                currentUserId) ||
+        index == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-            color: Colors.blue,
-          ),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: <Widget>[
+        centerTitle: true,
+        title: Text('Chatting with ${widget.otherNickname}'.trim()),
+        actions: [
           IconButton(
-            icon: Icon(
-              Icons.menu,
-              color: Colors.blue,
-            ),
-            onPressed: () {},
+            onPressed: () {
+              _callPhoneNumber(widget.otherPhoneNumber);
+            },
+            icon: const Icon(Icons.phone),
           ),
         ],
-        title: Text(
-          "${currentChat.contact?.name}",
-        ),
-        centerTitle: true,
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: ListView.builder(
-              itemCount: chatItems.length,
-              reverse: true,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 6,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: chatItems[index].senderId == currentUser
-                        ? MainAxisAlignment.end
-                        : MainAxisAlignment.start,
-                    children: <Widget>[
-                      _isFirstMessage(chatItems, index) &&
-                              chatItems[index].senderId == pairId
-                          ? Container(
-                              width: 30,
-                              height: 30,
-                              decoration: BoxDecoration(
-                                image: DecorationImage(
-                                  image: ExactAssetImage(
-                                    "assets/default.jpg",
-                                  ),
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(100),
-                                ),
-                              ),
-                            )
-                          : Container(
-                              width: 30,
-                              height: 30,
-                            ),
-                      Container(
-                        constraints: BoxConstraints(
-                          maxWidth: MediaQuery.of(context).size.width * .7,
-                        ),
-                        padding: EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        margin: EdgeInsets.symmetric(
-                          vertical: 6,
-                          horizontal: 12,
-                        ),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(10),
-                            bottomRight: Radius.circular(10),
-                            topLeft: Radius.circular(
-                              _isFirstMessage(chatItems, index) ? 0 : 10,
-                            ),
-                            bottomLeft: Radius.circular(
-                              _isLastMessage(chatItems, index) ? 0 : 10,
-                            ),
-                          ),
-                          color: chatItems[index].senderId == currentUser
-                              ? Colors.blue
-                              : Colors.white38,
-                        ),
-                        child: Text(
-                          "${chatItems[index].message}",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              },
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: Column(
+            children: [
+              buildListMessage(),
+              buildMessageInput(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget messageBubble(
+      {required String chatContent,
+      required EdgeInsetsGeometry? margin,
+      Color? color,
+      Color? textColor}) {
+    return Container(
+      padding: const EdgeInsets.all(10),
+      margin: margin,
+      width: 200,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Text(
+        chatContent,
+        style: TextStyle(fontSize: 16, color: textColor),
+      ),
+    );
+  }
+
+  Widget chatImage({required String imageSrc, required Function onTap}) {
+    return OutlinedButton(
+      onPressed: onTap(),
+      child: Image.network(
+        imageSrc,
+        width: 200,
+        height: 200,
+        fit: BoxFit.cover,
+        loadingBuilder:
+            (BuildContext ctx, Widget child, ImageChunkEvent? loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            width: 200,
+            height: 200,
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null &&
+                        loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded /
+                        loadingProgress.expectedTotalBytes!
+                    : null,
+              ),
+            ),
+          );
+        },
+        errorBuilder: (context, object, stackTrace) => errorContainer(),
+      ),
+    );
+  }
+
+  Widget errorContainer() {
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      child: Image.asset(
+        'assets/images/logo.png',
+        height: 200,
+        width: 200,
+      ),
+    );
+  }
+
+  Widget buildMessageInput() {
+    return SizedBox(
+      width: double.infinity,
+      height: 50,
+      child: Row(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(right: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: IconButton(
+              onPressed: getImage,
+              icon: const Icon(
+                Icons.camera_alt,
+                size: 28,
+              ),
             ),
           ),
-          if (currentChat.isTyping != null && currentChat.isTyping == true)
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    children: <Widget>[
-                      SpinKitThreeBounce(
-                        color: Colors.blue,
-                        size: 20.0,
+          Flexible(
+              child: TextField(
+            focusNode: focusNode,
+            textInputAction: TextInputAction.send,
+            keyboardType: TextInputType.text,
+            textCapitalization: TextCapitalization.sentences,
+            controller: textEditingController,
+            decoration:
+                kTextFormFieldDecoration.copyWith(hintText: 'type here...'),
+            onSubmitted: (value) {
+              onSendMessage(textEditingController.text, MessageType.text);
+            },
+          )),
+          Container(
+            margin: const EdgeInsets.only(left: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: IconButton(
+              onPressed: () {
+                onSendMessage(textEditingController.text, MessageType.text);
+              },
+              icon: const Icon(Icons.send_rounded),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildItem(int index, DocumentSnapshot? documentSnapshot) {
+    if (documentSnapshot != null) {
+      ChatMessage chatMessages = ChatMessage.fromDocument(documentSnapshot);
+      if (chatMessages.idFrom == currentUserId) {
+        // right side (my message)
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                chatMessages.type == MessageType.text
+                    ? messageBubble(
+                        chatContent: chatMessages.content,
+                        margin: const EdgeInsets.only(right: 10),
+                      )
+                    : chatMessages.type == MessageType.image
+                        ? Container(
+                            margin: const EdgeInsets.only(right: 10, top: 10),
+                            child: chatImage(
+                                imageSrc: chatMessages.content, onTap: () {}),
+                          )
+                        : const SizedBox.shrink(),
+                isMessageSent(index)
+                    ? Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Image.network(
+                          widget.userProfPicUrl,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext ctx, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                            null &&
+                                        loadingProgress.expectedTotalBytes !=
+                                            null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, object, stackTrace) {
+                            return const Icon(
+                              Icons.account_circle,
+                              size: 35,
+                            );
+                          },
+                        ),
+                      )
+                    : Container(
+                        width: 35,
                       ),
-                    ],
-                  ),
-                  Text(
-                    "${currentChat.contact?.name} is typing...",
-                    style: TextStyle(
-                      color: Colors.white38,
+              ],
+            ),
+            isMessageSent(index)
+                ? Container(
+                    margin: const EdgeInsets.only(right: 50, top: 6, bottom: 8),
+                    child: Text(
+                      DateFormat('dd MMM yyyy, hh:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(chatMessages.timestamp),
+                        ),
+                      ),
+                      style: const TextStyle(
+                          fontSize: 12, fontStyle: FontStyle.italic),
                     ),
                   )
-                ],
-              ),
+                : const SizedBox.shrink(),
+          ],
+        );
+      } else {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                isMessageReceived(index)
+                    // left side (received message)
+                    ? Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Image.network(
+                          widget.otherAvatar,
+                          width: 40,
+                          height: 40,
+                          fit: BoxFit.cover,
+                          loadingBuilder: (BuildContext ctx, Widget child,
+                              ImageChunkEvent? loadingProgress) {
+                            if (loadingProgress == null) return child;
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes !=
+                                            null &&
+                                        loadingProgress.expectedTotalBytes !=
+                                            null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          },
+                          errorBuilder: (context, object, stackTrace) {
+                            return const Icon(
+                              Icons.account_circle,
+                              size: 35,
+                            );
+                          },
+                        ),
+                      )
+                    : Container(
+                        width: 35,
+                      ),
+                chatMessages.type == MessageType.text
+                    ? messageBubble(
+                        chatContent: chatMessages.content,
+                        margin: const EdgeInsets.only(left: 10),
+                      )
+                    : chatMessages.type == MessageType.image
+                        ? Container(
+                            margin: const EdgeInsets.only(left: 10, top: 10),
+                            child: chatImage(
+                                imageSrc: chatMessages.content, onTap: () {}),
+                          )
+                        : const SizedBox.shrink(),
+              ],
             ),
-        ],
-      ),
-      bottomNavigationBar: _buildInput(),
+            isMessageReceived(index)
+                ? Container(
+                    margin: const EdgeInsets.only(left: 50, top: 6, bottom: 8),
+                    child: Text(
+                      DateFormat('dd MMM yyyy, hh:mm a').format(
+                        DateTime.fromMillisecondsSinceEpoch(
+                          int.parse(chatMessages.timestamp),
+                        ),
+                      ),
+                      style: const TextStyle(fontStyle: FontStyle.italic),
+                    ),
+                  )
+                : const SizedBox.shrink(),
+          ],
+        );
+      }
+    } else {
+      return const SizedBox.shrink();
+    }
+  }
+
+  Widget buildListMessage() {
+    return Flexible(
+      child: groupChatId.isNotEmpty
+          ? StreamBuilder<QuerySnapshot>(
+              stream: ChatProvider.getChatMessage(groupChatId, _limit),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasData) {
+                  listMessages = snapshot.data!.docs;
+                  if (listMessages.isNotEmpty) {
+                    return ListView.builder(
+                        padding: const EdgeInsets.all(10),
+                        itemCount: snapshot.data?.docs.length,
+                        reverse: true,
+                        controller: scrollController,
+                        itemBuilder: (context, index) =>
+                            buildItem(index, snapshot.data?.docs[index]));
+                  } else {
+                    return const Center(
+                      child: Text('No messages...'),
+                    );
+                  }
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              })
+          : const Center(
+              child: CircularProgressIndicator(),
+            ),
     );
-  }
-
-  Widget _buildInput() {
-    return Container(
-      margin: EdgeInsets.all(12),
-      padding: EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.all(
-          Radius.circular(10),
-        ),
-      ),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: "Type something...",
-                hintStyle: TextStyle(
-                  color: Colors.white30,
-                ),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.attach_file,
-              color: Colors.blue,
-            ),
-            onPressed: null,
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.alternate_email,
-              color: Colors.blue,
-            ),
-            onPressed: null,
-          ),
-        ],
-      ),
-    );
-  }
-
-  _isFirstMessage(List<ChatBubble> chatItems, int index) {
-    return (chatItems[index].senderId !=
-            chatItems[index - 1 < 0 ? 0 : index - 1].senderId) ||
-        index == 0;
-  }
-
-  _isLastMessage(List<ChatBubble> chatItems, int index) {
-    int maxItem = chatItems.length - 1;
-    return (chatItems[index].senderId !=
-            chatItems[index + 1 > maxItem ? maxItem : index + 1].senderId) ||
-        index == maxItem;
   }
 }

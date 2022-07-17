@@ -37,8 +37,7 @@ class _AddListingPageState extends State<AddListingPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   final usersCollection = FirebaseFirestore.instance.collection('Users');
-  late UserData userData = UserData.defaultUserData();
-  var parseUserData;
+  late UserData userData;
   // for rent or borrow dropdown
   String dropdownValue = 'Lending';
   List<String> listingTypes = ['Lending', 'Renting'];
@@ -155,19 +154,48 @@ class _AddListingPageState extends State<AddListingPage> {
 
   // ================ Firebase interface =============
 
-  void addListing(String uid, String profImgUrl, String email) async {
+  bool addListingChecks(bool forRent) {
     if (userEmail == null) {
       showSnackBar(context, "Error fetching user, unable to add listing");
-
-      return;
+      return false;
     }
     if (dropdownValue != 'Lending' && dropdownValue != 'Renting') {
       showSnackBar(
           context, 'Choose a proper listing type, unable to add listing');
-      return;
+      return false;
     }
 
+    if (_titleController.text == '') {
+      showSnackBar(
+          context, 'Please add a title');
+      return false;
+    }
+
+    if (_image == null) {
+      showSnackBar(
+          context, 'Please add image!');
+      return false;
+    }
+
+    if(forRent && _priceController.text == '') {
+      showSnackBar(
+          context, 'Please add your price for renting');
+      return false;
+    }
+
+    if(!forRent && _priceController.text != '0') {
+      showSnackBar(
+          context, 'As you are lending item, please input 0 as price');
+      return false;
+    }
+
+    return true;
+  }
+
+  Future<bool> addListing() async {
     bool forRent = dropdownValue == 'Renting' ? true : false;
+    bool validListing = addListingChecks(forRent);
+    if (!validListing) return false;
 
     try {
       // upload to both storage and 'listing' collection
@@ -175,19 +203,22 @@ class _AddListingPageState extends State<AddListingPage> {
           _titleController.text,
           _descriptionController.text,
           _image!,
-          uid,
-          email,
-          profImgUrl,
+          userData.uid!,
+          userData.email!,
+          userData.imageUrl!,
           forRent,
           _priceController.text);
+      print(res);
       if (res == "success") {
-        showSnackBar(context, 'Posted!');
+        showSnackBar(context, 'Added Listing!');
         clearImage();
       }
     } catch (err) {
       print(err);
-      // showSnackBar(context, err.toString());
+      return false;
     }
+
+    return true;
   }
 
   void clearImage() {
@@ -373,13 +404,9 @@ class _AddListingPageState extends State<AddListingPage> {
                 Navigator.pop(context);
               }),
               const SizedBox(width: 60),
-              buildButtonField("ADD LISTING", Colors.green, 30.0, () {
-                addListing(
-                  userData.uid!,
-                  userData.imageUrl!,
-                  userData.email!,
-                );
-                Navigator.pop(context);
+              buildButtonField("ADD LISTING", Colors.green, 30.0, () async {
+                bool success = await addListing();
+                if (success) Navigator.pop(context);
               }),
             ]),
           ],
