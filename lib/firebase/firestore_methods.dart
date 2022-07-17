@@ -29,11 +29,20 @@ class FireStoreMethods {
       List<String> splitTitle = title.split(' ');
       List<String> indexTitle = [];
 
+      // for each word
       for (int i = 0; i < splitTitle.length; i++) {
-        for (int j = 0; j < splitTitle[i].length + i; j++) {
+        for (int j = 0; j < splitTitle[i].length + 1; j++) {
           indexTitle.add(splitTitle[i].substring(0, j).toLowerCase());
         }
       }
+
+      // for words with spaces
+      for (int i = 0; i < title.length + 1; i++) {
+        if (indexTitle.contains(title.substring(0, i)) == false) {
+          indexTitle.add(title.substring(0, i).toLowerCase());
+        }
+      }
+
       // to create uniqud id based on time, won't have the same id
       String listingId = const Uuid().v1(); // creates unique id based on time
       Listing listing = Listing(
@@ -53,7 +62,6 @@ class FireStoreMethods {
       );
 
       listingsCollection.doc(listingId).set(listing.toJson());
-      listingsCollection.add({'title': title, 'searchIndex': indexTitle});
       res = "success";
     } catch (err) {
       res = err.toString();

@@ -101,8 +101,8 @@ class _AllBorrowingState extends State<AllBorrowing> {
                     ? FirebaseFirestore.instance
                         .collection('listings')
                         .where('forRent', isEqualTo: false)
-                        .where("title",
-                            isEqualTo: searchListingText.toLowerCase())
+                        .where("searchIndex",
+                            arrayContains: searchListingText.toLowerCase())
                         .snapshots()
                     : FirebaseFirestore.instance
                         .collection('listings')
@@ -110,7 +110,7 @@ class _AllBorrowingState extends State<AllBorrowing> {
                             isEqualTo: widget.userEmailToDisplay)
                         .where('forRent', isEqualTo: false)
                         .where("searchIndex",
-                            isEqualTo: searchListingText.toLowerCase())
+                            arrayContains: searchListingText.toLowerCase())
                         .snapshots()
                 : widget.userEmailToDisplay!.isEmpty ||
                         widget.userEmailToDisplay == null
