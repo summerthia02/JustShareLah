@@ -2,22 +2,19 @@
 
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:justsharelah_v1/firebase/auth_service.dart';
-import 'package:justsharelah_v1/utils/apptheme.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
-import 'package:justsharelah_v1/models/feedTitle.dart';
+import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:supabase/supabase.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:justsharelah_v1/models/ForBorrowing.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
-import 'package:justsharelah_v1/models/listings.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 // import 'package:location/location.dart';
@@ -33,49 +30,18 @@ class _FeedPageState extends State<FeedPage> {
   final _searchController = TextEditingController();
   // Index for bottom nav bar
   late Position _currentPosition;
+  var latitude = 1.0;
+  var longitude = 1.0;
   late String _currentAddress;
+  String? currUserId = FirebaseAuth.instance.currentUser?.uid;
 
-  // _getCurrentLocation() {
-  //   Geolocator.getCurrentPosition(
-  //           desiredAccuracy: LocationAccuracy.best,
-  //           forceAndroidLocationManager: true)
-  //       .then((Position position) {
-  //     setState(() {
-  //       _currentPosition = position;
-  //       _getAddressFromLatLng();
-  //     });
-  //   }).catchError((e) {
-  //     print(e);
-  //   });
-  // }
+  // get the user's current collection of users
 
-  // _getAddressFromLatLng() async {
-  //   try {
-  //     List<Placemark> placemarks = await placemarkFromCoordinates(
-  //         _currentPosition.latitude, _currentPosition.longitude);
+  // get user current postion
+  Position getCurrPosition() {
+    return _currentPosition;
+  }
 
-  //     Placemark place = placemarks[0];
-
-  //     setState(() {
-  //       _currentAddress =
-  //           "${place.locality}, ${place.postalCode}, ${place.country}";
-  //     });
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // / Determine the current position of the device.
-  // /
-  // / When the location services are not enabled or permissions
-  // / are denied the `Future` will return an error.
-  // /
-  // determine position
-
-  // / Determine the current position of the device.
-  // /
-  // / When the location services are not enabled or permissions
-  // / are denied the `Future` will return an error.
   Future<Position?> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -119,24 +85,17 @@ class _FeedPageState extends State<FeedPage> {
       Placemark place = placemarks[0];
       setState(() {
         _currentPosition = position;
-        _currentAddress = place.street! + ", " + place.locality!;
+        longitude = position.longitude;
+        latitude = position.latitude;
+        _currentAddress = "${place.street!}, ${place.locality!}";
       });
     } catch (e) {
       print(e);
     }
-  }
 
-  // // update position
-  // Future<void> _updatePosition() async {
-  //   Position position = await _determinePosition();
-  //   List placeMarker =
-  //       await placemarkFromCoordinates(position.latitude, position.latitude);
-  //   setState(() {
-  //     _latitude = position.latitude.toString();
-  //     _longitude = position.longitude.toString();
-  //     currentAddress = placeMarker[0].toString();
-  //   });
-  // }
+    // update user
+    FireStoreMethods().updateLocation(longitude, latitude, currUserId);
+  }
 
   Future<void> _getProfile(String userId) async {
     // setState(() {
@@ -201,6 +160,8 @@ class _FeedPageState extends State<FeedPage> {
               icon: const Icon(Icons.logout),
               onPressed: () {
                 AuthService().signOut();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
               },
             ),
             Padding(

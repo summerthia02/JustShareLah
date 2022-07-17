@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/AllBorrowing.dart';
+import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
@@ -15,7 +16,6 @@ class ForBorrowing extends StatelessWidget {
   }) : super(key: key);
 
   late String? userEmailToDisplay;
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +59,6 @@ class ForBorrowing extends StatelessWidget {
               return const Text("Error Loading Borrowing Items");
             }
 
-
             return Container(
               height: 450,
               child: ListView.builder(
@@ -88,8 +87,6 @@ class ForBorrowing extends StatelessWidget {
                         ),
                       )),
             );
-
-
           },
         )
       ],

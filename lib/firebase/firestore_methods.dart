@@ -94,6 +94,15 @@ class FireStoreMethods {
     return res;
   }
 
+  // update the location of users
+  Future<void> updateLocation(
+      double longitude, double latitude, String? uid) async {
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    return await users
+        .doc(uid)
+        .update({"location": GeoPoint(latitude, longitude)});
+  }
+
   // searching for listing
   searchListing(String listingTitle) async {
     return await listingsCollection
