@@ -14,7 +14,10 @@ import 'package:justsharelah_v1/utils/time_helper.dart';
 import 'package:justsharelah_v1/widget/like_helper.dart';
 
 class EnlargedScreen extends StatefulWidget {
-  const EnlargedScreen({Key? key, required this.snap}) : super(key: key);
+  const EnlargedScreen({
+    Key? key,
+    required this.snap,
+  }) : super(key: key);
   final snap;
 
   @override
@@ -46,8 +49,10 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
           PostedBy(snap: widget.snap),
           GestureDetector(
               onDoubleTap: () async {
-                // await FireStoreMethods().likelisting(
-                //     widget.snap["uid"], userId!, widget.snap["usersLiked"]);
+                await FireStoreMethods().likelisting(
+                    widget.snap["uid"].toString(),
+                    userId!,
+                    widget.snap["usersLiked"]);
 
                 setState(() {
                   isLiking = true;
@@ -63,9 +68,9 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     duration: const Duration(milliseconds: 150),
                     opacity: isLiking ? 1 : 0,
                     child: LikeHelper(
-                      isLiking: isLiking,
                       child: const Icon(Icons.favorite,
                           color: Colors.white, size: 100),
+                      isLiking: isLiking,
                       duration: const Duration(
                         milliseconds: 350,
                       ),
@@ -99,15 +104,37 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         LikeHelper(
-                            child: IconButton(
-                              onPressed: () {},
-                              icon:
-                                  const Icon(Icons.favorite, color: Colors.red),
-                            ),
+                            smallHeart: true,
                             isLiking:
-                                widget.snap["usersLiked"].contains(userId)),
+                                widget.snap["usersLiked"].contains(userId),
+                            child: IconButton(
+                                onPressed: () async {
+                                  // print(
+                                  //   widget.snap["uid"].toString(),
+                                  // );
+                                  await FireStoreMethods().likelisting(
+                                      widget.snap["uid"].toString(),
+                                      userId!,
+                                      widget.snap["usersLiked"]);
+                                },
+                                icon: widget.snap["usersLiked"].contains(userId)
+                                    ? const Icon(
+                                        Icons.favorite,
+                                        color: Colors.red,
+                                      )
+                                    : const Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.grey,
+                                      ))),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 14.0),
+                          child: Text(widget.snap["usersLiked"].length != 1
+                              ? "${widget.snap["usersLiked"].length} likes"
+                              : "1 like"),
+                        ),
                       ],
                     ),
+
                     // listing title, price, description
                     // IconButton(
                     //   alignment: Alignment.topLeft,
@@ -123,7 +150,6 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                       "Listed on " + convertedTime(widget.snap["dateListed"]),
                     ),
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
-        
 
                     const SizedBox(height: (defaultPadding)),
                     Center(
@@ -256,7 +282,6 @@ class ListingCardDetails extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-
                 snap["title"],
                 style: kHeadingText,
               ),
@@ -272,7 +297,6 @@ class ListingCardDetails extends StatelessWidget {
           height: 10,
         ),
         Text(
-
           snap["description"].toString(),
           style: kBodyTextSmall,
         ),

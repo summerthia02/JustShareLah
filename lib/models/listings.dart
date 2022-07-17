@@ -51,6 +51,7 @@ class Listing {
 
   Map<String, dynamic> toJson() {
     return {
+      'uid': uid,
       'imageUrl': imageUrl,
       'title': title,
       'price': price,
