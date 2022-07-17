@@ -10,7 +10,7 @@ import 'package:justsharelah_v1/models/feedTitle.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 
 // class _AllBorrowingState extends State<AllRenting> {
-class AllRenting extends StatelessWidget {
+class AllRenting extends StatefulWidget {
   AllRenting({
     Key? key,
     this.userEmailToDisplay = "",
@@ -18,32 +18,37 @@ class AllRenting extends StatelessWidget {
   }) : super(key: key);
 
   late String? userEmailToDisplay;
+
+  @override
+  State<AllRenting> createState() => _AllRentingState();
+}
+
+class _AllRentingState extends State<AllRenting> {
+  String searchListingText = "";
+
   // Future<Iterable<Listing>> borrowingData =
-  //     ForBorrowing().getBorrowListingData();
-
-  // get the borrowing listing data put into future of the build context UI
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('images/location.png', width: 40, height: 30),
-              const SizedBox(width: 10.0),
-              Text(
-                "NUS, Singapore",
-              )
-            ],
-          ),
-        ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back_rounded),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: TextFormField(
+              onChanged: ((value) {
+                setState(() {
+                  searchListingText = value.toLowerCase();
+                  print(searchListingText);
+                });
+              }),
+              decoration: kTextFormFieldDecoration.copyWith(
+                  hintText: "Search for Listings to Borrow",
+                  border: InputBorder.none,
+                  suffixIcon: Icon(Icons.search_rounded)),
+            )),
         body:
             ListView(padding: const EdgeInsets.all(defaultPadding), children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -54,22 +59,41 @@ class AllRenting extends StatelessWidget {
                   fontSize: 35, fontWeight: FontWeight.w500),
             ),
             const Text(
-              'Listings For Borrowing',
+              'Listings For Rentiing',
               style: TextStyle(fontSize: 15.0, color: Colors.blueGrey),
             ),
             const SizedBox(height: defaultPadding),
-            Form(
-                child: TextFormField(
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: "Search for Listings to Rent",
-                  prefixIcon: Icon(Icons.search_rounded)),
-            )),
           ]),
           StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('listings')
-                .where('forRent', isEqualTo: true)
-                .snapshots(),
+            stream: (searchListingText != "")
+                ? widget.userEmailToDisplay!.isEmpty ||
+                        widget.userEmailToDisplay == null
+                    ? FirebaseFirestore.instance
+                        .collection('listings')
+                        .where('forRent', isEqualTo: true)
+                        .where("searchIndex",
+                            arrayContains: searchListingText.toLowerCase())
+                        .snapshots()
+                    : FirebaseFirestore.instance
+                        .collection('listings')
+                        .where('createdByEmail',
+                            isEqualTo: widget.userEmailToDisplay)
+                        .where('forRent', isEqualTo: true)
+                        .where("searchIndex",
+                            arrayContains: searchListingText.toLowerCase())
+                        .snapshots()
+                : widget.userEmailToDisplay!.isEmpty ||
+                        widget.userEmailToDisplay == null
+                    ? FirebaseFirestore.instance
+                        .collection('listings')
+                        .where('forRent', isEqualTo: true)
+                        .snapshots()
+                    : FirebaseFirestore.instance
+                        .collection('listings')
+                        .where('createdByEmail',
+                            isEqualTo: widget.userEmailToDisplay)
+                        .where('forRent', isEqualTo: true)
+                        .snapshots(),
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
