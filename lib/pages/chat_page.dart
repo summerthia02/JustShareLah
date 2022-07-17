@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
+import 'package:justsharelah_v1/pages/chat_item_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/review_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -45,7 +47,6 @@ class _ChatPageState extends State<ChatPage> {
       });
     }
   }
-
 
   // ======================= Widgets =====================
   Widget buildSearchBar() {
@@ -120,19 +121,21 @@ class _ChatPageState extends State<ChatPage> {
         return const SizedBox.shrink();
       } else {
         return TextButton(
-          onPressed: () {
+          onPressed: () async {
             if (KeyboardUtils.isKeyboardShowing()) {
               KeyboardUtils.closeKeyboard(context);
             }
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) => ChatPage(
-            //               peerId: userChat.id,
-            //               peerAvatar: userChat.photoUrl,
-            //               peerNickname: userChat.displayName,
-            //               userAvatar: firebaseAuth.currentUser!.photoURL!,
-            //             )));
+            String userProfPicURL =
+              await AuthMethods.getUserDetails().then((userData) => userData.imageUrl!);
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                  builder: (context) => ChatItemPage(
+                        otherId: userData.uid!,
+                        otherAvatar: userData.imageUrl!,
+                        otherNickname: userData.userName!,
+                        userProfPicUrl: userProfPicURL,
+                        otherPhoneNumber: userData.phoneNumber!,
+                      )));
           },
           child: ListTile(
             leading: userData.imageUrl!.isNotEmpty
@@ -210,10 +213,8 @@ class _ChatPageState extends State<ChatPage> {
           const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FireStoreMethods.getFirestoreData(
-                  FirestoreGeneralKeys.pathUserCollection,
-                  _limit,
-                  _textSearch),
+              stream: FireStoreMethods.getFirestoreChatData(
+                  FirestoreGeneralKeys.pathUserCollection, _limit, _textSearch),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
@@ -221,12 +222,11 @@ class _ChatPageState extends State<ChatPage> {
                     return ListView.separated(
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) => buildItem(
-                          context, snapshot.data?.docs[index]),
+                      itemBuilder: (context, index) =>
+                          buildItem(context, snapshot.data?.docs[index]),
                       controller: scrollController,
-                      separatorBuilder:
-                          (BuildContext context, int index) =>
-                              const Divider(),
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(),
                     );
                   } else {
                     return const Center(
@@ -243,26 +243,6 @@ class _ChatPageState extends State<ChatPage> {
           ),
         ],
       ),
-
-      //     ElevatedButton(
-      //       onPressed: () {
-      //         Navigator.push(
-      //             context,
-      //             MaterialPageRoute(
-      //               builder: (context) => MakeReviewPage(),
-      //             ));
-      //       },
-      //       child: Text('Reviews Page'),
-      //       style: ElevatedButton.styleFrom(
-      //           primary: Colors.black,
-      //           elevation: 2,
-      //           shadowColor: Colors.black,
-      //           shape: RoundedRectangleBorder(
-      //               borderRadius: BorderRadius.circular(40))),
-      //     ),
-      //   ],
-      //   // ignore: prefer_const_constructors
-      // ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }

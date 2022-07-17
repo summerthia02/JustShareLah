@@ -126,7 +126,7 @@ class FireStoreMethods {
         .update(updateData);
   }
 
-  static Stream<QuerySnapshot> getFirestoreData(
+  static Stream<QuerySnapshot> getFirestoreChatData(
       String collectionPath, int limit, String? textSearch) {
     if (textSearch?.isNotEmpty == true) {
       return firebaseFirestore
