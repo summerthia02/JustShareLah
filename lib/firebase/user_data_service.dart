@@ -18,7 +18,7 @@ class UserDataService {
     final users = FirebaseFirestore.instance.collection('Users');
     return await users.doc(uid).set({
       'email': email,
-      'user_name': userName,
+      'username': userName,
       'first_name': firstName,
       'last_name': lastName,
       'phone_number': "",
@@ -26,7 +26,7 @@ class UserDataService {
       'imageUrl': "https://i.stack.imgur.com/l60Hf.png",
       'listings': [],
       'reviews': [],
-      'share_credits': "",
+      'share_credits': "0",
     });
   }
 

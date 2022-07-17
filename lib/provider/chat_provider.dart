@@ -7,22 +7,16 @@ import 'package:justsharelah_v1/models/chats/chat_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatProvider {
-  final SharedPreferences prefs;
-  final FirebaseFirestore firebaseFirestore;
-  final FirebaseStorage firebaseStorage;
+  static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  static final FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
-  ChatProvider(
-      {required this.prefs,
-      required this.firebaseStorage,
-      required this.firebaseFirestore});
-
-  UploadTask uploadImageFile(File image, String filename) {
+  static UploadTask uploadImageFile(File image, String filename) {
     Reference reference = firebaseStorage.ref().child(filename);
     UploadTask uploadTask = reference.putFile(image);
     return uploadTask;
   }
 
-  Future<void> updateFirestoreData(
+  static Future<void> updateFirestoreData(
       String collectionPath, String docPath, Map<String, dynamic> dataUpdate) {
     return firebaseFirestore
         .collection(collectionPath)
@@ -30,7 +24,7 @@ class ChatProvider {
         .update(dataUpdate);
   }
 
-  Stream<QuerySnapshot> getChatMessage(String groupChatId, int limit) {
+  static Stream<QuerySnapshot> getChatMessage(String groupChatId, int limit) {
     return firebaseFirestore
         .collection(FirestoreChatKeys.pathMessageCollection)
         .doc(groupChatId)
@@ -40,7 +34,7 @@ class ChatProvider {
         .snapshots();
   }
 
-  void sendChatMessage(String content, int type, String groupChatId,
+  static void sendChatMessage(String content, int type, String groupChatId,
       String currentUserId, String peerId) {
     DocumentReference documentReference = firebaseFirestore
         .collection(FirestoreChatKeys.pathMessageCollection)
