@@ -176,7 +176,7 @@ class _FeedPageState extends State<FeedPage> {
           (_currentAddress != null)
               ? Text(
                   _currentAddress,
-                  style: TextStyle(fontSize: 17),
+                  style: TextStyle(fontSize: 14),
                 )
               : Text('My Address'),
         ]),
@@ -184,7 +184,10 @@ class _FeedPageState extends State<FeedPage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _determinePosition,
         tooltip: "Get Current Location",
-        child: const Icon(Icons.change_circle_outlined),
+        child: const Icon(
+          Icons.change_circle_outlined,
+          size: 30,
+        ),
       ),
 
       body: Padding(
