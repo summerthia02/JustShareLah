@@ -44,9 +44,7 @@ class _ListingCardState extends State<ListingCard> {
         print("listingData query successful");
         // userData = res.docs.map((snapshot) => snapshot.data());
 
-        setState(() {
-          name = res.docs[0]["username"];
-        });
+        name = res.docs[0]["username"];
       },
       onError: (e) => print("Error completing: $e"),
     );
@@ -57,7 +55,7 @@ class _ListingCardState extends State<ListingCard> {
   @override
   void initState() {
     super.initState();
-    getUserName();
+    getUserName().then((value) => setState(() {},));
     userId = currentUser?.uid;
   }
 

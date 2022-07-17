@@ -11,7 +11,7 @@ class ChatWidget {
 
   static List<ChatWidget> list = [
     ChatWidget(
-      isTyping: true,
+      isTyping: false,
       lastMessage: "hello!",
       lastMessageTime: "2d",
       contact: ContactModel(name: "Martin Valencia"),
