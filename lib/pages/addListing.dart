@@ -8,6 +8,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
@@ -41,6 +43,11 @@ class _AddListingPageState extends State<AddListingPage> {
   // for rent or borrow dropdown
   String dropdownValue = 'Lending';
   List<String> listingTypes = ['Lending', 'Renting'];
+  late Position _currentPosition;
+  var latitude = 1.0;
+  var longitude = 1.0;
+  late String _currentAddress;
+  String? currUserId = FirebaseAuth.instance.currentUser?.uid;
 
   // ================ User Information =============================
 
@@ -67,6 +74,8 @@ class _AddListingPageState extends State<AddListingPage> {
         });
       }
     });
+    _determinePosition();
+
     super.initState();
   }
 
@@ -81,6 +90,63 @@ class _AddListingPageState extends State<AddListingPage> {
     );
 
     return userData;
+  }
+
+  // ================ Determine Position + Permissions  =============
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentPosition = position;
+        longitude = position.longitude;
+        latitude = position.latitude;
+        _currentAddress = "${place.street!}, ${place.locality!}";
+      });
+    } catch (e) {
+      print(e);
+    }
+
+    // update user
+    FireStoreMethods().updateLocation(longitude, latitude, currUserId);
   }
 
   // ================ ImagePickers =============================
@@ -166,26 +232,22 @@ class _AddListingPageState extends State<AddListingPage> {
     }
 
     if (_titleController.text == '') {
-      showSnackBar(
-          context, 'Please add a title');
+      showSnackBar(context, 'Please add a title');
       return false;
     }
 
     if (_image == null) {
-      showSnackBar(
-          context, 'Please add image!');
+      showSnackBar(context, 'Please add image!');
       return false;
     }
 
-    if(forRent && _priceController.text == '') {
-      showSnackBar(
-          context, 'Please add your price for renting');
+    if (forRent && _priceController.text == '') {
+      showSnackBar(context, 'Please add your price for renting');
       return false;
     }
 
-    if(!forRent && _priceController.text != '0') {
-      showSnackBar(
-          context, 'As you are lending item, please input 0 as price');
+    if (!forRent && _priceController.text != '0') {
+      showSnackBar(context, 'As you are lending item, please input 0 as price');
       return false;
     }
 
@@ -270,6 +332,30 @@ class _AddListingPageState extends State<AddListingPage> {
           maxLines: numLines,
           onChanged: (value) => print(value),
           controller: controller,
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+            hintText: hintText,
+            border: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(30))),
+            hintStyle: const TextStyle(fontSize: 17, color: Colors.grey),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Container locationField(String hintText,
+      {double height = 40.0, int numLines = 1}) {
+    return Container(
+      padding: const EdgeInsets.only(top: 20, right: 20),
+      child: SizedBox(
+        width: 230,
+        height: height,
+        child: TextField(
+          minLines: numLines,
+          maxLines: numLines,
+          onChanged: (value) => print(value),
           decoration: InputDecoration(
             contentPadding:
                 const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
@@ -392,12 +478,43 @@ class _AddListingPageState extends State<AddListingPage> {
             ]),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
-              buildFormTitle("Description"),
+              buildFormTitle("Description "),
               const Expanded(child: SizedBox()),
               buildFormField("Give us a brief description of your listing",
                   _descriptionController,
                   height: 100, numLines: 5),
             ]),
+            const SizedBox(height: 10.0),
+            Row(children: [
+              buildFormTitle("Location"),
+              const Expanded(child: SizedBox()),
+              Stack(children: [
+                Container(
+                    alignment: Alignment.topRight,
+                    padding: EdgeInsets.only(
+                        bottom: 30, left: 230, right: 20, top: 20),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.all(Radius.circular(30)))),
+                Positioned(top: 17, left: 15, child: Text(_currentAddress)),
+              ]),
+            ]),
+            Container(
+              padding:
+                  EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 10),
+              child: FloatingActionButton(
+                onPressed: _determinePosition,
+                tooltip: "Get Current Location",
+                child: const Icon(
+                  Icons.change_circle_outlined,
+                  size: 30,
+                ),
+              ),
+            ),
+            Text(
+              "Click to Get current Location",
+              style: TextStyle(fontSize: 15),
+            ),
             const SizedBox(height: 10.0),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               buildButtonField("CANCEL", Colors.red, 20.0, () {

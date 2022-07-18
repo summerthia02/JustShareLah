@@ -42,6 +42,8 @@ class _FeedPageState extends State<FeedPage> {
     return _currentPosition;
   }
 
+  // ================ Determine Position + Permissions  =============
+
   Future<Position?> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
