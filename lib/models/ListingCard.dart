@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:justsharelah_v1/firebase/auth_provider.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
@@ -57,7 +58,9 @@ class _ListingCardState extends State<ListingCard> {
   @override
   void initState() {
     super.initState();
-    getUserName().then((value) => setState(() {},));
+    getUserName().then((value) => setState(
+          () {},
+        ));
     userId = currentUser?.uid;
   }
 
@@ -96,15 +99,16 @@ class _ListingCardState extends State<ListingCard> {
                     AspectRatio(
                       aspectRatio: 90 / 100,
                       child: Container(
-                        width: 500,
-                        height: 500,
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 162, 202, 197),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(defaultBorderRadius))),
-                        child: Image.network(widget.snap["imageUrl"].toString(),
-                              scale: 1.5, fit: BoxFit.scaleDown)
-                      ),
+                          width: 500,
+                          height: 500,
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 162, 202, 197),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(defaultBorderRadius))),
+                          child: Image.network(
+                              widget.snap["imageUrl"].toString(),
+                              scale: 1.5,
+                              fit: BoxFit.scaleDown)),
                     ),
                     Positioned(
                       top: 20,
@@ -137,7 +141,7 @@ class _ListingCardState extends State<ListingCard> {
                   Expanded(
                       child: Text(
                     widget.snap['title'],
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                   )),
                   SizedBox(
                     width: 20,
@@ -155,11 +159,18 @@ class _ListingCardState extends State<ListingCard> {
                     Text(
                       "Listed " + timeDisplayed(widget.snap['dateListed']),
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                       ),
                     )
                   ],
-                )
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    widget.snap['location'],
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ),
               ],
             ),
           ),

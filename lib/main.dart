@@ -14,7 +14,6 @@ import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/splash_page.dart';
 import 'package:justsharelah_v1/pages/chat_page.dart';
-
 import 'firebase/auth_provider.dart';
 import 'firebase/firebase_options.dart';
 
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Provider(
-      auth: AuthService(), 
+      auth: AuthService(),
       child: MaterialApp(
         title: 'JustShareLah',
         theme: AppTheme().buildThemeData(),
@@ -50,7 +49,6 @@ class MyApp extends StatelessWidget {
           '/profile': (_) => const ProfilePage(),
           '/activity': (_) => const ActivityPage(),
           '/reviews': (_) => const MakeReviewPage(),
-
         },
       ),
     );
