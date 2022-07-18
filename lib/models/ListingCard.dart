@@ -52,6 +52,7 @@ class _ListingCardState extends State<ListingCard> {
       },
       onError: (e) => print("Error completing: $e"),
     );
+
     return name;
   }
 
@@ -152,13 +153,16 @@ class _ListingCardState extends State<ListingCard> {
                       child: SizedBox(
                           height: 30,
                           width: 30,
-                          child: IconButton(
-                            icon: const Icon(Icons.more_vert,
-                                color: Colors.black, size: 30),
-                            onPressed: () {
-                              EditListing(context);
-                            },
-                          )),
+                          child: widget.snap["createdByEmail"] ==
+                                  currentUser!.email
+                              ? IconButton(
+                                  icon: const Icon(Icons.more_vert,
+                                      color: Colors.black, size: 30),
+                                  onPressed: () {
+                                    EditListing(context);
+                                  },
+                                )
+                              : Container()),
                     ),
                     Positioned(
                       top: 15,
