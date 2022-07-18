@@ -78,7 +78,6 @@ class FireStoreMethods {
   // uid of the users that liked the listing
   Future<String> likelisting(
       String listingId, String? uid, List<dynamic> likes) async {
-
     String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
@@ -98,6 +97,50 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<bool> editListing(
+      String uid,
+      String title,
+      String price,
+      String description,
+      bool forRent,
+      bool avail,
+      String location,
+      GeoPoint geoLocation) async {
+    Map<String, dynamic>? listingData;
+    String? docID;
+    await listingsCollection.where("uid", isEqualTo: uid).get().then(
+      (res) {
+        print("listingsData query successful");
+        listingData = res.docs.first.data();
+        docID = res.docs.first.id;
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    if (uid == null || uid == null) {
+      return false;
+    }
+
+    // if empty, remains the same, else take the controller variable
+    listingData!["title"] = title.isEmpty ? listingData!["title"] : title;
+    listingData!["price"] = price.isEmpty ? listingData!["price"] : price;
+    listingData!["description"] =
+        description.isEmpty ? listingData!["description"] : description;
+    listingData!["forRent"] = forRent;
+    listingData!["available"] = avail;
+
+    listingData!["location"] =
+        location.isEmpty ? listingData!["location"] : location;
+    listingData!["GeoLocation"] = geoLocation;
+
+    listingsCollection
+        .doc(docID)
+        .update(listingData!)
+        .then((value) => print('Edited Profile'))
+        .catchError((err) => print('Failed to edit profile: $err'));
+    return true;
   }
 
   // update the location of users

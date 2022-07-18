@@ -7,6 +7,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:justsharelah_v1/firebase/auth_provider.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
+import 'package:justsharelah_v1/pages/edit_listing.dart';
 import 'package:justsharelah_v1/provider/user_provider.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
 import 'package:justsharelah_v1/widget/like_helper.dart';
@@ -51,6 +52,7 @@ class _ListingCardState extends State<ListingCard> {
       },
       onError: (e) => print("Error completing: $e"),
     );
+
     return name;
   }
 
@@ -62,6 +64,41 @@ class _ListingCardState extends State<ListingCard> {
           () {},
         ));
     userId = currentUser?.uid;
+  }
+
+  // ================ Edit Listing Button + Pop Up  =============
+
+  // ignore: non_constant_identifier_names
+  EditListing(BuildContext parentContext) async {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Edit Listing'),
+          children: <Widget>[
+            SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Text('Edit Listing Details'),
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditListingPage(
+                          snap: widget.snap,
+                        ),
+                      ));
+                }),
+            SimpleDialogOption(
+              padding: const EdgeInsets.all(20),
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -111,16 +148,37 @@ class _ListingCardState extends State<ListingCard> {
                               fit: BoxFit.scaleDown)),
                     ),
                     Positioned(
-                      top: 20,
-                      right: 0,
+                      top: 10,
+                      right: 5,
+                      child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: widget.snap["createdByEmail"] ==
+                                  currentUser!.email
+                              ? IconButton(
+                                  icon: const Icon(Icons.more_vert,
+                                      color: Colors.black, size: 30),
+                                  onPressed: () {
+                                    EditListing(context);
+                                  },
+                                )
+                              : Container()),
+                    ),
+                    Positioned(
+                      top: 15,
+                      left: 3,
                       child: Container(
                         height: 30,
                         width: 30,
                         child: widget.snap["usersLiked"].contains(userId)
-                            ? const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                size: 30,
+                            ? const CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 25,
+                                ),
                               )
                             : Container(),
                       ),

@@ -8,6 +8,16 @@ class MyBottomNavBar {
     "/activity",
     "/profile",
   ];
+  BottomNavigationBarThemeData bottomNavigationBarTheme(ColorScheme colors) {
+    return BottomNavigationBarThemeData(
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: colors.surfaceVariant,
+      selectedItemColor: colors.onSurface,
+      unselectedItemColor: colors.onSurfaceVariant,
+      elevation: 0,
+      landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
+    );
+  }
 
   BottomNavigationBar buildBottomNavBar(BuildContext context) {
     return BottomNavigationBar(
@@ -41,8 +51,7 @@ class MyBottomNavBar {
       ],
       onTap: (index) {
         String selectedRoute = widgetPages.elementAt(index);
-        Navigator.of(context).pushNamed(selectedRoute).then(
-          (_) => null);
+        Navigator.of(context).pushNamed(selectedRoute).then((_) => null);
       },
     );
   }

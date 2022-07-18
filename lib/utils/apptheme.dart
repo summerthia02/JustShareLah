@@ -6,10 +6,10 @@ class AppTheme {
     return ThemeData.light().copyWith(
       primaryColor: Colors.teal,
       colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal),
-      textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
-          headline1: TextStyle().copyWith(
-        fontSize: 72,
-      )),
+      // textTheme: GoogleFonts.nunitoSansTextTheme().copyWith(
+      //     headline1: TextStyle().copyWith(
+      //   fontSize: 72,
+      // )),
       scaffoldBackgroundColor: Colors.white,
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

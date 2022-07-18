@@ -189,7 +189,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         userEmail!, _image, firstName, lastName, userName, bio);
     successFailSnackBar(dataSaved, "Edit Profile Successful",
         "Error Editing Profile, Please try again.", context);
-
   }
 
   // ================ Widgets =============================

@@ -7,13 +7,13 @@ const double defaultPadding = 16.0;
 const double defaultBorderRadius = 12.0;
 
 const kJustShareLahStyle = TextStyle(
-  fontFamily: 'Lato',
+  fontFamily: 'Lobster',
   fontSize: 45.0,
   fontWeight: FontWeight.w200,
 );
 
 const kBodyTextSmall = TextStyle(
-  fontFamily: 'Lato',
+  fontFamily: 'Satisfy',
   fontSize: 18.0,
   color: Colors.black,
   height: 1.5,
@@ -54,7 +54,6 @@ ElevatedButton buildButtonField(String text, Color color, double length,
 
 //=========================Snackbar Methods=============================
 
-
 showSnackBar(BuildContext context, String text) {
   return ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(content: Text(text)),
@@ -64,9 +63,8 @@ showSnackBar(BuildContext context, String text) {
 void successFailSnackBar(
     bool cond, String successText, String failText, BuildContext context) {
   return cond
-  ? showSnackBar(context, successText)
-  : showSnackBar(context, failText);
-  
+      ? showSnackBar(context, successText)
+      : showSnackBar(context, failText);
 }
 
 const kTextFormFieldDecoration = InputDecoration(
