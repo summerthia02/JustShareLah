@@ -120,10 +120,17 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
                     ListingCardDetails(snap: widget.snap),
                     Text(
-                      "Listed on " + convertedTime(widget.snap["dateListed"]),
+                      "Listed on " +
+                          convertedTime(
+                            widget.snap["dateListed"],
+                          ),
+                      style: kBodyTextSmall,
                     ),
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
-        
+                    Text(
+                      widget.snap["location"],
+                      style: TextStyle(fontSize: 12),
+                    ),
 
                     const SizedBox(height: (defaultPadding)),
                     Center(
@@ -256,23 +263,17 @@ class ListingCardDetails extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-
                 snap["title"],
                 style: kHeadingText,
               ),
             ),
-            const SizedBox(width: defaultPadding),
             Text(
               "\$" + snap["price"].toString(),
               style: Theme.of(context).textTheme.headline6,
             ),
           ],
         ),
-        SizedBox(
-          height: 10,
-        ),
         Text(
-
           snap["description"].toString(),
           style: kBodyTextSmall,
         ),
