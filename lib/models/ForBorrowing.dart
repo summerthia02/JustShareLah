@@ -23,7 +23,7 @@ class ForBorrowing extends StatelessWidget {
     return Column(
       children: [
         FeedTitle(
-          title: "For Borrowing",
+          title: "FOR BORROWING",
           pressSeeAll: () {
             Navigator.push(
                 context,

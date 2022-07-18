@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
+import 'package:justsharelah_v1/pages/review_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/models/ForBorrowing.dart';
@@ -125,19 +126,19 @@ class _ProfilePageState extends State<ProfilePage> {
       // circular widget to accept and show selected image
       children: [
         userData.imageUrl != null && userData.imageUrl != ""
-        ? CircleAvatar(
-          radius: 60,
-          backgroundImage: NetworkImage(userData.imageUrl!),
-        )
-        : CircleAvatar(
-          backgroundColor: Colors.white,
-          radius: 70,
-          child: ClipRRect(
-            borderRadius: BorderRadius.zero,
-            child:
-                Image.asset('images/def_dp.png', width: 250, height: 200),
-          ),
-        ),
+            ? CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(userData.imageUrl!),
+              )
+            : CircleAvatar(
+                backgroundColor: Colors.white,
+                radius: 70,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.zero,
+                  child:
+                      Image.asset('images/def_dp.png', width: 250, height: 200),
+                ),
+              ),
       ],
     );
   }
@@ -185,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const EditProfilePage(),
+                builder: (context) => const MakeReviewPage(),
               ));
         },
         child: const Text('Edit Profile'),

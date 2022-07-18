@@ -3,6 +3,7 @@ import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/slider.dart';
+import 'package:justsharelah_v1/widget/toggle_button.dart';
 import '../utils/appbar.dart';
 import '../utils/bottom_nav_bar.dart';
 
@@ -32,7 +33,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
               ),
             ),
             SizedBox(
-              height: 20.0,
+              height: 30.0,
             ),
             Text(
               "Give John a rating out of 10",
@@ -41,14 +42,17 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
                   fontSize: 16.0,
                   fontWeight: FontWeight.w300),
             ),
-            MySlider(),
             SizedBox(
-              height: 10.0,
+              height: 15,
+            ),
+            ToggleButtons1(),
+            SizedBox(
+              height: 15.0,
             ),
             Text(
               "Write a review for the buyer",
               style: TextStyle(
-                  fontFamily: "Roboto",
+                  fontFamily: "Lobster",
                   fontSize: 17.0,
                   fontWeight: FontWeight.w600,
                   color: Colors.blue),
@@ -56,14 +60,17 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
             SizedBox(
               height: 10.0,
             ),
-            TextFormField(
-              obscureText: false,
-              textAlign: TextAlign.center,
-              minLines: 4,
-              maxLines: 6,
-              decoration: kTextFormFieldDecoration.copyWith(
-                  hintText: 'Describe the experience',
-                  floatingLabelBehavior: FloatingLabelBehavior.always),
+            Container(
+              padding: EdgeInsets.only(left: 20, right: 20),
+              child: TextFormField(
+                obscureText: false,
+                textAlign: TextAlign.center,
+                minLines: 4,
+                maxLines: 6,
+                decoration: kTextFormFieldDecoration.copyWith(
+                    hintText: 'Describe the experience',
+                    floatingLabelBehavior: FloatingLabelBehavior.always),
+              ),
             ),
             SizedBox(
               height: 20.0,

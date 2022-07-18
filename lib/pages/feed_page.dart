@@ -137,7 +137,9 @@ class _FeedPageState extends State<FeedPage> {
                 Text(
                   "Explore",
                   style: kJustShareLahStyle.copyWith(
-                      fontSize: 35, fontWeight: FontWeight.w500),
+                      fontSize: 35,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'Lobster'),
                 ),
                 const Text(
                   'Listings For You',

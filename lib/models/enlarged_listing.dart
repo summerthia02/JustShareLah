@@ -112,6 +112,8 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                                   // print(
                                   //   widget.snap["uid"].toString(),
                                   // );
+                                  print(widget.snap["uid"]);
+
                                   await FireStoreMethods().likelisting(
                                       widget.snap["uid"].toString(),
                                       userId!,
