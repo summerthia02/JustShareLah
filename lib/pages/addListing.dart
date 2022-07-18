@@ -32,6 +32,7 @@ class _AddListingPageState extends State<AddListingPage> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
 
   //listing image
   Uint8List? _image;
@@ -299,6 +300,7 @@ class _AddListingPageState extends State<AddListingPage> {
     _priceController.dispose();
     _titleController.dispose();
     _descriptionController.dispose();
+    _locationController.dispose();
     _listingTypeController.dispose();
   }
 
@@ -345,6 +347,30 @@ class _AddListingPageState extends State<AddListingPage> {
       ),
     );
   }
+
+  // Container locationField(String initialValue,
+  //     {double height = 80.0, int numLines = 2}) {
+  //   return Container(
+  //     padding: const EdgeInsets.only(top: 20, right: 20),
+  //     child: SizedBox(
+  //       width: 230,
+  //       height: height,
+  //       child: TextFormField(
+  //         initialValue: initialValue,
+  //         minLines: numLines,
+  //         maxLines: numLines,
+  //         onChanged: (value) => print(value),
+  //         decoration: InputDecoration(
+  //           contentPadding:
+  //               const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+  //           border: const OutlineInputBorder(
+  //               borderRadius: BorderRadius.all(Radius.circular(30))),
+  //           hintStyle: const TextStyle(fontSize: 17, color: Colors.grey),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // create class for dropdown menu items
   Container buildRentOrBorrowDropdown() {
