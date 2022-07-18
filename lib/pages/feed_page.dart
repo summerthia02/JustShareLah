@@ -17,6 +17,7 @@ import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:justsharelah_v1/utils/location_helper.dart';
 // import 'package:location/location.dart';
 
 class FeedPage extends StatefulWidget {
@@ -32,7 +33,7 @@ class _FeedPageState extends State<FeedPage> {
   late Position _currentPosition;
   var latitude = 1.0;
   var longitude = 1.0;
-  late String _currentAddress;
+  String _currentAddress = "My Address";
   String? currUserId = FirebaseAuth.instance.currentUser?.uid;
 
   // get the user's current collection of users

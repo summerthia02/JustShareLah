@@ -17,6 +17,8 @@ class Listing {
   final dynamic dateListed;
   final List<dynamic> usersLiked;
   final List<String> searchIndex;
+  GeoPoint GeoLocation;
+  String location;
 
   // final Color bgColor;
 
@@ -34,6 +36,8 @@ class Listing {
     required this.profImageUrl,
     required this.likeCount,
     required this.searchIndex,
+    required this.GeoLocation,
+    required this.location,
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
@@ -63,6 +67,8 @@ class Listing {
       'profImageUrl': profImageUrl,
       'dateListed': Timestamp.fromDate(dateListed),
       'searchIndex': searchIndex,
+      'GeoLocation': GeoLocation,
+      'location': location,
     };
   }
 

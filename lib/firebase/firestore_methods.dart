@@ -21,6 +21,9 @@ class FireStoreMethods {
     String profImageUrl,
     bool forRent,
     String price,
+    double longitude,
+    double latitude,
+    String location,
   ) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
@@ -48,20 +51,21 @@ class FireStoreMethods {
       // to create uniqud id based on time, won't have the same id
       String listingId = const Uuid().v1(); // creates unique id based on time
       Listing listing = Listing(
-        description: description,
-        title: title,
-        uid: listingId,
-        available: true,
-        price: price,
-        forRent: forRent,
-        createdByEmail: createdByEmail,
-        usersLiked: [],
-        likeCount: 0,
-        dateListed: DateTime.now(),
-        imageUrl: imageUrl,
-        profImageUrl: profImageUrl,
-        searchIndex: indexTitle,
-      );
+          description: description,
+          title: title,
+          uid: listingId,
+          available: true,
+          price: price,
+          forRent: forRent,
+          createdByEmail: createdByEmail,
+          usersLiked: [],
+          likeCount: 0,
+          dateListed: DateTime.now(),
+          imageUrl: imageUrl,
+          profImageUrl: profImageUrl,
+          searchIndex: indexTitle,
+          GeoLocation: GeoPoint(latitude, longitude),
+          location: location);
 
       listingsCollection.doc(listingId).set(listing.toJson());
       res = "success";
@@ -100,6 +104,16 @@ class FireStoreMethods {
     CollectionReference users = FirebaseFirestore.instance.collection("Users");
     return await users
         .doc(uid)
+        .update({"location": GeoPoint(latitude, longitude)});
+  }
+
+  // update location of the listing
+  Future<void> updateListingLocation(
+      double longitude, double latitude, String? listingId) async {
+    CollectionReference listings =
+        FirebaseFirestore.instance.collection("listings");
+    return await listings
+        .doc(listingId)
         .update({"location": GeoPoint(latitude, longitude)});
   }
 

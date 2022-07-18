@@ -2,6 +2,16 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 
 class LocationHelper {
+  // convert lat and long to address
+  Future<String> convertToAddress(double longitude, double latitude) async {
+    String address = "";
+    List<Placemark> placemarks =
+        await placemarkFromCoordinates(latitude, longitude);
+    Placemark place = placemarks[0];
+    address = "${place.street!}, ${place.locality!}";
+    return address;
+  }
+
   static Future<Position?> determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
