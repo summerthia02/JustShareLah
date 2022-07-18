@@ -149,10 +149,9 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
                     ListingCardDetails(snap: widget.snap),
                     Text(
-                      "Listed on " +
-                          convertedTime(
-                            widget.snap["dateListed"],
-                          ),
+                      "Listed on ${convertedTime(
+                        widget.snap["dateListed"],
+                      )}",
                       style: kBodyTextSmall,
                     ),
                     // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
@@ -160,7 +159,6 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                       widget.snap["location"],
                       style: TextStyle(fontSize: 12),
                     ),
-
 
                     const SizedBox(height: (defaultPadding)),
                     Center(
@@ -259,7 +257,7 @@ class _LikeCountsState extends State<LikeCounts> {
   @override
   Widget build(BuildContext context) {
     return Text(
-      widget.likeCount.toString() + " likes",
+      "${widget.likeCount} likes",
       style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
     );
   }
@@ -298,7 +296,7 @@ class ListingCardDetails extends StatelessWidget {
               ),
             ),
             Text(
-              "\$" + snap["price"].toString(),
+              "\$${snap["price"]}",
               style: Theme.of(context).textTheme.headline6,
             ),
           ],
@@ -306,6 +304,37 @@ class ListingCardDetails extends StatelessWidget {
         Text(
           snap["description"].toString(),
           style: kBodyTextSmall,
+        ),
+        Row(
+          children: [
+            Text("Availability: ",
+                style: kBodyTextSmall.copyWith(fontWeight: FontWeight.w500)),
+            snap["available"]
+                ? Row(
+                    children: const [
+                      Icon(
+                        Icons.check,
+                        color: Colors.green,
+                      ),
+                      Text(
+                        "Currently Available",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: const [
+                      Icon(
+                        Icons.close,
+                        color: Colors.red,
+                      ),
+                      Text(
+                        "Currently Unavailable. Chat for more info! ",
+                        style: TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ],
+                  ),
+          ],
         ),
       ],
     );

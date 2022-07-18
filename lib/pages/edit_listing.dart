@@ -39,8 +39,11 @@ class _EditListingPageState extends State<EditListingPage> {
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userEmail;
   late UserData userData = UserData.defaultUserData();
-  String dropdownValue = 'Lending';
+  String rentDropdownValue = 'Lending';
+  String availDropDownValue = "yes";
   List<String> listingTypes = ['Lending', 'Renting'];
+  List<String> availTypes = ['yes', 'no'];
+
   late Position _currentPosition;
   double latitude = 1.0;
   double longitude = 1.0;
@@ -143,6 +146,8 @@ class _EditListingPageState extends State<EditListingPage> {
             const SizedBox(
               height: 10,
             ),
+            buildTextTitle("Available?"),
+            buildAvailDropDown(),
             buildTextTitle("Location"),
             Stack(children: [
               Container(
@@ -246,18 +251,19 @@ class _EditListingPageState extends State<EditListingPage> {
   // =================== Firestore interface =============
   void _editListing(String uid) async {
     String title, price, description, location;
-    bool forRent;
+    bool forRent, avail;
     GeoPoint geoLocation;
 
     title = _titleController.text.trim();
     price = _priceController.text.trim();
     description = _descriptionController.text.trim();
-    forRent = dropdownValue == 'Renting' ? true : false;
+    forRent = rentDropdownValue == 'Renting' ? true : false;
+    avail = availDropDownValue == "yes" ? true : false;
     location = _currentAddress;
     geoLocation = GeoPoint(latitude, longitude);
 
     bool editedListing = await FireStoreMethods().editListing(
-        uid, title, price, description, forRent, location, geoLocation);
+        uid, title, price, description, forRent, avail, location, geoLocation);
 
     successFailSnackBar(editedListing, "Edit Listing Successful",
         "Error Editing Listing, Please try again.", context);
@@ -330,17 +336,47 @@ class _EditListingPageState extends State<EditListingPage> {
             child: DropdownButtonFormField<String>(
               hint: Text("Borrowing or Renting"),
               decoration: kTextFormFieldDecoration,
-              value: dropdownValue,
+              value: rentDropdownValue,
               icon: const Icon(Icons.arrow_downward_rounded),
               style: const TextStyle(color: Colors.grey, fontSize: 17),
               onChanged: (String? newValue) {
                 if (mounted) {
                   setState(() {
-                    dropdownValue = newValue!;
+                    rentDropdownValue = newValue!;
                   });
                 }
               },
               items: listingTypes.map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+            )));
+  }
+
+  // =================== Available  / Unavailable DropDown Button   =============
+
+  Container buildAvailDropDown() {
+    return Container(
+        padding: const EdgeInsets.only(top: 10, right: 5),
+        child: SizedBox(
+            width: 230,
+            height: 70,
+            child: DropdownButtonFormField<String>(
+              hint: Text("Available or Unavailable"),
+              decoration: kTextFormFieldDecoration,
+              value: availDropDownValue,
+              icon: const Icon(Icons.arrow_downward_rounded),
+              style: const TextStyle(color: Colors.grey, fontSize: 17),
+              onChanged: (String? newValue) {
+                if (mounted) {
+                  setState(() {
+                    availDropDownValue = newValue!;
+                  });
+                }
+              },
+              items: availTypes.map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
                   child: Text(value),

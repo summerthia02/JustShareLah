@@ -105,6 +105,7 @@ class FireStoreMethods {
       String price,
       String description,
       bool forRent,
+      bool avail,
       String location,
       GeoPoint geoLocation) async {
     Map<String, dynamic>? listingData;
@@ -128,6 +129,8 @@ class FireStoreMethods {
     listingData!["description"] =
         description.isEmpty ? listingData!["description"] : description;
     listingData!["forRent"] = forRent;
+    listingData!["available"] = avail;
+
     listingData!["location"] =
         location.isEmpty ? listingData!["location"] : location;
     listingData!["GeoLocation"] = geoLocation;
