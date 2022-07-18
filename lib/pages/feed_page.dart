@@ -1,23 +1,24 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:justsharelah_v1/firebase/auth_service.dart';
-import 'package:justsharelah_v1/utils/apptheme.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
-import 'package:justsharelah_v1/models/feedTitle.dart';
+import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:supabase/supabase.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:justsharelah_v1/models/ForBorrowing.dart';
-import '../models/ListingCard.dart';
-import 'chat_page.dart';
-import 'addListing.dart';
-import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
-import 'package:justsharelah_v1/models/listings.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:justsharelah_v1/utils/location_helper.dart';
+// import 'package:location/location.dart';
 
 class FeedPage extends StatefulWidget {
   const FeedPage({Key? key}) : super(key: key);
@@ -28,35 +29,77 @@ class FeedPage extends StatefulWidget {
 
 class _FeedPageState extends State<FeedPage> {
   final _searchController = TextEditingController();
-  var _loading = false;
   // Index for bottom nav bar
-  int _selectedIndex = 0;
+  late Position _currentPosition;
+  var latitude = 1.0;
+  var longitude = 1.0;
+  String _currentAddress = "My Address";
+  String? currUserId = FirebaseAuth.instance.currentUser?.uid;
 
-  // List of next pages to go to
+  // get the user's current collection of users
 
-  // // Routing for bottom nav bar
-  // void _onItemTapped(int index) {
-  //   setState(() {
-  //     _loading = true;
-  //   });
-  //   switch (index) {
-  //     case 0:
-  //       // _navigatorKey.currentState!.pushNamed("/chat");
-  //       break;
-  //     case 1:
-  //       // _navigatorKey.currentState!.pushNamed("/addlisting");
-  //       break;
-  //     case 2:
-  //       Navigator.of(context).pushNamed("/account");
-  //       break;
-  //   }
-  //   setState(() {
-  //     _selectedIndex = index;
-  //     _loading = false;
-  //   });
-  // }
+  // get user current postion
+  Position getCurrPosition() {
+    return _currentPosition;
+  }
 
-  /// Called once a user id is received within `onAuthenticated()`
+  // ================ Determine Position + Permissions  =============
+
+  Future<Position?> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+
+    try {
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      Placemark place = placemarks[0];
+      setState(() {
+        _currentPosition = position;
+        longitude = position.longitude;
+        latitude = position.latitude;
+        _currentAddress = "${place.street!}, ${place.locality!}";
+      });
+    } catch (e) {
+      print(e);
+    }
+
+    // update user
+    FireStoreMethods().updateLocation(longitude, latitude, currUserId);
+  }
+
   Future<void> _getProfile(String userId) async {
     // setState(() {
     //   _loading = true;
@@ -90,6 +133,21 @@ class _FeedPageState extends State<FeedPage> {
   }
 
   @override
+  void initState() {
+    _currentPosition = Position(
+        longitude: 140,
+        latitude: 1.29,
+        timestamp: DateTime(2022, 9, 4, 12, 20),
+        accuracy: 1,
+        altitude: 1,
+        heading: 1,
+        speed: 1,
+        speedAccuracy: 1);
+    _determinePosition();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
@@ -105,6 +163,8 @@ class _FeedPageState extends State<FeedPage> {
               icon: const Icon(Icons.logout),
               onPressed: () {
                 AuthService().signOut();
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => LoginPage()));
               },
             ),
             Padding(
@@ -113,15 +173,23 @@ class _FeedPageState extends State<FeedPage> {
             ),
           ]),
         ],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset('images/location.png', width: 40, height: 30),
-            const SizedBox(width: 10.0),
-            Text(
-              "NUS, Singapore",
-            )
-          ],
+        title: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Image.asset('images/location.png', width: 40, height: 30),
+          const SizedBox(width: 10.0),
+          (_currentAddress != null)
+              ? Text(
+                  _currentAddress,
+                  style: TextStyle(fontSize: 14),
+                )
+              : Text('My Address'),
+        ]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _determinePosition,
+        tooltip: "Get Current Location",
+        child: const Icon(
+          Icons.change_circle_outlined,
+          size: 30,
         ),
       ),
 

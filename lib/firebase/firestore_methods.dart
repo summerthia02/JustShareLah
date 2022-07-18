@@ -21,6 +21,9 @@ class FireStoreMethods {
     String profImageUrl,
     bool forRent,
     String price,
+    double longitude,
+    double latitude,
+    String location,
   ) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
@@ -48,20 +51,21 @@ class FireStoreMethods {
       // to create uniqud id based on time, won't have the same id
       String listingId = const Uuid().v1(); // creates unique id based on time
       Listing listing = Listing(
-        description: description,
-        title: title,
-        uid: listingId,
-        available: true,
-        price: price,
-        forRent: forRent,
-        createdByEmail: createdByEmail,
-        usersLiked: [],
-        likeCount: 0,
-        dateListed: DateTime.now(),
-        imageUrl: imageUrl,
-        profImageUrl: profImageUrl,
-        searchIndex: indexTitle,
-      );
+          description: description,
+          title: title,
+          uid: listingId,
+          available: true,
+          price: price,
+          forRent: forRent,
+          createdByEmail: createdByEmail,
+          usersLiked: [],
+          likeCount: 0,
+          dateListed: DateTime.now(),
+          imageUrl: imageUrl,
+          profImageUrl: profImageUrl,
+          searchIndex: indexTitle,
+          GeoLocation: GeoPoint(latitude, longitude),
+          location: location);
 
       listingsCollection.doc(listingId).set(listing.toJson());
       res = "success";
@@ -74,7 +78,6 @@ class FireStoreMethods {
   // uid of the users that liked the listing
   Future<String> likelisting(
       String listingId, String? uid, List<dynamic> likes) async {
-
     String res = "Some error occurred";
     try {
       if (likes.contains(uid)) {
@@ -94,6 +97,66 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  Future<bool> editListing(
+      String uid,
+      String title,
+      String price,
+      String description,
+      bool forRent,
+      String location,
+      GeoPoint geoLocation) async {
+    Map<String, dynamic>? listingData;
+    String? docID;
+    await listingsCollection.where("uid", isEqualTo: uid).get().then(
+      (res) {
+        print("listingsData query successful");
+        listingData = res.docs.first.data();
+        docID = res.docs.first.id;
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    if (uid == null || uid == null) {
+      return false;
+    }
+
+    // if empty, remains the same, else take the controller variable
+    listingData!["title"] = title.isEmpty ? listingData!["title"] : title;
+    listingData!["price"] = price.isEmpty ? listingData!["price"] : price;
+    listingData!["description"] =
+        description.isEmpty ? listingData!["description"] : description;
+    listingData!["forRent"] = forRent;
+    listingData!["location"] =
+        location.isEmpty ? listingData!["location"] : location;
+    listingData!["GeoLocation"] = geoLocation;
+
+    listingsCollection
+        .doc(docID)
+        .update(listingData!)
+        .then((value) => print('Edited Profile'))
+        .catchError((err) => print('Failed to edit profile: $err'));
+    return true;
+  }
+
+  // update the location of users
+  Future<void> updateLocation(
+      double longitude, double latitude, String? uid) async {
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    return await users
+        .doc(uid)
+        .update({"location": GeoPoint(latitude, longitude)});
+  }
+
+  // update location of the listing
+  Future<void> updateListingLocation(
+      double longitude, double latitude, String? listingId) async {
+    CollectionReference listings =
+        FirebaseFirestore.instance.collection("listings");
+    return await listings
+        .doc(listingId)
+        .update({"location": GeoPoint(latitude, longitude)});
   }
 
   // searching for listing

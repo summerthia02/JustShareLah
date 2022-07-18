@@ -75,10 +75,9 @@ class ForRenting extends StatelessWidget {
                   itemBuilder: (context, index) => Container(
                         margin: EdgeInsets.symmetric(horizontal: 10),
                         child: ListingCard(
-
                           // collect the data for each indiviudal document at the index
                           snap: snapshot.data!.docs[index].data(),
-                                   press: () {
+                          press: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -89,8 +88,6 @@ class ForRenting extends StatelessWidget {
                         ),
                       )),
             );
-
-
           },
         )
       ],

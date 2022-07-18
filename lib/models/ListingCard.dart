@@ -3,9 +3,11 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:justsharelah_v1/firebase/auth_provider.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
+import 'package:justsharelah_v1/pages/edit_listing.dart';
 import 'package:justsharelah_v1/provider/user_provider.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
 import 'package:justsharelah_v1/widget/like_helper.dart';
@@ -57,8 +59,45 @@ class _ListingCardState extends State<ListingCard> {
   @override
   void initState() {
     super.initState();
-    getUserName().then((value) => setState(() {},));
+    getUserName().then((value) => setState(
+          () {},
+        ));
     userId = currentUser?.uid;
+  }
+
+  // ================ Edit Listing Button + Pop Up  =============
+
+  // ignore: non_constant_identifier_names
+  EditListing(BuildContext parentContext) async {
+    return showDialog(
+      context: parentContext,
+      builder: (BuildContext context) {
+        return SimpleDialog(
+          title: const Text('Edit Listing'),
+          children: <Widget>[
+            SimpleDialogOption(
+                padding: const EdgeInsets.all(20),
+                child: const Text('Edit Listing Details'),
+                onPressed: () async {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditListingPage(
+                          snap: widget.snap,
+                        ),
+                      ));
+                }),
+            SimpleDialogOption(
+              padding: const EdgeInsets.all(20),
+              child: const Text("Cancel"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -96,27 +135,46 @@ class _ListingCardState extends State<ListingCard> {
                     AspectRatio(
                       aspectRatio: 90 / 100,
                       child: Container(
-                        width: 500,
-                        height: 500,
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 162, 202, 197),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(defaultBorderRadius))),
-                        child: Image.network(widget.snap["imageUrl"].toString(),
-                              scale: 1.5, fit: BoxFit.scaleDown)
-                      ),
+                          width: 500,
+                          height: 500,
+                          decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 162, 202, 197),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(defaultBorderRadius))),
+                          child: Image.network(
+                              widget.snap["imageUrl"].toString(),
+                              scale: 1.5,
+                              fit: BoxFit.scaleDown)),
                     ),
                     Positioned(
-                      top: 20,
-                      right: 0,
+                      top: 10,
+                      right: 5,
+                      child: SizedBox(
+                          height: 30,
+                          width: 30,
+                          child: IconButton(
+                            icon: const Icon(Icons.more_vert,
+                                color: Colors.black, size: 30),
+                            onPressed: () {
+                              EditListing(context);
+                            },
+                          )),
+                    ),
+                    Positioned(
+                      top: 15,
+                      left: 3,
                       child: Container(
                         height: 30,
                         width: 30,
                         child: widget.snap["usersLiked"].contains(userId)
-                            ? const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                size: 30,
+                            ? const CircleAvatar(
+                                radius: 40,
+                                backgroundColor: Colors.white,
+                                child: Icon(
+                                  Icons.favorite,
+                                  color: Colors.red,
+                                  size: 25,
+                                ),
                               )
                             : Container(),
                       ),
@@ -137,7 +195,7 @@ class _ListingCardState extends State<ListingCard> {
                   Expanded(
                       child: Text(
                     widget.snap['title'],
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
                   )),
                   SizedBox(
                     width: 20,
@@ -155,11 +213,18 @@ class _ListingCardState extends State<ListingCard> {
                     Text(
                       "Listed " + timeDisplayed(widget.snap['dateListed']),
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 14,
                       ),
                     )
                   ],
-                )
+                ),
+                Container(
+                  alignment: Alignment.topLeft,
+                  child: Text(
+                    widget.snap['location'],
+                    style: TextStyle(fontSize: 10),
+                  ),
+                ),
               ],
             ),
           ),
