@@ -147,15 +147,18 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          numReviews.toString(),
-          style: kBodyTextSmall.copyWith(
-              fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline),
-        ),
-        Text(
-          " Reviews",
-          style: kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
+        TextButton(
+          // style: kBodyTextSmall.copyWith(
+          //     fontWeight: FontWeight.bold,
+          //     decoration: TextDecoration.underline),
+          child: Text(
+            numReviews.toString() + " Reviews",
+            style:
+                kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
+          ),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, "/reviews");
+          },
         ),
       ],
     );
@@ -186,7 +189,7 @@ class _ProfilePageState extends State<ProfilePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const MakeReviewPage(),
+                builder: (context) => const EditProfilePage(),
               ));
         },
         child: const Text('Edit Profile'),
