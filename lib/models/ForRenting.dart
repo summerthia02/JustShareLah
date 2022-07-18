@@ -25,7 +25,7 @@ class ForRenting extends StatelessWidget {
     return Column(
       children: [
         FeedTitle(
-          title: "For Renting",
+          title: "FOR RENTING",
           pressSeeAll: () {
             Navigator.push(
                 context,

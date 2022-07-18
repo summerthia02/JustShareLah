@@ -5,46 +5,48 @@ class MyBottomNavBar {
     "/feed",
     "/chat",
     "/addlisting",
-    "/activity",
+    "/favourites",
     "/profile",
   ];
-  BottomNavigationBarThemeData bottomNavigationBarTheme(ColorScheme colors) {
-    return BottomNavigationBarThemeData(
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: colors.surfaceVariant,
-      selectedItemColor: colors.onSurface,
-      unselectedItemColor: colors.onSurfaceVariant,
-      elevation: 0,
-      landscapeLayout: BottomNavigationBarLandscapeLayout.centered,
-    );
-  }
 
   BottomNavigationBar buildBottomNavBar(BuildContext context) {
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       items: const <BottomNavigationBarItem>[
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(
+            Icons.home,
+            color: Colors.pink,
+          ),
           activeIcon: Icon(Icons.home),
           label: 'Feed',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.chat_outlined),
+          icon: Icon(
+            Icons.chat,
+            color: Colors.purple,
+          ),
           activeIcon: Icon(Icons.chat),
           label: 'Chat',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.add_a_photo_outlined),
+          icon: Icon(Icons.add_a_photo, color: Colors.grey),
           activeIcon: Icon(Icons.add_a_photo_rounded),
           label: 'Add Listing',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.notifications_active_outlined),
-          activeIcon: Icon(Icons.notification_add),
-          label: 'Activity',
+          icon: Icon(Icons.favorite, color: Colors.red),
+          activeIcon: Icon(
+            Icons.favorite,
+            color: Colors.red,
+          ),
+          label: 'Favourites',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.person_outline_rounded),
+          icon: Icon(
+            Icons.person,
+            color: Colors.orange,
+          ),
           activeIcon: Icon(Icons.person),
           label: 'User Profile',
         ),
