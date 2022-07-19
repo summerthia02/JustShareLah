@@ -115,10 +115,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           radius: 70,
                           backgroundImage: MemoryImage(_image!),
                         )
-                      : CircleAvatar(
-                          radius: 60,
-                          backgroundImage: NetworkImage(userData.imageUrl!),
-                        ),
+                      :     CircleAvatar(
+                radius: 60,
+                backgroundImage: NetworkImage(userData.imageUrl!),),
+              
                   Positioned(
                     bottom: -10,
                     right: 135,
