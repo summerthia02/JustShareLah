@@ -110,8 +110,7 @@ class _ListingCardState extends State<ListingCard> {
           children: [
             CircleAvatar(
               radius: 11,
-              backgroundImage:
-                  NetworkImage(widget.snap['profImageUrl'].toString()),
+              backgroundImage: NetworkImage(widget.snap['imageUrl'].toString()),
             ),
             const SizedBox(
               width: 10,
