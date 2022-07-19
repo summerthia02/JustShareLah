@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/models/ListingCard.dart';
 import 'package:justsharelah_v1/models/enlarged_listing.dart';
@@ -25,14 +26,8 @@ class _FavouritesState extends State<Favourites> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back_rounded),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-        ),
+        appBar:
+            MyAppBar().buildAppBar(const Text("Favourites"), context, '/feed'),
         body:
             ListView(padding: const EdgeInsets.all(defaultPadding), children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
@@ -119,30 +114,6 @@ class _FavouritesState extends State<Favourites> {
                           ),
                         )),
               );
-
-              // // print("going to cast listing data");
-
-              // // return Row(
-              // //     crossAxisAlignment: CrossAxisAlignment.start,
-              // //     children: List.generate(
-              // //       listingData.length,
-              // //       (index) => Padding(
-              // //         padding: const EdgeInsets.only(right: defaultPadding),
-              // //         child: ListingCard(
-              // //           image: listingData[index].imageUrl,
-              // //           title: listingData[index].title,
-              // //           price: listingData[index].price,
-              // //           press: () {
-              // //             Navigator.push(
-              // //                 context,
-              // //                 MaterialPageRoute(
-              // //                   builder: (context) => EnlargedScreen(
-              // //                       listing: listingData[index]),
-              // //                 ));
-              // //           },
-              //         ),
-              //       ),
-              //     ));
             },
           )
         ]));
