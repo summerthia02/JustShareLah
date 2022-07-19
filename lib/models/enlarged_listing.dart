@@ -230,7 +230,7 @@ class _PostedByState extends State<PostedBy> {
         padding: EdgeInsets.all(10),
         child: Row(children: <Widget>[
           ProfileWidget(
-            imageUrl: widget.snap["profImageUrl"],
+            imageUrl: widget.snap["imageUrl"],
             onClicked: () => {},
           ),
           SizedBox(
