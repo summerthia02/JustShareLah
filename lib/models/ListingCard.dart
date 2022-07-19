@@ -17,11 +17,10 @@ import '../pages/profile_page.dart';
 import '../utils/const_templates.dart';
 
 class ListingCard extends StatefulWidget {
-  const ListingCard({Key? key, this.snap, this.uid, required this.press})
+  const ListingCard({Key? key, this.snap, required this.press})
       : super(key: key);
 
   final snap;
-  final uid;
 
   // final String image, title, price;
   final VoidCallback press;
