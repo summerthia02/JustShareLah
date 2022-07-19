@@ -53,6 +53,8 @@ class ForRenting extends StatelessWidget {
               return const Center(
                 child: CircularProgressIndicator(),
               );
+            } else if (snapshot.hasData == false) {
+              return const Text("No Listings for Renting Yet :( ");
             } else if (!snapshot.hasData) {
               return const Text("Awaiting result...");
             } else if (snapshot.hasError) {
