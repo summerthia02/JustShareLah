@@ -41,7 +41,8 @@ We envision a mobile application that allows for seamless borrowing/lending/rent
 - As a user, I want to edit my listings as required.
 - As a user, I wish to chat with those I want to transact with.
 - As a user, I want to manage all my chats on a single page.
-- As a user, I want to monitor my activity in my account.
+- As a user, I want to like listings that I am interested in.
+- As a user, I want to to be able to see all the listings I have liked. 
 <hr>
 
 ### Features
