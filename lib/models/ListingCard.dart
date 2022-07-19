@@ -34,6 +34,7 @@ class _ListingCardState extends State<ListingCard> {
   bool isLiking = false;
 
   String name = "";
+  String profPicUrl = "";
 
   Future<String> getUserName() async {
     String email = widget.snap["createdByEmail"].toString();
@@ -56,13 +57,34 @@ class _ListingCardState extends State<ListingCard> {
     return name;
   }
 
+  Future<String> getProfilePicture() async {
+    String email = widget.snap["createdByEmail"].toString();
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    DocumentReference profilePic = users.doc("imageUrl");
+    Iterable<Map<String, dynamic>> userData = [];
+    // get username
+    Query userDoc = users.where("email", isEqualTo: email);
+    // String userName = userDoc.print("hi");
+    await userDoc.get().then(
+      (res) {
+        print("listingData query successful");
+        // userData = res.docs.map((snapshot) => snapshot.data());
+
+        setState(() {
+          profPicUrl = res.docs[0]["imageUrl"];
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return profPicUrl;
+  }
+
   // String name;
   @override
   void initState() {
     super.initState();
-    getUserName().then((value) => setState(
-          () {},
-        ));
+    getUserName();
+    getProfilePicture();
     userId = currentUser?.uid;
   }
 
@@ -108,10 +130,7 @@ class _ListingCardState extends State<ListingCard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 11,
-              backgroundImage: NetworkImage(widget.snap['imageUrl'].toString()),
-            ),
+            CircleAvatar(radius: 11, backgroundImage: NetworkImage(profPicUrl)),
             const SizedBox(
               width: 10,
             ),

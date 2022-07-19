@@ -18,7 +18,8 @@ import 'package:justsharelah_v1/utils/image_picker.dart';
 import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({Key? key, required this.email}) : super(key: key);
+  var email;
 
   @override
   _ProfilePageState createState() => _ProfilePageState();
@@ -27,19 +28,21 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   final currentUser = FirebaseAuth.instance.currentUser;
-  late String? userEmail;
+  final currUserEmail = FirebaseAuth.instance.currentUser?.email;
   late UserData userData = UserData.defaultUserData();
-
   var profileData = {};
 
   // access the usertable, then get the data where email field == current email
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
-    // get
-    await usersCollection.where('email', isEqualTo: userEmail).get().then(
+    // get data where 'email' field is = email argument field
+    await usersCollection.where('email', isEqualTo: widget.email).get().then(
       (res) {
         print("userData query successful");
         userData = res.docs.first.data();
+        setState(() {
+          userData = userData;
+        });
       },
       onError: (e) => print("Error completing: $e"),
     );
@@ -49,14 +52,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
-    userEmail = currentUser?.email;
+    _getUserData();
+    getProfileData();
     _getUserData().then((data) {
       UserData parseUserData = UserData(
-        uid: currentUser?.uid,
+        uid: data["uid"],
         userName: data["username"],
         firstName: data["first_name"],
         lastName: data["last_name"],
-        email: userEmail,
+        email: widget.email,
         phoneNumber: data["phone_number"],
         about: data["about"],
         imageUrl: data["imageUrl"],
@@ -106,13 +110,19 @@ class _ProfilePageState extends State<ProfilePage> {
             numReviews(userData.reviews.length),
             numShareCredits(
                 userData.shareCredits.isEmpty ? "0" : userData.shareCredits),
-            editProfileButton(),
+            // only show this button when it's my own profile
+            currUserEmail == widget.email ? editProfileButton() : Container(),
             const SizedBox(height: 24),
-            buildAbout(userData),
+            currUserEmail == widget.email
+                ? buildAbout(userData)
+                : userData.about == "Click Edit Profile to add a bio!"
+                    ? buildNoBio()
+                    : buildAbout(userData),
+
             const SizedBox(height: defaultPadding),
-            ForBorrowing(userEmailToDisplay: userEmail),
+            ForBorrowing(userEmailToDisplay: widget.email),
             const SizedBox(height: defaultPadding),
-            ForRenting(userEmailToDisplay: userEmail)
+            ForRenting(userEmailToDisplay: widget.email)
           ],
         ),
       ),
@@ -229,6 +239,25 @@ class _ProfilePageState extends State<ProfilePage> {
             const SizedBox(height: 10),
             Text(
               userData.about.toString(),
+              style: const TextStyle(fontSize: 16, height: 1.4),
+            ),
+          ],
+        ),
+      );
+
+  // for users' who have not created bio
+  Widget buildNoBio() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 48),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'About',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              "User has not updated their bio yet :( ",
               style: const TextStyle(fontSize: 16, height: 1.4),
             ),
           ],
