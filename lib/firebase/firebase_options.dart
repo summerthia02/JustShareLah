@@ -65,9 +65,11 @@ class DefaultFirebaseOptions {
     messagingSenderId: '10879165640',
     projectId: 'justsharelah-6dca5',
     storageBucket: 'justsharelah-6dca5.appspot.com',
-    androidClientId: '10879165640-ipqeaemtarv9h5kpgsr216su9r9pueqk.apps.googleusercontent.com',
-    iosClientId: '10879165640-q602g5sl8aupgj1vmh1mfj22u8qp9vf6.apps.googleusercontent.com',
-    iosBundleId: 'com.example.justsharelahV1',
+    androidClientId:
+        '10879165640-ipqeaemtarv9h5kpgsr216su9r9pueqk.apps.googleusercontent.com',
+    iosClientId:
+        '10879165640-q602g5sl8aupgj1vmh1mfj22u8qp9vf6.apps.googleusercontent.com',
+    iosBundleId: 'com.example.justsharelah_v1',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -76,8 +78,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '10879165640',
     projectId: 'justsharelah-6dca5',
     storageBucket: 'justsharelah-6dca5.appspot.com',
-    androidClientId: '10879165640-ipqeaemtarv9h5kpgsr216su9r9pueqk.apps.googleusercontent.com',
-    iosClientId: '10879165640-q602g5sl8aupgj1vmh1mfj22u8qp9vf6.apps.googleusercontent.com',
-    iosBundleId: 'com.example.justsharelahV1',
+    androidClientId:
+        '10879165640-ipqeaemtarv9h5kpgsr216su9r9pueqk.apps.googleusercontent.com',
+    iosClientId:
+        '10879165640-q602g5sl8aupgj1vmh1mfj22u8qp9vf6.apps.googleusercontent.com',
+    iosBundleId: 'com.example.justsharelah_v1',
   );
 }
