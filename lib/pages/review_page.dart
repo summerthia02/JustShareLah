@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
@@ -17,6 +19,73 @@ class MakeReviewPage extends StatefulWidget {
 
 class _MakeReviewPageState extends State<MakeReviewPage> {
   final currUserEmail = FirebaseAuth.instance.currentUser?.email;
+
+  List<bool> isSelected = [true, false, false];
+  late int index;
+  late TextEditingController _descriptionController;
+
+  // ================ Toggle Button  =============================
+
+  Container toggleButton() => Container(
+        color: Color.fromARGB(255, 228, 154, 179),
+        child: ToggleButtons(
+          isSelected: isSelected,
+          selectedColor: Colors.black,
+          color: Colors.black,
+          fillColor: Colors.green,
+          renderBorder: false,
+          // splashColor: Colors.red,
+          highlightColor: Colors.lightBlue,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text('Negative', style: TextStyle(fontSize: 18)),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                'Neutral',
+                style: TextStyle(fontSize: 18),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text('Positive', style: TextStyle(fontSize: 18)),
+            ),
+          ],
+          onPressed: (newIndex) {
+            setState(() {
+              for (int index = 0; index < isSelected.length; index++) {
+                if (index == newIndex) {
+                  isSelected[index] = true;
+                } else {
+                  isSelected[index] = false;
+                }
+              }
+              index = newIndex;
+              // print(newIndex);
+            });
+          },
+        ),
+      );
+
+  // get the feedback
+  String getFeedback(int index) {
+    if (index == 0) {
+      return "Negative";
+    } else if (index == 1) {
+      return "Neutral";
+    } else {
+      return "Positive";
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    index = 0;
+    toggleButton();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +117,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
             SizedBox(
               height: 15,
             ),
-            ToggleButtons1(),
+            toggleButton(),
             SizedBox(
               height: 15.0,
             ),
@@ -67,6 +136,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
               padding: EdgeInsets.only(left: 20, right: 20),
               child: TextFormField(
                 obscureText: false,
+                controller: _descriptionController,
                 textAlign: TextAlign.center,
                 minLines: 4,
                 maxLines: 6,
