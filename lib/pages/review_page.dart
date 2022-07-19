@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
@@ -15,6 +16,8 @@ class MakeReviewPage extends StatefulWidget {
 }
 
 class _MakeReviewPageState extends State<MakeReviewPage> {
+  final currUserEmail = FirebaseAuth.instance.currentUser?.email;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +85,13 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
                     "CANCEL", Colors.red, 20.0, context, FeedPage()),
                 SizedBox(width: 10.0),
                 buildButtonField(
-                    "SUBMIT", Colors.green, 20.0, context, ProfilePage()),
+                    "SUBMIT",
+                    Colors.green,
+                    20.0,
+                    context,
+                    ProfilePage(
+                      email: currUserEmail,
+                    )),
               ],
             )
           ],

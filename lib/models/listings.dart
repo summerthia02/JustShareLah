@@ -6,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Listing {
   final String uid;
   final String imageUrl;
-  final String profImageUrl;
   final String title;
   final String price;
   final bool forRent;
@@ -33,7 +32,6 @@ class Listing {
     required this.createdByEmail,
     required this.usersLiked,
     required this.dateListed,
-    required this.profImageUrl,
     required this.likeCount,
     required this.searchIndex,
     required this.GeoLocation,
@@ -65,7 +63,6 @@ class Listing {
       'createdByEmail': createdByEmail,
       'likeCount': likeCount,
       'usersLiked': usersLiked,
-      'profImageUrl': profImageUrl,
       'dateListed': Timestamp.fromDate(dateListed),
       'searchIndex': searchIndex,
       'GeoLocation': GeoLocation,

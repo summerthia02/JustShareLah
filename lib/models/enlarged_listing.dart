@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
 
@@ -195,7 +196,8 @@ class PostedBy extends StatefulWidget {
 
 class _PostedByState extends State<PostedBy> {
   String name = "";
-
+  String profPicUrl = "";
+  // getting the username directly from the database
   Future<String> getUserName() async {
     String email = widget.snap["createdByEmail"].toString();
     CollectionReference users = FirebaseFirestore.instance.collection("Users");
@@ -218,10 +220,33 @@ class _PostedByState extends State<PostedBy> {
     return name;
   }
 
+  Future<String> getProfilePicture() async {
+    String email = widget.snap["createdByEmail"].toString();
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    DocumentReference profilePic = users.doc("imageUrl");
+    Iterable<Map<String, dynamic>> userData = [];
+    // get username
+    Query userDoc = users.where("email", isEqualTo: email);
+    // String userName = userDoc.print("hi");
+    await userDoc.get().then(
+      (res) {
+        print("listingData query successful");
+        // userData = res.docs.map((snapshot) => snapshot.data());
+
+        setState(() {
+          profPicUrl = res.docs[0]["imageUrl"];
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return profPicUrl;
+  }
+
   @override
   void initState() {
     super.initState();
     getUserName();
+    getProfilePicture();
   }
 
   @override
@@ -230,8 +255,16 @@ class _PostedByState extends State<PostedBy> {
         padding: EdgeInsets.all(10),
         child: Row(children: <Widget>[
           ProfileWidget(
-            imageUrl: widget.snap["imageUrl"],
-            onClicked: () => {},
+            imageUrl: profPicUrl,
+            onClicked: () => {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ProfilePage(
+                      email: widget.snap["createdByEmail"],
+                    ),
+                  ))
+            },
           ),
           SizedBox(
             width: 20.0,

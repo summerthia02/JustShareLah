@@ -62,7 +62,6 @@ class FireStoreMethods {
           likeCount: 0,
           dateListed: DateTime.now(),
           imageUrl: imageUrl,
-          profImageUrl: profImageUrl,
           searchIndex: indexTitle,
           GeoLocation: GeoPoint(latitude, longitude),
           location: location);

@@ -16,7 +16,9 @@ class UserDataService {
   static Future<void> createUser(String uid, String email, String userName,
       String firstName, String lastName) async {
     final users = FirebaseFirestore.instance.collection('Users');
+
     return await users.doc(uid).set({
+      'uid': uid,
       'email': email,
       'username': userName,
       'first_name': firstName,

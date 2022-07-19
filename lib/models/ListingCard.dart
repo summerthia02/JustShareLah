@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:justsharelah_v1/firebase/auth_provider.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/pages/edit_listing.dart';
 import 'package:justsharelah_v1/provider/user_provider.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
 import 'package:justsharelah_v1/widget/like_helper.dart';
 
+import '../pages/profile_page.dart';
 import '../utils/const_templates.dart';
 
 class ListingCard extends StatefulWidget {
@@ -34,6 +36,7 @@ class _ListingCardState extends State<ListingCard> {
   bool isLiking = false;
 
   String name = "";
+  String profPicUrl = "";
 
   Future<String> getUserName() async {
     String email = widget.snap["createdByEmail"].toString();
@@ -56,13 +59,34 @@ class _ListingCardState extends State<ListingCard> {
     return name;
   }
 
+  Future<String> getProfilePicture() async {
+    String email = widget.snap["createdByEmail"].toString();
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    DocumentReference profilePic = users.doc("imageUrl");
+    Iterable<Map<String, dynamic>> userData = [];
+    // get username
+    Query userDoc = users.where("email", isEqualTo: email);
+    // String userName = userDoc.print("hi");
+    await userDoc.get().then(
+      (res) {
+        print("listingData query successful");
+        // userData = res.docs.map((snapshot) => snapshot.data());
+
+        setState(() {
+          profPicUrl = res.docs[0]["imageUrl"];
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return profPicUrl;
+  }
+
   // String name;
   @override
   void initState() {
     super.initState();
-    getUserName().then((value) => setState(
-          () {},
-        ));
+    getUserName();
+    getProfilePicture();
     userId = currentUser?.uid;
   }
 
@@ -108,14 +132,24 @@ class _ListingCardState extends State<ListingCard> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            CircleAvatar(
-              radius: 11,
-              backgroundImage: NetworkImage(widget.snap['imageUrl'].toString()),
+            ProfileWidget(
+              imageUrl: profPicUrl,
+              onClicked: () => {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(
+                        email: widget.snap["createdByEmail"],
+                      ),
+                    ))
+              },
             ),
             const SizedBox(
               width: 10,
             ),
-            Text(name, style: const TextStyle(fontWeight: FontWeight.w700)),
+            Text(name,
+                style:
+                    const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
           ],
         ),
         GestureDetector(

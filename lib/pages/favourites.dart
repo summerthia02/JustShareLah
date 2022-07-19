@@ -75,6 +75,8 @@ class _FavouritesState extends State<Favourites> {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
+              } else if (snapshot.data == null) {
+                return const Text("No Favourite Listings Yet :( ");
               } else if (!snapshot.hasData) {
                 return const Text("Awaiting result...");
               } else if (snapshot.hasError) {
