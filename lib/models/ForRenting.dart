@@ -17,6 +17,7 @@ class ForRenting extends StatelessWidget {
   }) : super(key: key);
 
   late String? userEmailToDisplay;
+  List<QueryDocumentSnapshot> listingData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +50,18 @@ class ForRenting extends StatelessWidget {
                   .snapshots(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            if (snapshot.hasData) {
+              // docs is to get a list of all the documents in the snapshot
+
+              listingData = snapshot.data!.docs;
+              if (listingData.isEmpty) {
+                return const Text("No Listings for Renting Yet");
+              }
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
               );
-            } else if (snapshot.hasData == false) {
-              return const Text("No Listings for Renting Yet :( ");
             } else if (!snapshot.hasData) {
               return const Text("Awaiting result...");
             } else if (snapshot.hasError) {
@@ -62,12 +69,6 @@ class ForRenting extends StatelessWidget {
               return const Text("Error Loading Borrowing Items");
             }
 
-            // Iterable<Listing>? listingDataIterable = snapshot.data!;
-            // if (listingDataIterable == null ||
-            //     listingDataIterable.isEmpty) {
-            //   return const Text("No such listings :(");
-            // }
-            // List<Listing> listingData = listingDataIterable.toList();
             return SizedBox(
               height: 450,
               child: ListView.builder(
