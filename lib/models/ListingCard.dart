@@ -9,6 +9,7 @@ import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/pages/edit_listing.dart';
+import 'package:justsharelah_v1/pages/like_page.dart';
 import 'package:justsharelah_v1/provider/user_provider.dart';
 import 'package:justsharelah_v1/utils/time_helper.dart';
 import 'package:justsharelah_v1/widget/like_helper.dart';
@@ -64,8 +65,6 @@ class _ListingCardState extends State<ListingCard> {
   Future<String> getProfilePicture() async {
     String email = widget.snap["createdByEmail"].toString();
     CollectionReference users = FirebaseFirestore.instance.collection("Users");
-    DocumentReference profilePic = users.doc("imageUrl");
-    Iterable<Map<String, dynamic>> userData = [];
     // get username
     Query userDoc = users.where("email", isEqualTo: email);
     // String userName = userDoc.print("hi");
@@ -129,6 +128,11 @@ class _ListingCardState extends State<ListingCard> {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> usersLiked = widget.snap["usersLiked"];
+
+    // for (var i = 0; i < usersLiked.length; i++) {
+    //   print(usersLiked[i]);
+    // }
     return Column(
       children: [
         Row(
@@ -220,14 +224,24 @@ class _ListingCardState extends State<ListingCard> {
                     ),
                   ],
                 ),
-
                 // ignore: prefer_const_literals_to_create_immutables
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    widget.snap["usersLiked"].length != 1
-                        ? "${widget.snap["usersLiked"].length} likes"
-                        : "1 like",
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => LikePage(
+                            usersLiked: usersLiked,
+                          ),
+                        ));
+                  },
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      widget.snap["usersLiked"].length != 1
+                          ? "${widget.snap["usersLiked"].length} likes"
+                          : "1 like",
+                    ),
                   ),
                 ),
                 Row(children: [
