@@ -118,7 +118,7 @@ class _ChatPageState extends State<ChatPage> {
     if (documentSnapshot != null) {
       UserData userData = UserDataService.fromDocument(documentSnapshot);
       if (userData.uid == currentUserId) {
-        return const SizedBox.shrink();
+        return const SizedBox.shrink();  
       } else {
         return TextButton(
           onPressed: () async {
