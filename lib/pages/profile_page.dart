@@ -16,6 +16,7 @@ import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/image_picker.dart';
 import 'package:justsharelah_v1/utils/profile_image.dart';
+import 'sharecredits.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key, required this.email}) : super(key: key);
@@ -178,9 +179,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
-          "ShareCredits: ",
-          style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
+        TextButton(
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, "/sharecredits");
+          },
+          child: Text(
+            "ShareCredits: ",
+            style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
+          ),
         ),
         Text(
           numShareCreds.toString(),
