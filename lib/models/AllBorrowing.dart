@@ -26,6 +26,7 @@ class AllBorrowing extends StatefulWidget {
 
 class _AllBorrowingState extends State<AllBorrowing> {
   String searchListingText = "";
+  List<QueryDocumentSnapshot> listingData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +127,18 @@ class _AllBorrowingState extends State<AllBorrowing> {
                         .snapshots(),
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.hasData) {
+                listingData = snapshot.data!.docs;
+                if (listingData.isEmpty) {
+                  return Container(
+                      padding: EdgeInsets.only(
+                          bottom: 180, top: 180, right: 25, left: 25),
+                      child: const Text(
+                        "No Listings for Borrowing Yet :(",
+                        style: kJustShareLahStyle,
+                      ));
+                }
+              }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),

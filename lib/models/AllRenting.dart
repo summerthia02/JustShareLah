@@ -25,6 +25,7 @@ class AllRenting extends StatefulWidget {
 
 class _AllRentingState extends State<AllRenting> {
   String searchListingText = "";
+  List<QueryDocumentSnapshot> listingData = [];
 
   // Future<Iterable<Listing>> borrowingData =
   @override
@@ -96,6 +97,13 @@ class _AllRentingState extends State<AllRenting> {
                         .snapshots(),
             builder: (context,
                 AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+              if (snapshot.hasData) {
+                listingData = snapshot.data!.docs;
+                if (listingData.isEmpty) {
+                  return Container(
+                      child: const Text("No Listings for Borrowing Yet :("));
+                }
+              }
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),

@@ -16,6 +16,7 @@ class ForBorrowing extends StatelessWidget {
   }) : super(key: key);
 
   late String? userEmailToDisplay;
+  List<QueryDocumentSnapshot> listingData = [];
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +49,13 @@ class ForBorrowing extends StatelessWidget {
                   .snapshots(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            if (snapshot.hasData) {
+              // docs is to get a list of all the documents in the snapshot
+              listingData = snapshot.data!.docs;
+              if (listingData.isEmpty) {
+                return const Text("No Listings for Borrowing Yet");
+              }
+            }
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
                 child: CircularProgressIndicator(),
