@@ -15,7 +15,6 @@ class UserDataService {
 
   static Future<void> createUser(String uid, String email, String userName,
       String firstName, String lastName) async {
-
     return await usersCollection.doc(uid).set({
       'uid': uid,
       'email': email,
@@ -122,6 +121,7 @@ class UserDataService {
       (res) {
         print("userData query successful");
         userData = res.docs.first.data();
+        userData["uid"] = res.docs.first.id;
       },
       onError: (e) => print("Error completing: $e"),
     );

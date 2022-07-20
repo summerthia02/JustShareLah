@@ -92,18 +92,6 @@ class _ChatItemPageState extends State<ChatItemPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
           (Route<dynamic> route) => false);
     }
-    if (currentUserId.compareTo(widget.otherId) > 0) {
-      groupChatId = '${widget.listingId} : $currentUserId - ${widget.otherId}';
-    } else {
-      groupChatId = '${widget.listingId} : ${widget.otherId} - $currentUserId';
-    }
-    Map<String, dynamic> userData = await UserDataService.getUserData(
-        FirebaseAuth.instance.currentUser!.email!);
-    List<String> chattingWithArr = userData[FirestoreUserKeys.chattingWith];
-    chattingWithArr.add(widget.listingId);
-
-    ChatProvider.updateFirestoreData(
-        FirestoreGeneralKeys.pathUserCollection, currentUserId, userData);
   }
 
   Future getImage() async {

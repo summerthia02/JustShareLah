@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/pages/chat_item_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
@@ -171,7 +174,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                         width: 200,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: onChatPressed,
                           style: ElevatedButton.styleFrom(
                               primary: Colors.redAccent,
                               shape: const StadiumBorder()),
@@ -187,6 +190,21 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
         ],
       ),
     );
+  }
+
+  void onChatPressed() async {
+    Map<String, dynamic> sellerData = await UserDataService.getUserData(widget.snap["createdByEmail"].email!);
+    Map<String, dynamic> userData = await UserDataService.getUserData(currentUser!.email!);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ChatItemPage(
+              otherId: sellerData["uid"],
+              otherAvatar: sellerData["imageUrl"],
+              otherNickname: sellerData["username"],
+              userProfPicUrl: userData["imageUrl"],
+              otherPhoneNumber: sellerData["phone_number"],
+              listingId: widget.snap["uid"],
+              listingTitle: widget.snap["title"],
+            )));
   }
 }
 
