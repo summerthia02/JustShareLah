@@ -17,8 +17,11 @@ import '../pages/profile_page.dart';
 import '../utils/const_templates.dart';
 
 class ListingCard extends StatefulWidget {
-  const ListingCard({Key? key, this.snap, required this.press})
-      : super(key: key);
+  ListingCard({
+    Key? key,
+    this.snap,
+    required this.press,
+  }) : super(key: key);
 
   final snap;
 
@@ -236,13 +239,14 @@ class _ListingCardState extends State<ListingCard> {
                   SizedBox(
                     width: 20,
                   ),
+                  widget.snap["forRent"] == true ? Text("\$") : Container(),
                   Text(
-                    '\$' + widget.snap['price'].toString(),
+                    widget.snap["forRent"] == true
+                        ? widget.snap['price'].toString()
+                        : widget.snap["shareCredits"],
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  // Text(snap['usersLiked'] == null
-                  //     ? '${snap['usersLiked'].length!} likes'
-                  //     : "0 Likes"),
+                  widget.snap["forRent"] == false ? Text(" SC") : Container(),
                 ]),
                 Row(
                   children: [

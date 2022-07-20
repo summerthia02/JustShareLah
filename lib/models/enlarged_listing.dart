@@ -328,10 +328,14 @@ class ListingCardDetails extends StatelessWidget {
                 style: kHeadingText,
               ),
             ),
+            snap["forRent"] == true ? Text("\$") : Container(),
             Text(
-              "\$${snap["price"]}",
-              style: Theme.of(context).textTheme.headline6,
+              snap["forRent"] == true
+                  ? snap['price'].toString()
+                  : snap["shareCredits"],
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            snap["forRent"] == false ? Text(" SC") : Container(),
           ],
         ),
         Text(
