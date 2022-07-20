@@ -196,7 +196,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
 
   void onChatPressed() async {
     Map<String, dynamic> sellerData =
-        await UserDataService.getUserData(widget.snap["createdByEmail"].email!);
+        await UserDataService.getUserData(widget.snap["createdByEmail"]);
     Map<String, dynamic> userData =
         await UserDataService.getUserData(currentUser!.email!);
 

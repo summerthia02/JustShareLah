@@ -57,12 +57,21 @@ class ChatProvider {
   }
 
   // ==================CHAT STUFF========================
-  static Stream<QuerySnapshot> getChat(String groupChatId) {
-    return firebaseFirestore
+  static Future<Map<String, dynamic>?> getChat(String groupChatId) async {
+    Map<String, dynamic>? chatData;
+    await firebaseFirestore
         .collection(FirestoreChatKeys.pathChatCollection)
-        .doc(groupChatId)
-        .collection(groupChatId)
-        .snapshots();
+        .where(FirestoreChatKeys.groupChatId, isEqualTo: groupChatId)
+        .get()
+        .then(
+      (res) {
+        print("chatData query successful");
+        chatData = res.docs.first.data();
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    print(chatData);
+    return chatData;
   }
 
   static Future<void> makeNewChat(ChatItem chatItem) async {
@@ -76,12 +85,16 @@ class ChatProvider {
         await UserDataService.getUserDataFromId(sellerId);
     Map<String, dynamic> chattingWithData =
         await UserDataService.getUserDataFromId(chattingWithId);
-    sellerData["chats"].append(groupChatId);
-    chattingWithData["chats"].append(groupChatId);
-    updateFirestoreData(
-        FirestoreGeneralKeys.pathUserCollection, sellerId, sellerData);
-        updateFirestoreData(
-        FirestoreGeneralKeys.pathUserCollection, chattingWithId, chattingWithData);
+    if (!sellerData["chats"].contains(groupChatId)) {
+      sellerData["chats"].add(groupChatId);
+      updateFirestoreData(
+          FirestoreGeneralKeys.pathUserCollection, sellerId, sellerData);
+    }
+    if (!chattingWithData["chats"].contains(groupChatId)) {
+      chattingWithData["chats"].add(groupChatId);
+      updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
+          chattingWithId, chattingWithData);
+    }
 
     return firebaseFirestore
         .collection(FirestoreChatKeys.pathChatCollection)
@@ -90,11 +103,13 @@ class ChatProvider {
   }
 
   static Future<bool> handleChatRequest(ChatItem chatItem) async {
-    Stream<QuerySnapshot> chatSnapshot = getChat(chatItem.groupChatId);
-    if (await chatSnapshot.isEmpty) {
+    print("HANDLING CHAT REQUEST");
+    Map<String, dynamic>? chatData = await getChat(chatItem.groupChatId);
+    if (chatData == null) {
       makeNewChat(chatItem);
       return false;
     }
+    print("chat exists");
     return true;
   }
 }
