@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/chats/chat_item.dart';
 import 'package:justsharelah_v1/models/chats/chat_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,11 +65,23 @@ class ChatProvider {
         .snapshots();
   }
 
-  static Future<void> makeNewChat(ChatItem chatItem) {
+  static Future<void> makeNewChat(ChatItem chatItem) async {
     String groupChatId = chatItem.groupChatId;
     String sellerId = chatItem.sellerId;
     String chattingWithId = chatItem.chattingWithId;
     String listingId = chatItem.listingId;
+
+    // add groupChatID to users chat field
+    Map<String, dynamic> sellerData =
+        await UserDataService.getUserDataFromId(sellerId);
+    Map<String, dynamic> chattingWithData =
+        await UserDataService.getUserDataFromId(chattingWithId);
+    sellerData["chats"].append(groupChatId);
+    chattingWithData["chats"].append(groupChatId);
+    updateFirestoreData(
+        FirestoreGeneralKeys.pathUserCollection, sellerId, sellerData);
+        updateFirestoreData(
+        FirestoreGeneralKeys.pathUserCollection, chattingWithId, chattingWithData);
 
     return firebaseFirestore
         .collection(FirestoreChatKeys.pathChatCollection)

@@ -5,10 +5,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/chats/chat_item.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/pages/chat_item_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
+import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
 
@@ -193,8 +195,27 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
   }
 
   void onChatPressed() async {
-    Map<String, dynamic> sellerData = await UserDataService.getUserData(widget.snap["createdByEmail"].email!);
-    Map<String, dynamic> userData = await UserDataService.getUserData(currentUser!.email!);
+    Map<String, dynamic> sellerData =
+        await UserDataService.getUserData(widget.snap["createdByEmail"].email!);
+    Map<String, dynamic> userData =
+        await UserDataService.getUserData(currentUser!.email!);
+
+    String listingId = widget.snap["uid"];
+    String sellerId = sellerData["uid"];
+    String chattingWithId = userData["uid"];
+    String groupChatId;
+    if (chattingWithId.compareTo(sellerId) > 0) {
+      groupChatId = '$listingId : $chattingWithId - $sellerId';
+    } else {
+      groupChatId = '$listingId : $sellerId - $chattingWithId';
+    }
+
+    ChatItem chatItem = ChatItem(
+        groupChatId: groupChatId,
+        sellerId: sellerId,
+        chattingWithId: chattingWithId,
+        listingId: listingId);
+    ChatProvider.handleChatRequest(chatItem);
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ChatItemPage(
               otherId: sellerData["uid"],
@@ -202,7 +223,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
               otherNickname: sellerData["username"],
               userProfPicUrl: userData["imageUrl"],
               otherPhoneNumber: sellerData["phone_number"],
-              listingId: widget.snap["uid"],
+              listingId: listingId,
               listingTitle: widget.snap["title"],
             )));
   }

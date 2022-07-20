@@ -92,6 +92,11 @@ class _ChatItemPageState extends State<ChatItemPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
           (Route<dynamic> route) => false);
     }
+    if (widget.otherId.compareTo(currentUserId) > 0) {
+      groupChatId = '${widget.listingId} : ${widget.otherId} - $currentUserId';
+    } else {
+      groupChatId = '${widget.listingId} : $currentUserId - ${widget.otherId}';
+    }
   }
 
   Future getImage() async {

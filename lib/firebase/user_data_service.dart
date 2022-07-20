@@ -128,4 +128,19 @@ class UserDataService {
 
     return userData;
   }
+
+  static Future<Map<String, dynamic>> getUserDataFromId(String uid) async {
+    Map<String, dynamic> userData = <String, dynamic>{};
+    // get data where 'email' field is = email argument field
+    await usersCollection.doc(uid).get().then(
+      (res) {
+        print("userData query successful");
+        userData = res.data()!;
+        userData["uid"] = res.id;
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return userData;
+  }
 }
