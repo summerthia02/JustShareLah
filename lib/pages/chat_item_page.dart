@@ -21,6 +21,7 @@ class ChatItemPage extends StatefulWidget {
   final String otherNickname;
   final String userProfPicUrl;
   final String otherPhoneNumber;
+  final String listingId;
 
   const ChatItemPage({
     Key? key,
@@ -29,6 +30,7 @@ class ChatItemPage extends StatefulWidget {
     required this.otherId,
     required this.userProfPicUrl,
     required this.otherPhoneNumber,
+    required this.listingId,
   }) : super(key: key);
 
   @override
@@ -86,11 +88,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
           (Route<dynamic> route) => false);
     }
-    if (currentUserId.compareTo(widget.otherId) > 0) {
-      groupChatId = '$currentUserId - ${widget.otherId}';
-    } else {
-      groupChatId = '${widget.otherId} - $currentUserId';
-    }
+    groupChatId = '${widget.listingId} : $currentUserId';
     ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
         currentUserId, {FirestoreUserKeys.chattingWith: widget.otherId});
   }

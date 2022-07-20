@@ -34,8 +34,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = true;
     });
-
-
     bool success = await AuthService()
         .signIn(_emailController.text.trim(), _passwordController.text.trim());
     successFailSnackBar(

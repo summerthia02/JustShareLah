@@ -135,6 +135,7 @@ class _ChatPageState extends State<ChatPage> {
                         otherNickname: userData.userName!,
                         userProfPicUrl: userProfPicURL,
                         otherPhoneNumber: userData.phoneNumber!,
+                        listingId: "test",
                       )));
           },
           child: ListTile(
