@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/chats/chat_message.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -22,6 +24,7 @@ class ChatItemPage extends StatefulWidget {
   final String userProfPicUrl;
   final String otherPhoneNumber;
   final String listingId;
+  final String listingTitle;
 
   const ChatItemPage({
     Key? key,
@@ -31,6 +34,7 @@ class ChatItemPage extends StatefulWidget {
     required this.userProfPicUrl,
     required this.otherPhoneNumber,
     required this.listingId,
+    required this.listingTitle,
   }) : super(key: key);
 
   @override
@@ -80,7 +84,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
     }
   }
 
-  void readLocal() {
+  void readLocal() async {
     if (FirebaseAuth.instance.currentUser != null) {
       currentUserId = FirebaseAuth.instance.currentUser!.uid;
     } else {
@@ -88,9 +92,18 @@ class _ChatItemPageState extends State<ChatItemPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
           (Route<dynamic> route) => false);
     }
-    groupChatId = '${widget.listingId} : $currentUserId';
-    ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
-        currentUserId, {FirestoreUserKeys.chattingWith: widget.otherId});
+    if (currentUserId.compareTo(widget.otherId) > 0) {
+      groupChatId = '${widget.listingId} : $currentUserId - ${widget.otherId}';
+    } else {
+      groupChatId = '${widget.listingId} : ${widget.otherId} - $currentUserId';
+    }
+    Map<String, dynamic> userData = await UserDataService.getUserData(
+        FirebaseAuth.instance.currentUser!.email!);
+    List<String> chattingWithArr = userData[FirestoreUserKeys.chattingWith];
+    chattingWithArr.add(widget.listingId);
+
+    ChatProvider.updateFirestoreData(
+        FirestoreGeneralKeys.pathUserCollection, currentUserId, userData);
   }
 
   Future getImage() async {
@@ -121,8 +134,6 @@ class _ChatItemPageState extends State<ChatItemPage> {
         isShowSticker = false;
       });
     } else {
-      ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
-          currentUserId, {FirestoreUserKeys.chattingWith: null});
     }
     return Future.value(false);
   }
@@ -196,7 +207,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Chatting with ${widget.otherNickname}'.trim()),
+        title: Text(widget.listingTitle),
         actions: [
           IconButton(
             onPressed: () {

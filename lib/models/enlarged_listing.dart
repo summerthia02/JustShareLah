@@ -62,8 +62,12 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
-                  ListingImage(
-                    snap: widget.snap,
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: ListingImage(
+                      snap: widget.snap,
+                    ),
                   ),
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 150),

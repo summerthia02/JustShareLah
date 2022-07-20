@@ -11,13 +11,12 @@ class UserDataService {
   UserDataService();
 
   // get the Users table
-  final users = FirebaseFirestore.instance.collection('Users');
+  static final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   static Future<void> createUser(String uid, String email, String userName,
       String firstName, String lastName) async {
-    final users = FirebaseFirestore.instance.collection('Users');
 
-    return await users.doc(uid).set({
+    return await usersCollection.doc(uid).set({
       'uid': uid,
       'email': email,
       'username': userName,
@@ -29,6 +28,7 @@ class UserDataService {
       'listings': [],
       'reviews': [],
       'share_credits': "0",
+      'chatting_with': []
     });
   }
 
@@ -78,7 +78,7 @@ class UserDataService {
       String firstName, String lastName, String userName, String bio) async {
     Map<String, dynamic>? userData;
     String? docID;
-    await users.where("email", isEqualTo: userEmail).get().then(
+    await usersCollection.where("email", isEqualTo: userEmail).get().then(
       (res) {
         print("userData query successful");
         userData = res.docs.first.data();
@@ -107,11 +107,25 @@ class UserDataService {
     userData!["username"] = userName.isEmpty ? userData!["username"] : userName;
     userData!["about"] = bio.isEmpty ? userData!["about"] : bio;
 
-    users
+    usersCollection
         .doc(docID)
         .update(userData!)
         .then((value) => print('Edited Profile'))
         .catchError((err) => print('Failed to edit profile: $err'));
     return true;
+  }
+
+  static Future<Map<String, dynamic>> getUserData(String email) async {
+    Map<String, dynamic> userData = <String, dynamic>{};
+    // get data where 'email' field is = email argument field
+    await usersCollection.where('email', isEqualTo: email).get().then(
+      (res) {
+        print("userData query successful");
+        userData = res.docs.first.data();
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return userData;
   }
 }

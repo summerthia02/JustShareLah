@@ -10,8 +10,8 @@ import 'package:uuid/uuid.dart';
 class FireStoreMethods {
   // listings folder in firebase
   static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  final listingsCollection = FirebaseFirestore.instance.collection('listings');
-  final usersCollection = FirebaseFirestore.instance.collection('Users');
+  static final listingsCollection = FirebaseFirestore.instance.collection('listings');
+  static final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   Future<String> uploadlisting(
     String title,
@@ -233,23 +233,6 @@ class FireStoreMethods {
           .limit(limit)
           .snapshots();
     }
-  }
-
-  static Future<Map<String, dynamic>> getUserData(String email) async {
-    Map<String, dynamic> userData = <String, dynamic>{};
-    // get data where 'email' field is = email argument field
-    await usersCollection.where('email', isEqualTo: email).get().then(
-      (res) {
-        print("userData query successful");
-        userData = res.docs.first.data();
-        setState(() {
-          userData = userData;
-        });
-      },
-      onError: (e) => print("Error completing: $e"),
-    );
-
-    return userData;
   }
 
 }
