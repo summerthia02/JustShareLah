@@ -101,9 +101,7 @@ class _FavouritesState extends State<Favourites> {
                           child: ListingCard(
                             // collect the data for each indiviudal document at the index
                             snap: snapshot.data!.docs[index].data(),
-                            // image: listingData[index].imageUrl,
-                            // title: listingData[index].title,
-                            // price: listingData[index].price,
+
                             press: () {
                               Navigator.push(
                                   context,

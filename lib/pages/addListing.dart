@@ -33,6 +33,7 @@ class _AddListingPageState extends State<AddListingPage> {
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _shareCreditsController = TextEditingController();
 
   //listing image
   Uint8List? _image;
@@ -268,6 +269,7 @@ class _AddListingPageState extends State<AddListingPage> {
         userData.imageUrl!,
         forRent,
         _priceController.text,
+        _shareCreditsController.text,
         longitude,
         latitude,
         _currentAddress,
@@ -486,7 +488,19 @@ class _AddListingPageState extends State<AddListingPage> {
                   child: SizedBox(
                 width: 5,
               )),
-              buildFormField("Enter Price of Listing ", _priceController),
+              buildFormField("Price (renting) ", _priceController),
+            ]),
+            const SizedBox(height: 10.0),
+            Row(children: <Widget>[
+              buildFormTitle("ShareCredits"),
+              const Expanded(
+                  child: SizedBox(
+                width: 5,
+              )),
+              Container(
+                child: buildFormField(
+                    "ShareCredits (lending) ", _shareCreditsController),
+              ),
             ]),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
