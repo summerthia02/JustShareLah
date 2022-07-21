@@ -63,13 +63,13 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Stack(children: [
         Container(
-          width: double.infinity,
-          height: double.infinity,
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
               image: DecorationImage(
-                  image: NetworkImage(
-                      'https://i.pinimg.com/564x/81/68/77/8168774f8b714d65417e7615aac3f361.jpg'),
-                  fit: BoxFit.fitWidth)),
+            image: NetworkImage(
+                'https://i.pinimg.com/564x/81/68/77/8168774f8b714d65417e7615aac3f361.jpg'),
+          )),
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -105,7 +105,6 @@ class _LoginPageState extends State<LoginPage> {
                 key: Key("Email"),
                 keyboardType: TextInputType.emailAddress,
                 validator: (value) => EmailFieldValidation.validate(value!),
-
                 textAlign: TextAlign.center,
                 controller: _emailController,
                 decoration: kTextFormFieldDecoration.copyWith(
@@ -118,7 +117,6 @@ class _LoginPageState extends State<LoginPage> {
                 key: Key("Password"),
                 obscureText: true,
                 validator: (value) => PasswordFieldValidation.validate(value!),
-
                 textAlign: TextAlign.center,
                 controller: _passwordController,
                 decoration: kTextFormFieldDecoration.copyWith(
@@ -135,7 +133,6 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _isLoading
                           ? null
                           : () async {
-
                               _signIn();
                             },
                       child: _isLoading
