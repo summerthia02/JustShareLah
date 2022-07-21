@@ -7,10 +7,12 @@ import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/chats/chat_item.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/pages/chat_item_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/review_page.dart';
+import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/debouncer.dart';
 import 'package:justsharelah_v1/utils/keyboard_utils.dart';
@@ -113,78 +115,236 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildItem(BuildContext context, DocumentSnapshot? documentSnapshot) {
+  Widget buildChattingWithChatItems(
+      BuildContext context, DocumentSnapshot? chatCollectionSnapshot) {
     final firebaseAuth = FirebaseAuth.instance;
-    if (documentSnapshot != null) {
-      UserData userData = UserDataService.fromDocument(documentSnapshot);
-      if (userData.uid == currentUserId) {
-        return const SizedBox.shrink();  
-      } else {
-        return TextButton(
-          onPressed: () async {
-            if (KeyboardUtils.isKeyboardShowing()) {
-              KeyboardUtils.closeKeyboard(context);
-            }
-            String userProfPicURL =
-              await AuthMethods.getUserDetails().then((userData) => userData.imageUrl!);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => ChatItemPage(
-                        otherId: userData.uid!,
-                        otherAvatar: userData.imageUrl!,
-                        otherNickname: userData.userName!,
-                        userProfPicUrl: userProfPicURL,
-                        otherPhoneNumber: userData.phoneNumber!,
-                      )));
-          },
-          child: ListTile(
-            leading: userData.imageUrl!.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.network(
-                      userData.imageUrl!,
-                      fit: BoxFit.cover,
-                      width: 50,
-                      height: 50,
-                      loadingBuilder: (BuildContext ctx, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(
-                                color: Colors.grey,
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null),
-                          );
-                        }
-                      },
-                      errorBuilder: (context, object, stackTrace) {
-                        return const Icon(Icons.account_circle, size: 50);
-                      },
-                    ),
-                  )
-                : const Icon(
-                    Icons.account_circle,
-                    size: 50,
-                  ),
-            title: Text(
-              userData.userName!,
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-        );
-      }
-    } else {
+    if (chatCollectionSnapshot == null) {
+      print("Chat Collection Snapshot is null");
       return const SizedBox.shrink();
     }
+
+    ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
+    if (chatData.sellerId != currentUserId &&
+        chatData.chattingWithId != currentUserId) {
+      print("This chat does not belong to this user");
+      return const SizedBox.shrink();
+    }
+
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream: UserDataService.getUserDataStreamFromId(chatData.sellerId),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          Map<String, dynamic>? sellerData = snapshot.data!.data();
+          if (sellerData == null) {
+            return const Center(
+              child: Text('This user/chat no longer exists'),
+            );
+          }
+
+          return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: FireStoreMethods.getListingDataStreamFromId(
+                  chatData.listingId),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                Map<String, dynamic>? listingData = snapshot.data!.data();
+                if (listingData == null) {
+                  return const Center(
+                    child: Text('This listing no longer exists'),
+                  );
+                }
+
+                return TextButton(
+                  onPressed: () async {
+                    if (KeyboardUtils.isKeyboardShowing()) {
+                      KeyboardUtils.closeKeyboard(context);
+                    }
+                    Map<String, dynamic> chattingWithData =
+                        await UserDataService.getUserDataFromId(
+                            chatData.sellerId);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ChatItemPage(
+                              otherId: sellerData["uid"],
+                              otherAvatar:
+                                  sellerData[FirestoreUserKeys.imageUrl],
+                              otherNickname:
+                                  sellerData[FirestoreUserKeys.username],
+                              userProfPicUrl:
+                                  chattingWithData[FirestoreUserKeys.imageUrl],
+                              otherPhoneNumber:
+                                  sellerData[FirestoreUserKeys.phoneNumber],
+                              listingId: listingData["uid"],
+                              listingTitle: listingData["title"],
+                            )));
+                  },
+                  child: ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.network(
+                        listingData["imageUrl"],
+                        fit: BoxFit.cover,
+                        width: 50,
+                        height: 50,
+                        loadingBuilder: (BuildContext ctx, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null),
+                            );
+                          }
+                        },
+                        errorBuilder: (context, object, stackTrace) {
+                          return const Icon(Icons.account_circle, size: 50);
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      "${listingData["title"]} (by ${sellerData["username"]})",
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                );
+              });
+        });
   }
 
+  Widget buildSellerChatItems(
+      BuildContext context, DocumentSnapshot? chatCollectionSnapshot) {
+    final firebaseAuth = FirebaseAuth.instance;
+    if (chatCollectionSnapshot == null) {
+      print("Chat Collection Snapshot is null");
+      return const SizedBox.shrink();
+    }
+
+    ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
+    if (chatData.sellerId != currentUserId &&
+        chatData.chattingWithId != currentUserId) {
+      print("This chat does not belong to this user");
+      return const SizedBox.shrink();
+    }
+
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        stream:
+            UserDataService.getUserDataStreamFromId(chatData.chattingWithId),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
+          Map<String, dynamic>? chattingWithData = snapshot.data!.data();
+          if (chattingWithData == null) {
+            return const Center(
+              child: Text('This user/chat no longer exists'),
+            );
+          }
+
+          return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: FireStoreMethods.getListingDataStreamFromId(
+                  chatData.listingId),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                      snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                Map<String, dynamic>? listingData = snapshot.data!.data();
+                if (listingData == null) {
+                  return const Center(
+                    child: Text('This listing no longer exists'),
+                  );
+                }
+
+                return TextButton(
+                  onPressed: () async {
+                    if (KeyboardUtils.isKeyboardShowing()) {
+                      KeyboardUtils.closeKeyboard(context);
+                    }
+                    Map<String, dynamic> sellerData =
+                        await UserDataService.getUserDataFromId(
+                            chatData.sellerId);
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ChatItemPage(
+                              otherId: chattingWithData["uid"],
+                              otherAvatar:
+                                  chattingWithData[FirestoreUserKeys.imageUrl],
+                              otherNickname:
+                                  chattingWithData[FirestoreUserKeys.username],
+                              userProfPicUrl:
+                                  sellerData[FirestoreUserKeys.imageUrl],
+                              otherPhoneNumber: chattingWithData[
+                                  FirestoreUserKeys.phoneNumber],
+                              listingId: listingData["uid"],
+                              listingTitle: listingData["title"],
+                            )));
+                  },
+                  child: ListTile(
+                    leading: ClipRRect(
+                      borderRadius: BorderRadius.circular(30),
+                      child: Image.network(
+                        listingData["imageUrl"],
+                        fit: BoxFit.cover,
+                        width: 50,
+                        height: 50,
+                        loadingBuilder: (BuildContext ctx, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: CircularProgressIndicator(
+                                  color: Colors.grey,
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null),
+                            );
+                          }
+                        },
+                        errorBuilder: (context, object, stackTrace) {
+                          return const Icon(Icons.account_circle, size: 50);
+                        },
+                      ),
+                    ),
+                    title: Text(
+                      "${listingData["title"]} (by ${chattingWithData["username"]})",
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ),
+                );
+              });
+        });
+  }
   // =========== Flutter methods ======================
 
   @override
@@ -204,44 +364,92 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar().buildAppBar(const Text("Chat"), context, '/feed'),
-      body: Column(
-        children: <Widget>[
-          const SizedBox(
-            height: 20,
+      body: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(
+                height: 20,
+              ),
+              // buildSearchBar(),
+              Text(
+                "Your Interested Listings",
+                style: kBodyText.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream:
+                      ChatProvider.getUserChattingWithChatData(currentUserId!),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      if ((snapshot.data?.docs.length ?? 0) > 0) {
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) =>
+                              buildChattingWithChatItems(
+                                  context, snapshot.data?.docs[index]),
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                        );
+                      } else {
+                        return const Text(
+                              'You have not started a chat with listing uploaded by others');
+                      }
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
+              const Divider(thickness: 2,),
+              Text(
+                "Your Uploaded Listings",
+                style: kBodyText.copyWith(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Expanded(
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: ChatProvider.getUserSellerChatData(currentUserId!),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      if ((snapshot.data?.docs.length ?? 0) > 0) {
+                        return ListView.separated(
+                          shrinkWrap: true,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) => buildSellerChatItems(
+                              context, snapshot.data?.docs[index]),
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const Divider(),
+                        );
+                      } else {
+                        return const Text(
+                            'You have not started a chat regarding your own listings');
+                      }
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ],
           ),
-          buildSearchBar(),
-          const SizedBox(height: 10),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FireStoreMethods.getFirestoreChatData(
-                  FirestoreGeneralKeys.pathUserCollection, _limit, _textSearch),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasData) {
-                  if ((snapshot.data?.docs.length ?? 0) > 0) {
-                    return ListView.separated(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) =>
-                          buildItem(context, snapshot.data?.docs[index]),
-                      controller: scrollController,
-                      separatorBuilder: (BuildContext context, int index) =>
-                          const Divider(),
-                    );
-                  } else {
-                    return const Center(
-                      child: Text('No user found...'),
-                    );
-                  }
-                } else {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-          ),
-        ],
+        ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );

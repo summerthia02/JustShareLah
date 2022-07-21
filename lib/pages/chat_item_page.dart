@@ -5,6 +5,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/chats/chat_message.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -21,6 +23,8 @@ class ChatItemPage extends StatefulWidget {
   final String otherNickname;
   final String userProfPicUrl;
   final String otherPhoneNumber;
+  final String listingId;
+  final String listingTitle;
 
   const ChatItemPage({
     Key? key,
@@ -29,6 +33,8 @@ class ChatItemPage extends StatefulWidget {
     required this.otherId,
     required this.userProfPicUrl,
     required this.otherPhoneNumber,
+    required this.listingId,
+    required this.listingTitle,
   }) : super(key: key);
 
   @override
@@ -78,7 +84,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
     }
   }
 
-  void readLocal() {
+  void readLocal() async {
     if (FirebaseAuth.instance.currentUser != null) {
       currentUserId = FirebaseAuth.instance.currentUser!.uid;
     } else {
@@ -86,13 +92,11 @@ class _ChatItemPageState extends State<ChatItemPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
           (Route<dynamic> route) => false);
     }
-    if (currentUserId.compareTo(widget.otherId) > 0) {
-      groupChatId = '$currentUserId - ${widget.otherId}';
+    if (widget.otherId.compareTo(currentUserId) > 0) {
+      groupChatId = '${widget.listingId} : ${widget.otherId} - $currentUserId';
     } else {
-      groupChatId = '${widget.otherId} - $currentUserId';
+      groupChatId = '${widget.listingId} : $currentUserId - ${widget.otherId}';
     }
-    ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
-        currentUserId, {FirestoreUserKeys.chattingWith: widget.otherId});
   }
 
   Future getImage() async {
@@ -122,10 +126,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
       setState(() {
         isShowSticker = false;
       });
-    } else {
-      ChatProvider.updateFirestoreData(FirestoreGeneralKeys.pathUserCollection,
-          currentUserId, {FirestoreUserKeys.chattingWith: null});
-    }
+    } else {}
     return Future.value(false);
   }
 
@@ -198,7 +199,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Chatting with ${widget.otherNickname}'.trim()),
+        title: Text(widget.listingTitle),
         actions: [
           IconButton(
             onPressed: () {
@@ -213,8 +214,10 @@ class _ChatItemPageState extends State<ChatItemPage> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
+              const SizedBox(height: 20,),
               buildListMessage(),
               buildMessageInput(),
+              const SizedBox(height: 20,)
             ],
           ),
         ),
@@ -511,8 +514,8 @@ class _ChatItemPageState extends State<ChatItemPage> {
                         itemBuilder: (context, index) =>
                             buildItem(index, snapshot.data?.docs[index]));
                   } else {
-                    return const Center(
-                      child: Text('No messages...'),
+                    return Center(
+                      child: Text('Talk to ${widget.otherNickname} about the transaction!'),
                     );
                   }
                 } else {

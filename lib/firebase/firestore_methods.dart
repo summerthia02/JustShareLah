@@ -10,7 +10,9 @@ import 'package:uuid/uuid.dart';
 class FireStoreMethods {
   // listings folder in firebase
   static final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-  final listingsCollection = FirebaseFirestore.instance.collection('listings');
+  static final listingsCollection =
+      FirebaseFirestore.instance.collection('listings');
+  static final usersCollection = FirebaseFirestore.instance.collection('Users');
 
   Future<String> uploadlisting(
     String title,
@@ -74,6 +76,20 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  static Future<Map<String, dynamic>> getListingData(String listingId) async {
+    Map<String, dynamic> listingData = <String, dynamic>{};
+    // get data where 'email' field is = email argument field
+    await usersCollection.doc(listingId).get().then(
+      (res) {
+        print("listingData query successful");
+        listingData = res.data()!;
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return listingData;
   }
 
   // uid of the users that liked the listing
@@ -220,19 +236,7 @@ class FireStoreMethods {
         .update(updateData);
   }
 
-  static Stream<QuerySnapshot> getFirestoreChatData(
-      String collectionPath, int limit, String? textSearch) {
-    if (textSearch?.isNotEmpty == true) {
-      return firebaseFirestore
-          .collection(collectionPath)
-          .limit(limit)
-          .where(FirestoreUserKeys.username, isEqualTo: textSearch)
-          .snapshots();
-    } else {
-      return firebaseFirestore
-          .collection(collectionPath)
-          .limit(limit)
-          .snapshots();
-    }
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getListingDataStreamFromId(String uid) {
+    return listingsCollection.doc(uid).snapshots();
   }
 }
