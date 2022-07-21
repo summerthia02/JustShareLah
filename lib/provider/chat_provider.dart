@@ -66,9 +66,16 @@ class ChatProvider {
         .then(
       (res) {
         print("chatData query successful");
+        if (res.docs.isEmpty) {
+          chatData = null;
+          return;
+        }
         chatData = res.docs.first.data();
       },
-      onError: (e) => print("Error completing: $e"),
+      onError: (e) {
+        print("Error completing: $e");
+        chatData = null;
+      },
     );
     print(chatData);
     return chatData;
@@ -111,6 +118,36 @@ class ChatProvider {
     }
     print("chat exists");
     return true;
+  }
+
+  static Stream<QuerySnapshot> getAllChatData(int limit, String? textSearch) {
+    if (textSearch?.isNotEmpty == true) {
+      return firebaseFirestore
+          .collection(FirestoreChatKeys.pathChatCollection)
+          .limit(limit)
+          //TODO: Implement search function
+          // .where(FirestoreUserKeys.username, isEqualTo: textSearch)
+          .snapshots();
+    } else {
+      return firebaseFirestore
+          .collection(FirestoreChatKeys.pathChatCollection)
+          .limit(limit)
+          .snapshots();
+    }
+  }
+
+  static Stream<QuerySnapshot> getUserSellerChatData(String uid) {
+    return firebaseFirestore
+        .collection(FirestoreChatKeys.pathChatCollection)
+        .where(FirestoreChatKeys.sellerId, isEqualTo: uid)
+        .snapshots();
+  }
+
+  static Stream<QuerySnapshot> getUserChattingWithChatData(String uid) {
+    return firebaseFirestore
+        .collection(FirestoreChatKeys.pathChatCollection)
+        .where(FirestoreChatKeys.chattingWithId, isEqualTo: uid)
+        .snapshots();
   }
 }
 

@@ -126,8 +126,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
       setState(() {
         isShowSticker = false;
       });
-    } else {
-    }
+    } else {}
     return Future.value(false);
   }
 
@@ -513,8 +512,8 @@ class _ChatItemPageState extends State<ChatItemPage> {
                         itemBuilder: (context, index) =>
                             buildItem(index, snapshot.data?.docs[index]));
                   } else {
-                    return const Center(
-                      child: Text('No messages...'),
+                    return Center(
+                      child: Text('Talk to ${widget.otherNickname} about the transaction!'),
                     );
                   }
                 } else {

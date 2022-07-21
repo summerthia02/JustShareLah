@@ -7,10 +7,12 @@ import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/chats/chat_item.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/pages/chat_item_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
 import 'package:justsharelah_v1/pages/review_page.dart';
+import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/debouncer.dart';
 import 'package:justsharelah_v1/utils/keyboard_utils.dart';
@@ -113,78 +115,93 @@ class _ChatPageState extends State<ChatPage> {
     );
   }
 
-  Widget buildItem(BuildContext context, DocumentSnapshot? documentSnapshot) {
+  Widget buildChattingWithChatItems(
+      BuildContext context, DocumentSnapshot? chatCollectionSnapshot) {
     final firebaseAuth = FirebaseAuth.instance;
-    if (documentSnapshot != null) {
-      UserData userData = UserDataService.fromDocument(documentSnapshot);
-      if (userData.uid == currentUserId) {
-        return const SizedBox.shrink();  
-      } else {
+    if (chatCollectionSnapshot == null) {
+      return const SizedBox.shrink();
+    }
+
+    ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
+    if (chatData.sellerId != currentUserId ||
+        chatData.chattingWithId != currentUserId) {
+      return const SizedBox.shrink();
+    }
+
+    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+      stream: UserDataService.getUserDataStreamFromId(chatData.sellerId),
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+        if (!snapshot.hasData) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        Map<String, dynamic>? sellerData = snapshot.data!.data();
+        if (sellerData == null) {
+          return const Center(
+            child: Text('This user/chat no longer exists'),
+          );
+        }
+
         return TextButton(
           onPressed: () async {
             if (KeyboardUtils.isKeyboardShowing()) {
               KeyboardUtils.closeKeyboard(context);
             }
-            String userProfPicURL =
-              await AuthMethods.getUserDetails().then((userData) => userData.imageUrl!);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (context) => ChatItemPage(
-                        otherId: userData.uid!,
-                        otherAvatar: userData.imageUrl!,
-                        otherNickname: userData.userName!,
-                        userProfPicUrl: userProfPicURL,
-                        otherPhoneNumber: userData.phoneNumber!,
-                        listingId: "test",
-                        listingTitle: "testing",
-                      )));
+            Map<String, dynamic> chattingWithData =
+                await UserDataService.getUserDataFromId(chatData.sellerId);
+            Map<String, dynamic> listingData =
+                await FireStoreMethods.getListingData(chatData.listingId);
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ChatItemPage(
+                      otherId: sellerData["uid"],
+                      otherAvatar: sellerData[FirestoreUserKeys.imageUrl],
+                      otherNickname: sellerData[FirestoreUserKeys.username],
+                      userProfPicUrl: chattingWithData[FirestoreUserKeys.imageUrl],
+                      otherPhoneNumber: sellerData[FirestoreUserKeys.phoneNumber],
+                      listingId: listingData["uid"],
+                      listingTitle: listingData["title"],
+                    )));
           },
           child: ListTile(
-            leading: userData.imageUrl!.isNotEmpty
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(30),
-                    child: Image.network(
-                      userData.imageUrl!,
-                      fit: BoxFit.cover,
+            leading: ClipRRect(
+              borderRadius: BorderRadius.circular(30),
+              child: Image.network(
+                sellerData[FirestoreUserKeys.imageUrl],
+                fit: BoxFit.cover,
+                width: 50,
+                height: 50,
+                loadingBuilder: (BuildContext ctx, Widget child,
+                    ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child;
+                  } else {
+                    return SizedBox(
                       width: 50,
                       height: 50,
-                      loadingBuilder: (BuildContext ctx, Widget child,
-                          ImageChunkEvent? loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return SizedBox(
-                            width: 50,
-                            height: 50,
-                            child: CircularProgressIndicator(
-                                color: Colors.grey,
-                                value: loadingProgress.expectedTotalBytes !=
-                                        null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
-                                    : null),
-                          );
-                        }
-                      },
-                      errorBuilder: (context, object, stackTrace) {
-                        return const Icon(Icons.account_circle, size: 50);
-                      },
-                    ),
-                  )
-                : const Icon(
-                    Icons.account_circle,
-                    size: 50,
-                  ),
+                      child: CircularProgressIndicator(
+                          color: Colors.grey,
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                  loadingProgress.expectedTotalBytes!
+                              : null),
+                    );
+                  }
+                },
+                errorBuilder: (context, object, stackTrace) {
+                  return const Icon(Icons.account_circle, size: 50);
+                },
+              ),
+            ),
             title: Text(
-              userData.userName!,
+              sellerData[FirestoreUserKeys.username],
               style: const TextStyle(color: Colors.black),
             ),
           ),
         );
       }
-    } else {
-      return const SizedBox.shrink();
-    }
+    );
   }
 
   // =========== Flutter methods ======================
@@ -215,8 +232,7 @@ class _ChatPageState extends State<ChatPage> {
           const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
-              stream: FireStoreMethods.getFirestoreChatData(
-                  FirestoreGeneralKeys.pathUserCollection, _limit, _textSearch),
+              stream: ChatProvider.getUserChattingWithChatData(currentUserId!),
               builder: (BuildContext context,
                   AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.hasData) {
@@ -224,15 +240,14 @@ class _ChatPageState extends State<ChatPage> {
                     return ListView.separated(
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) =>
-                          buildItem(context, snapshot.data?.docs[index]),
+                      itemBuilder: (context, index) => Text("hi"),
                       controller: scrollController,
                       separatorBuilder: (BuildContext context, int index) =>
                           const Divider(),
                     );
                   } else {
                     return const Center(
-                      child: Text('No user found...'),
+                      child: Text('You have not started a chat with a listing'),
                     );
                   }
                 } else {

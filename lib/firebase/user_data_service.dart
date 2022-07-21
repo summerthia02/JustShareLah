@@ -143,4 +143,8 @@ class UserDataService {
 
     return userData;
   }
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserDataStreamFromId(String uid) {
+    return usersCollection.doc(uid).snapshots();
+  }
 }
