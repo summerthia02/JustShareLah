@@ -2,10 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/chats/chat_item.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/pages/chat_item_page.dart';
+import 'package:justsharelah_v1/pages/like_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
+import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'dart:async';
 
@@ -62,8 +68,12 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
-                  ListingImage(
-                    snap: widget.snap,
+                  Container(
+                    height: 200,
+                    width: 200,
+                    child: ListingImage(
+                      snap: widget.snap,
+                    ),
                   ),
                   AnimatedOpacity(
                     duration: const Duration(milliseconds: 150),
@@ -104,36 +114,54 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        LikeHelper(
-                            smallHeart: true,
-                            isLiking:
-                                widget.snap["usersLiked"].contains(userId),
-                            child: IconButton(
-                                onPressed: () async {
-                                  // print(
-                                  //   widget.snap["uid"].toString(),
-                                  // );
-                                  print(widget.snap["uid"]);
+                        Padding(
+                          padding: const EdgeInsets.only(top: 7.0),
+                          child: LikeHelper(
+                              smallHeart: true,
+                              isLiking:
+                                  widget.snap["usersLiked"].contains(userId),
+                              child: IconButton(
+                                  onPressed: () async {
+                                    // print(
+                                    //   widget.snap["uid"].toString(),
+                                    // );
+                                    print(widget.snap["uid"]);
 
-                                  await FireStoreMethods().likelisting(
-                                      widget.snap["uid"].toString(),
-                                      userId!,
-                                      widget.snap["usersLiked"]);
-                                },
-                                icon: widget.snap["usersLiked"].contains(userId)
-                                    ? const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                      )
-                                    : const Icon(
-                                        Icons.favorite_border,
-                                        color: Colors.grey,
-                                      ))),
+                                    await FireStoreMethods().likelisting(
+                                        widget.snap["uid"].toString(),
+                                        userId!,
+                                        widget.snap["usersLiked"]);
+                                  },
+                                  icon:
+                                      widget.snap["usersLiked"].contains(userId)
+                                          ? const Icon(
+                                              Icons.favorite,
+                                              color: Colors.red,
+                                            )
+                                          : const Icon(
+                                              Icons.favorite_border,
+                                              color: Colors.grey,
+                                            ))),
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(top: 14.0),
-                          child: Text(widget.snap["usersLiked"].length != 1
-                              ? "${widget.snap["usersLiked"].length} likes"
-                              : "1 like"),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => LikePage(
+                                      usersLiked: widget.snap["usersLiked"],
+                                    ),
+                                  ));
+                            },
+                            child: Text(
+                              widget.snap["usersLiked"].length != 1
+                                  ? "${widget.snap["usersLiked"].length} likes"
+                                  : "1 like",
+                              style: kBodyTextSmall,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -167,7 +195,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                         width: 200,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: onChatPressed,
                           style: ElevatedButton.styleFrom(
                               primary: Colors.redAccent,
                               shape: const StadiumBorder()),
@@ -183,6 +211,40 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
         ],
       ),
     );
+  }
+
+  void onChatPressed() async {
+    Map<String, dynamic> sellerData =
+        await UserDataService.getUserData(widget.snap["createdByEmail"]);
+    Map<String, dynamic> userData =
+        await UserDataService.getUserData(currentUser!.email!);
+
+    String listingId = widget.snap["uid"];
+    String sellerId = sellerData["uid"];
+    String chattingWithId = userData["uid"];
+    String groupChatId;
+    if (chattingWithId.compareTo(sellerId) > 0) {
+      groupChatId = '$listingId : $chattingWithId - $sellerId';
+    } else {
+      groupChatId = '$listingId : $sellerId - $chattingWithId';
+    }
+
+    ChatItem chatItem = ChatItem(
+        groupChatId: groupChatId,
+        sellerId: sellerId,
+        chattingWithId: chattingWithId,
+        listingId: listingId);
+    ChatProvider.handleChatRequest(chatItem);
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ChatItemPage(
+              otherId: sellerData["uid"],
+              otherAvatar: sellerData["imageUrl"],
+              otherNickname: sellerData["username"],
+              userProfPicUrl: userData["imageUrl"],
+              otherPhoneNumber: sellerData["phone_number"],
+              listingId: listingId,
+              listingTitle: widget.snap["title"],
+            )));
   }
 }
 
@@ -325,13 +387,17 @@ class ListingCardDetails extends StatelessWidget {
             Expanded(
               child: Text(
                 snap["title"],
-                style: kHeadingText,
+                style: kHeadingText.copyWith(fontWeight: FontWeight.w800),
               ),
             ),
+            snap["forRent"] == true ? Text("\$") : Container(),
             Text(
-              "\$${snap["price"]}",
-              style: Theme.of(context).textTheme.headline6,
+              snap["forRent"] == true
+                  ? snap['price'].toString()
+                  : snap["shareCredits"],
+              style: TextStyle(fontWeight: FontWeight.bold),
             ),
+            snap["forRent"] == false ? Text(" SC") : Container(),
           ],
         ),
         Text(

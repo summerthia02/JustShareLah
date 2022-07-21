@@ -5,6 +5,12 @@ class FirestoreChatKeys {
   static const String content = "content";
   static const String type = "type";
   static const String pathMessageCollection = "messagesCollection";
+  static const String pathChatCollection = "chatsCollection";
+
+  static const String groupChatId = "groupChatId";
+  static const String sellerId = "sellerId";
+  static const String chattingWithId = "chattingWithId";
+  static const String listingId = "listingId";
 }
 
 class FirestoreUserKeys {

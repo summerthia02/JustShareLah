@@ -22,7 +22,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
 
   List<bool> isSelected = [true, false, false];
   late int index;
-  late TextEditingController _descriptionController;
+  final TextEditingController _descriptionController = TextEditingController();
 
   // ================ Toggle Button  =============================
 
@@ -85,6 +85,12 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
     super.initState();
     index = 0;
     toggleButton();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _descriptionController.dispose();
   }
 
   @override

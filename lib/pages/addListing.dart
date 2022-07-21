@@ -33,6 +33,7 @@ class _AddListingPageState extends State<AddListingPage> {
   final TextEditingController _brandController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
+  final TextEditingController _shareCreditsController = TextEditingController();
 
   //listing image
   Uint8List? _image;
@@ -268,6 +269,7 @@ class _AddListingPageState extends State<AddListingPage> {
         userData.imageUrl!,
         forRent,
         _priceController.text,
+        _shareCreditsController.text,
         longitude,
         latitude,
         _currentAddress,
@@ -411,7 +413,7 @@ class _AddListingPageState extends State<AddListingPage> {
       padding: EdgeInsets.only(left: 20, top: 20, right: 20),
       child: Text(
         text,
-        style: TextStyle(fontSize: 20),
+        style: TextStyle(fontSize: 17),
       ),
     );
   }
@@ -461,7 +463,10 @@ class _AddListingPageState extends State<AddListingPage> {
             ),
             Row(children: <Widget>[
               buildFormTitle("Listing Title"),
-              const Expanded(child: SizedBox()),
+              const Expanded(
+                  child: SizedBox(
+                width: 5,
+              )),
               buildFormField("Enter Listing Details", _titleController),
             ]),
             const SizedBox(height: 10.0),
@@ -469,20 +474,41 @@ class _AddListingPageState extends State<AddListingPage> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 buildFormTitle("Listing Type"),
-                const Expanded(child: SizedBox()),
+                const Expanded(
+                    child: SizedBox(
+                  width: 5,
+                )),
                 buildRentOrBorrowDropdown(),
               ],
             ),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
               buildFormTitle("Price"),
-              const Expanded(child: SizedBox()),
-              buildFormField("Enter Price of Listing ", _priceController),
+              const Expanded(
+                  child: SizedBox(
+                width: 5,
+              )),
+              buildFormField("Price (renting) ", _priceController),
+            ]),
+            const SizedBox(height: 10.0),
+            Row(children: <Widget>[
+              buildFormTitle("ShareCredits"),
+              const Expanded(
+                  child: SizedBox(
+                width: 5,
+              )),
+              Container(
+                child: buildFormField(
+                    "ShareCredits (lending) ", _shareCreditsController),
+              ),
             ]),
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
               buildFormTitle("Description "),
-              const Expanded(child: SizedBox()),
+              const Expanded(
+                  child: SizedBox(
+                width: 5,
+              )),
               buildFormField("Give us a brief description of your listing",
                   _descriptionController,
                   height: 100, numLines: 5),

@@ -8,6 +8,7 @@ class Listing {
   final String imageUrl;
   final String title;
   final String price;
+  final String shareCredits;
   final bool forRent;
   final String description;
   final bool available;
@@ -26,6 +27,7 @@ class Listing {
     required this.imageUrl,
     required this.title,
     required this.price,
+    required this.shareCredits,
     required this.forRent,
     required this.description,
     required this.available,
@@ -57,6 +59,7 @@ class Listing {
       'imageUrl': imageUrl,
       'title': title,
       'price': price,
+      'shareCredits': shareCredits,
       'forRent': forRent,
       'description': description,
       'available': available,
