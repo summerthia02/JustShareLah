@@ -412,6 +412,7 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
+              const Divider(thickness: 2,),
               Text(
                 "Your Uploaded Listings",
                 style: kBodyText.copyWith(fontWeight: FontWeight.bold),
