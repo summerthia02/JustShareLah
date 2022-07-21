@@ -263,9 +263,6 @@ class _PostedByState extends State<PostedBy> {
   Future<String> getUserName() async {
     String email = widget.snap["createdByEmail"].toString();
     CollectionReference users = FirebaseFirestore.instance.collection("Users");
-    DocumentReference username = users.doc("userName");
-    Iterable<Map<String, dynamic>> userData = [];
-    // get username
     Query userDoc = users.where("email", isEqualTo: email);
     // String userName = userDoc.print("hi");
     await userDoc.get().then(

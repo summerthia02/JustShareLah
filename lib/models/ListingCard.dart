@@ -18,7 +18,7 @@ import '../pages/profile_page.dart';
 import '../utils/const_templates.dart';
 
 class ListingCard extends StatefulWidget {
-  ListingCard({
+  const ListingCard({
     Key? key,
     this.snap,
     required this.press,
