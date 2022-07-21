@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 
-class ChatItem {
+class ChatData {
   String groupChatId;
   String sellerId;
   String chattingWithId;
   String listingId;
 
-  ChatItem(
+  ChatData(
       {required this.groupChatId,
       required this.sellerId,
       required this.chattingWithId,
@@ -22,17 +22,17 @@ class ChatItem {
     };
   }
 
-  factory ChatItem.fromDocument(DocumentSnapshot documentSnapshot) {
+  factory ChatData.fromDocument(DocumentSnapshot documentSnapshot) {
     String groupChatId = documentSnapshot.id;
     String sellerId = documentSnapshot.get(FirestoreChatKeys.sellerId);
     String chattingWithId =
         documentSnapshot.get(FirestoreChatKeys.chattingWithId);
     String listingId = documentSnapshot.get(FirestoreChatKeys.listingId);
 
-    return ChatItem(
-      groupChatId: groupChatId,
-      sellerId: sellerId,
-      chattingWithId: chattingWithId,
-      listingId: listingId);
+    return ChatData(
+        groupChatId: groupChatId,
+        sellerId: sellerId,
+        chattingWithId: chattingWithId,
+        listingId: listingId);
   }
 }

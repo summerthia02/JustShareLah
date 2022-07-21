@@ -210,7 +210,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
       groupChatId = '$listingId : $sellerId - $chattingWithId';
     }
 
-    ChatItem chatItem = ChatItem(
+    ChatData chatItem = ChatData(
         groupChatId: groupChatId,
         sellerId: sellerId,
         chattingWithId: chattingWithId,

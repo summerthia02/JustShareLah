@@ -123,7 +123,7 @@ class _ChatPageState extends State<ChatPage> {
       return const SizedBox.shrink();
     }
 
-    ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
+    ChatData chatData = ChatData.fromDocument(chatCollectionSnapshot);
     if (chatData.sellerId != currentUserId &&
         chatData.chattingWithId != currentUserId) {
       print("This chat does not belong to this user");
@@ -133,14 +133,15 @@ class _ChatPageState extends State<ChatPage> {
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
         stream: UserDataService.getUserDataStreamFromId(chatData.sellerId),
         builder: (BuildContext context,
-            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
-          if (!snapshot.hasData) {
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>>
+                sellerDataSnapshot) {
+          if (!sellerDataSnapshot.hasData) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          Map<String, dynamic>? sellerData = snapshot.data!.data();
+          Map<String, dynamic>? sellerData = sellerDataSnapshot.data!.data();
           if (sellerData == null) {
             return const Center(
               child: Text('This user/chat no longer exists'),
@@ -238,7 +239,7 @@ class _ChatPageState extends State<ChatPage> {
       return const SizedBox.shrink();
     }
 
-    ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
+    ChatData chatData = ChatData.fromDocument(chatCollectionSnapshot);
     if (chatData.sellerId != currentUserId &&
         chatData.chattingWithId != currentUserId) {
       print("This chat does not belong to this user");
@@ -402,7 +403,7 @@ class _ChatPageState extends State<ChatPage> {
                         );
                       } else {
                         return const Text(
-                              'You have not started a chat with listing uploaded by others');
+                            'You have not started a chat with listing uploaded by others');
                       }
                     } else {
                       return const Center(
@@ -412,7 +413,9 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
-              const Divider(thickness: 2,),
+              const Divider(
+                thickness: 2,
+              ),
               Text(
                 "Your Uploaded Listings",
                 style: kBodyText.copyWith(fontWeight: FontWeight.bold),

@@ -238,9 +238,12 @@ class _ChatItemPageState extends State<ChatItemPage> {
         color: color,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Text(
-        chatContent,
-        style: TextStyle(fontSize: 16, color: textColor),
+      child: Align(
+        alignment: Alignment.center,
+        child:Text(
+          chatContent,
+          style: TextStyle(fontSize: 16, color: textColor),
+        ),
       ),
     );
   }
@@ -338,7 +341,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
     );
   }
 
-  Widget buildItem(int index, DocumentSnapshot? documentSnapshot) {
+  Widget buildIndivMsg(int index, DocumentSnapshot? documentSnapshot) {
     if (documentSnapshot != null) {
       ChatMessage chatMessages = ChatMessage.fromDocument(documentSnapshot);
       if (chatMessages.idFrom == currentUserId) {
@@ -512,7 +515,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
                         reverse: true,
                         controller: scrollController,
                         itemBuilder: (context, index) =>
-                            buildItem(index, snapshot.data?.docs[index]));
+                            buildIndivMsg(index, snapshot.data?.docs[index]));
                   } else {
                     return Center(
                       child: Text('Talk to ${widget.otherNickname} about the transaction!'),

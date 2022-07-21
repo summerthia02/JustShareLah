@@ -81,7 +81,7 @@ class ChatProvider {
     return chatData;
   }
 
-  static Future<void> makeNewChat(ChatItem chatItem) async {
+  static Future<void> makeNewChat(ChatData chatItem) async {
     String groupChatId = chatItem.groupChatId;
     String sellerId = chatItem.sellerId;
     String chattingWithId = chatItem.chattingWithId;
@@ -109,7 +109,7 @@ class ChatProvider {
         .set(chatItem.toJson());
   }
 
-  static Future<bool> handleChatRequest(ChatItem chatItem) async {
+  static Future<bool> handleChatRequest(ChatData chatItem) async {
     print("HANDLING CHAT REQUEST");
     Map<String, dynamic>? chatData = await getChat(chatItem.groupChatId);
     if (chatData == null) {
