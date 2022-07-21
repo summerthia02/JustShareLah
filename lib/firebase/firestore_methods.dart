@@ -233,4 +233,8 @@ class FireStoreMethods {
         .doc(path)
         .update(updateData);
   }
+
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getListingDataStreamFromId(String uid) {
+    return listingsCollection.doc(uid).snapshots();
+  }
 }

@@ -119,89 +119,110 @@ class _ChatPageState extends State<ChatPage> {
       BuildContext context, DocumentSnapshot? chatCollectionSnapshot) {
     final firebaseAuth = FirebaseAuth.instance;
     if (chatCollectionSnapshot == null) {
+      print("Chat Collection Snapshot is null");
       return const SizedBox.shrink();
     }
 
     ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
-    if (chatData.sellerId != currentUserId ||
+    if (chatData.sellerId != currentUserId &&
         chatData.chattingWithId != currentUserId) {
+      print("This chat does not belong to this user");
       return const SizedBox.shrink();
     }
 
     return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      stream: UserDataService.getUserDataStreamFromId(chatData.sellerId),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        stream: UserDataService.getUserDataStreamFromId(chatData.sellerId),
+        builder: (BuildContext context,
+            AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-        Map<String, dynamic>? sellerData = snapshot.data!.data();
-        if (sellerData == null) {
-          return const Center(
-            child: Text('This user/chat no longer exists'),
-          );
-        }
+          Map<String, dynamic>? sellerData = snapshot.data!.data();
+          if (sellerData == null) {
+            return const Center(
+              child: Text('This user/chat no longer exists'),
+            );
+          }
 
-        return TextButton(
-          onPressed: () async {
-            if (KeyboardUtils.isKeyboardShowing()) {
-              KeyboardUtils.closeKeyboard(context);
-            }
-            Map<String, dynamic> chattingWithData =
-                await UserDataService.getUserDataFromId(chatData.sellerId);
-            Map<String, dynamic> listingData =
-                await FireStoreMethods.getListingData(chatData.listingId);
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ChatItemPage(
-                      otherId: sellerData["uid"],
-                      otherAvatar: sellerData[FirestoreUserKeys.imageUrl],
-                      otherNickname: sellerData[FirestoreUserKeys.username],
-                      userProfPicUrl: chattingWithData[FirestoreUserKeys.imageUrl],
-                      otherPhoneNumber: sellerData[FirestoreUserKeys.phoneNumber],
-                      listingId: listingData["uid"],
-                      listingTitle: listingData["title"],
-                    )));
-          },
-          child: ListTile(
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(30),
-              child: Image.network(
-                sellerData[FirestoreUserKeys.imageUrl],
-                fit: BoxFit.cover,
-                width: 50,
-                height: 50,
-                loadingBuilder: (BuildContext ctx, Widget child,
-                    ImageChunkEvent? loadingProgress) {
-                  if (loadingProgress == null) {
-                    return child;
-                  } else {
-                    return SizedBox(
+          return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+            stream: FireStoreMethods.getListingDataStreamFromId(chatData.listingId),
+            builder: (BuildContext context,
+                AsyncSnapshot<DocumentSnapshot<Map<String, dynamic>>> snapshot) {
+              if (!snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+
+              Map<String, dynamic>? listingData = snapshot.data!.data();
+              if (listingData == null) {
+                return const Center(
+                  child: Text('This listing no longer exists'),
+                );
+              }
+
+              return TextButton(
+                onPressed: () async {
+                  if (KeyboardUtils.isKeyboardShowing()) {
+                    KeyboardUtils.closeKeyboard(context);
+                  }
+                  //TODO CHANGE TO LOAD BEFORE HAND
+                  Map<String, dynamic> chattingWithData =
+                      await UserDataService.getUserDataFromId(chatData.sellerId);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ChatItemPage(
+                            otherId: sellerData["uid"],
+                            otherAvatar: sellerData[FirestoreUserKeys.imageUrl],
+                            otherNickname: sellerData[FirestoreUserKeys.username],
+                            userProfPicUrl:
+                                chattingWithData[FirestoreUserKeys.imageUrl],
+                            otherPhoneNumber:
+                                sellerData[FirestoreUserKeys.phoneNumber],
+                            listingId: listingData["uid"],
+                            listingTitle: listingData["title"],
+                          )));
+                },
+                child: ListTile(
+                  leading: ClipRRect(
+                    borderRadius: BorderRadius.circular(30),
+                    child: Image.network(
+                      listingData["imageUrl"],
+                      fit: BoxFit.cover,
                       width: 50,
                       height: 50,
-                      child: CircularProgressIndicator(
-                          color: Colors.grey,
-                          value: loadingProgress.expectedTotalBytes != null
-                              ? loadingProgress.cumulativeBytesLoaded /
-                                  loadingProgress.expectedTotalBytes!
-                              : null),
-                    );
-                  }
-                },
-                errorBuilder: (context, object, stackTrace) {
-                  return const Icon(Icons.account_circle, size: 50);
-                },
-              ),
-            ),
-            title: Text(
-              sellerData[FirestoreUserKeys.username],
-              style: const TextStyle(color: Colors.black),
-            ),
-          ),
-        );
-      }
-    );
+                      loadingBuilder: (BuildContext ctx, Widget child,
+                          ImageChunkEvent? loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return SizedBox(
+                            width: 50,
+                            height: 50,
+                            child: CircularProgressIndicator(
+                                color: Colors.grey,
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null),
+                          );
+                        }
+                      },
+                      errorBuilder: (context, object, stackTrace) {
+                        return const Icon(Icons.account_circle, size: 50);
+                      },
+                    ),
+                  ),
+                  title: Text(
+                    listingData["title"],
+                    style: const TextStyle(color: Colors.black),
+                  ),
+                ),
+              );
+          });
+        });
   }
 
   // =========== Flutter methods ======================
@@ -240,7 +261,9 @@ class _ChatPageState extends State<ChatPage> {
                     return ListView.separated(
                       shrinkWrap: true,
                       itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) => Text("hi"),
+                      itemBuilder: (context, index) =>
+                          buildChattingWithChatItems(
+                              context, snapshot.data?.docs[index]),
                       controller: scrollController,
                       separatorBuilder: (BuildContext context, int index) =>
                           const Divider(),
