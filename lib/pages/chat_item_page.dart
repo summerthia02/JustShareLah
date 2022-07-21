@@ -214,8 +214,10 @@ class _ChatItemPageState extends State<ChatItemPage> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
+              const SizedBox(height: 20,),
               buildListMessage(),
               buildMessageInput(),
+              const SizedBox(height: 20,)
             ],
           ),
         ),
