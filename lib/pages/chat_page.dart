@@ -187,6 +187,7 @@ class _ChatPageState extends State<ChatPage> {
                                   sellerData[FirestoreUserKeys.phoneNumber],
                               listingId: listingData["uid"],
                               listingTitle: listingData["title"],
+                              chatData: chatData,
                             )));
                   },
                   child: ListTile(
@@ -303,6 +304,7 @@ class _ChatPageState extends State<ChatPage> {
                                   FirestoreUserKeys.phoneNumber],
                               listingId: listingData["uid"],
                               listingTitle: listingData["title"],
+                              chatData: chatData,
                             )));
                   },
                   child: ListTile(

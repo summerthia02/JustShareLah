@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/chat_message.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -18,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'login_page.dart';
 
 class ChatItemPage extends StatefulWidget {
+  final ChatItem chatData;
   final String otherId;
   final String otherAvatar;
   final String otherNickname;
@@ -35,6 +37,7 @@ class ChatItemPage extends StatefulWidget {
     required this.otherPhoneNumber,
     required this.listingId,
     required this.listingTitle,
+    required this.chatData,
   }) : super(key: key);
 
   @override
@@ -218,7 +221,11 @@ class _ChatItemPageState extends State<ChatItemPage> {
               const SizedBox(
                 height: 15,
               ),
-              buildButtonField("Make an Offer", Colors.green, 20, () {}),
+              // only can make an offer if it is your listing
+              // i.e. chatData.sellerId != currentUser
+              widget.chatData.sellerId != currentUserId
+                  ? buildButtonField("Make an Offer", Colors.green, 20, () {})
+                  : Container(),
 
               const SizedBox(
                 height: 20,

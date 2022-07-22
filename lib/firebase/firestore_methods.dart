@@ -186,36 +186,6 @@ class FireStoreMethods {
         .get();
   }
 
-  // listing comment
-  String listingComment(String listingId, String text, String uid, String name,
-      String profilePic) {
-    String res = "Some error occurred";
-    try {
-      if (text.isNotEmpty) {
-        // if the likes list contains the user uid, we need to remove it
-        String commentId = const Uuid().v1();
-        listingsCollection
-            .doc(listingId)
-            .collection('comments')
-            .doc(commentId)
-            .set({
-          'profilePic': profilePic,
-          'name': name,
-          'uid': uid,
-          'text': text,
-          'commentId': commentId,
-          'dateCreated': Timestamp.fromDate(DateTime.now()),
-        });
-        res = 'success';
-      } else {
-        res = "Please enter text";
-      }
-    } catch (err) {
-      res = err.toString();
-    }
-    return res;
-  }
-
   // Delete listing
   Future<String> deletelisting(String listingId) async {
     String res = "Some error occurred";
@@ -236,7 +206,8 @@ class FireStoreMethods {
         .update(updateData);
   }
 
-  static Stream<DocumentSnapshot<Map<String, dynamic>>> getListingDataStreamFromId(String uid) {
+  static Stream<DocumentSnapshot<Map<String, dynamic>>>
+      getListingDataStreamFromId(String uid) {
     return listingsCollection.doc(uid).snapshots();
   }
 
@@ -253,5 +224,4 @@ class FireStoreMethods {
 
     return userData;
   }
-
 }
