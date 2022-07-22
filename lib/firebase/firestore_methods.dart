@@ -198,6 +198,21 @@ class FireStoreMethods {
     return res;
   }
 
+  // make an offer in chat -> makeOffer field becomes true
+  // only if makeOffer == true, then accept offer works
+  Future<void> makeChatOffer(String chatId) async {
+    CollectionReference chats =
+        FirebaseFirestore.instance.collection("chatsCollection");
+    return await chats.doc(chatId).update({"madeOffer": true});
+  }
+
+  // accept offer
+  Future<void> acceptOffer(String chatId) async {
+    CollectionReference chats =
+        FirebaseFirestore.instance.collection("chatsCollection");
+    return await chats.doc(chatId).update({"acceptedOffer": true});
+  }
+
   static Future<void> updateFirestoreData(
       String collectionPath, String path, Map<String, dynamic> updateData) {
     return firebaseFirestore

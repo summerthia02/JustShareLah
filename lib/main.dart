@@ -53,7 +53,9 @@ class MyApp extends StatelessWidget {
                 email: currUserEmail,
               ),
           '/favourites': (_) => Favourites(),
-          '/reviews': (_) => const MakeReviewPage(),
+          '/reviews': (_) => MakeReviewPage(
+                reviewForId: '',
+              ),
           '/sharecredits': (_) => const ShareCreditsScreen(),
         },
       ),

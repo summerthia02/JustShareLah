@@ -9,6 +9,7 @@ import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/chat_message.dart';
+import 'package:justsharelah_v1/pages/review_page.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +53,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
   int _limit = 20;
   final int _limitIncrement = 20;
   String groupChatId = '';
-
+  // chatingWithId = buyerId
   File? imageFile;
   bool isLoading = false;
   bool isShowSticker = false;
@@ -223,8 +224,82 @@ class _ChatItemPageState extends State<ChatItemPage> {
               ),
               // only can make an offer if it is your listing
               // i.e. chatData.sellerId != currentUser
-              widget.chatData.sellerId != currentUserId
-                  ? buildButtonField("Make an Offer", Colors.green, 20, () {})
+              // make offer button pressed -> makeOffer set to truen
+              if (widget.chatData.sellerId != currentUserId &&
+                  widget.chatData.madeOffer == false)
+                buildButtonField("Make an Offer", Colors.green, 20, () {
+                  FireStoreMethods().makeChatOffer(widget.chatData.groupChatId);
+                })
+              else
+                Container(),
+              const SizedBox(
+                height: 10,
+              ),
+              widget.chatData.sellerId != currentUserId &&
+                      widget.chatData.madeOffer == true
+                  ? const Text("Offer has been made !", style: kBodyTextSmall)
+                  : Container(),
+
+              const SizedBox(
+                height: 10,
+              ),
+              // IF BUYER, if accepted offer then say accept then can make reviews
+              widget.chatData.sellerId != currentUserId &&
+                      widget.chatData.acceptedOffer == true
+                  ? const Text("Seller has accepted your offer !",
+                      style: kBodyTextSmall)
+                  : Container(),
+
+              // if i am the seller and buyer has made an offer
+              // button to accept offer
+              //  upon offer accpetance -> successful transaction
+
+              // if user is seller + buyer has made offer ->
+              // widget to say "buyer made an offer"
+
+              (widget.chatData.madeOffer &&
+                      widget.chatData.sellerId == currentUserId &&
+                      widget.chatData.acceptedOffer == false)
+                  ? Column(
+                      children: [
+                        infoText("Buyer has made an offer !"),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text(
+                          "Do you want to accept the Offer ? ",
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        buildButtonField("YES !", Colors.blue, 15, () {
+                          FireStoreMethods()
+                              .acceptOffer(widget.chatData.groupChatId);
+                        })
+                      ],
+                    )
+                  : Container(),
+              // already accepted and is seller
+              widget.chatData.acceptedOffer &&
+                      widget.chatData.sellerId == currentUserId
+                  ? Text("You have accepted the offer already !")
+                  : Container(),
+              // make review when accepted offer
+              widget.chatData.acceptedOffer
+                  ? buildButtonField(
+                      "Leave a Review",
+                      Colors.cyan,
+                      20,
+                      () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => MakeReviewPage(
+                                reviewForId: widget.otherId,
+                              ),
+                            ));
+                      },
+                    )
                   : Container(),
 
               const SizedBox(
@@ -239,6 +314,17 @@ class _ChatItemPageState extends State<ChatItemPage> {
           ),
         ),
       ),
+    );
+  }
+
+  Container infoText(String text) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.green, borderRadius: BorderRadius.circular(30)),
+      alignment: Alignment.center,
+      height: 40,
+      width: 250,
+      child: Text(text, style: kBodyTextSmall),
     );
   }
 

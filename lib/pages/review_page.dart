@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
@@ -11,7 +12,8 @@ import '../utils/appbar.dart';
 import '../utils/bottom_nav_bar.dart';
 
 class MakeReviewPage extends StatefulWidget {
-  const MakeReviewPage({Key? key}) : super(key: key);
+  final String reviewForId;
+  const MakeReviewPage({Key? key, required this.reviewForId}) : super(key: key);
 
   @override
   State<MakeReviewPage> createState() => _MakeReviewPageState();
@@ -19,11 +21,33 @@ class MakeReviewPage extends StatefulWidget {
 
 class _MakeReviewPageState extends State<MakeReviewPage> {
   final currUserEmail = FirebaseAuth.instance.currentUser?.email;
+  // curruserId
+  final currUserId = FirebaseAuth.instance.currentUser?.uid;
 
   List<bool> isSelected = [true, false, false];
   late int index;
   final TextEditingController _descriptionController = TextEditingController();
+  // current user is the reviewBy
+  // other user is reviewFor
 
+  String name = '';
+  Future<String> getUserName() async {
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    Query userDoc = users.where("uid", isEqualTo: widget.reviewForId);
+    // String userName = userDoc.print("hi");
+    await userDoc.get().then(
+      (res) {
+        print("listingData query successful");
+        // userData = res.docs.map((snapshot) => snapshot.data());
+
+        setState(() {
+          name = res.docs[0]["username"];
+        });
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+    return name;
+  }
   // ================ Toggle Button  =============================
 
   Container toggleButton() => Container(
@@ -84,6 +108,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
   void initState() {
     super.initState();
     index = 0;
+    getUserName();
     toggleButton();
   }
 
@@ -114,7 +139,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
               height: 30.0,
             ),
             Text(
-              "Give John a rating out of 10",
+              "Give $name an over rating :)",
               style: TextStyle(
                   fontFamily: "Lato",
                   fontSize: 16.0,
@@ -128,7 +153,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
               height: 15.0,
             ),
             Text(
-              "Write a review for the buyer",
+              "Write a review for $name",
               style: TextStyle(
                   fontFamily: "Lobster",
                   fontSize: 17.0,
