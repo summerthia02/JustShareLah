@@ -187,6 +187,7 @@ class _ChatPageState extends State<ChatPage> {
                                   sellerData[FirestoreUserKeys.phoneNumber],
                               listingId: listingData["uid"],
                               listingTitle: listingData["title"],
+                              chatData: chatData,
                             )));
                   },
                   child: ListTile(
@@ -239,6 +240,7 @@ class _ChatPageState extends State<ChatPage> {
     }
 
     ChatItem chatData = ChatItem.fromDocument(chatCollectionSnapshot);
+
     if (chatData.sellerId != currentUserId &&
         chatData.chattingWithId != currentUserId) {
       print("This chat does not belong to this user");
@@ -292,6 +294,7 @@ class _ChatPageState extends State<ChatPage> {
                             chatData.sellerId);
                     Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => ChatItemPage(
+                              chatData: chatData,
                               otherId: chattingWithData["uid"],
                               otherAvatar:
                                   chattingWithData[FirestoreUserKeys.imageUrl],

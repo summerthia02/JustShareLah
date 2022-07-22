@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/chat_message.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -18,6 +19,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'login_page.dart';
 
 class ChatItemPage extends StatefulWidget {
+  final ChatItem chatData;
   final String otherId;
   final String otherAvatar;
   final String otherNickname;
@@ -28,6 +30,7 @@ class ChatItemPage extends StatefulWidget {
 
   const ChatItemPage({
     Key? key,
+    required this.chatData,
     required this.otherNickname,
     required this.otherAvatar,
     required this.otherId,
@@ -45,16 +48,13 @@ class _ChatItemPageState extends State<ChatItemPage> {
   late String currentUserId;
 
   List<QueryDocumentSnapshot> listMessages = [];
-
   int _limit = 20;
   final int _limitIncrement = 20;
   String groupChatId = '';
-
   File? imageFile;
   bool isLoading = false;
   bool isShowSticker = false;
   String imageUrl = '';
-
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
@@ -92,6 +92,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
           MaterialPageRoute(builder: (context) => const LoginPage()),
           (Route<dynamic> route) => false);
     }
+
     if (widget.otherId.compareTo(currentUserId) > 0) {
       groupChatId = '${widget.listingId} : ${widget.otherId} - $currentUserId';
     } else {
