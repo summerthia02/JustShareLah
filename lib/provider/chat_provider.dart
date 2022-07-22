@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
-import 'package:justsharelah_v1/models/chats/chat_item.dart';
-import 'package:justsharelah_v1/models/chats/chat_message.dart';
+import 'package:justsharelah_v1/models/chat_item.dart';
+import 'package:justsharelah_v1/models/chat_message.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatProvider {

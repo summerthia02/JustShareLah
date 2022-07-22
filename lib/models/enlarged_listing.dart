@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
-import 'package:justsharelah_v1/models/chats/chat_item.dart';
+import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/pages/chat_item_page.dart';
@@ -35,6 +35,8 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
   bool isLiking = false;
   final currentUser = FirebaseAuth.instance.currentUser;
   late String? userId;
+  // current user email
+  String? userEmail = FirebaseAuth.instance.currentUser?.email;
 
   @override
   void initState() {
@@ -190,19 +192,22 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                     ),
 
                     const SizedBox(height: (defaultPadding)),
-                    Center(
-                      child: SizedBox(
-                        width: 200,
-                        height: 48,
-                        child: ElevatedButton(
-                          onPressed: onChatPressed,
-                          style: ElevatedButton.styleFrom(
-                              primary: Colors.redAccent,
-                              shape: const StadiumBorder()),
-                          child: const Text("Chat"),
-                        ),
-                      ),
-                    )
+                    // only show the chat button if the listing isn't mine
+                    widget.snap["createdByEmail"] != userEmail
+                        ? Center(
+                            child: SizedBox(
+                              width: 200,
+                              height: 48,
+                              child: ElevatedButton(
+                                onPressed: onChatPressed,
+                                style: ElevatedButton.styleFrom(
+                                    primary: Colors.redAccent,
+                                    shape: const StadiumBorder()),
+                                child: const Text("Chat"),
+                              ),
+                            ),
+                          )
+                        : Container(),
                   ],
                 ),
               ),
@@ -228,12 +233,16 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
     } else {
       groupChatId = '$listingId : $sellerId - $chattingWithId';
     }
+    bool madeOffer = false;
+    bool acceptedOffer = false;
 
     ChatItem chatItem = ChatItem(
         groupChatId: groupChatId,
         sellerId: sellerId,
         chattingWithId: chattingWithId,
-        listingId: listingId);
+        listingId: listingId,
+        madeOffer: madeOffer,
+        acceptedOffer: acceptedOffer);
     ChatProvider.handleChatRequest(chatItem);
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ChatItemPage(
@@ -426,7 +435,7 @@ class ListingCardDetails extends StatelessWidget {
                       ),
                       Text(
                         "Currently Unavailable. Chat for more info! ",
-                        style: TextStyle(color: Colors.red, fontSize: 12),
+                        style: TextStyle(color: Colors.red, fontSize: 10),
                       ),
                     ],
                   ),

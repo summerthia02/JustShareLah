@@ -7,7 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
-import 'package:justsharelah_v1/models/chats/chat_message.dart';
+import 'package:justsharelah_v1/models/chat_message.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:provider/provider.dart';
@@ -214,10 +214,20 @@ class _ChatItemPageState extends State<ChatItemPage> {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Column(
             children: [
-              const SizedBox(height: 20,),
+              // make an offer button if user is a buyer
+              const SizedBox(
+                height: 15,
+              ),
+              buildButtonField("Make an Offer", Colors.green, 20, () {}),
+
+              const SizedBox(
+                height: 20,
+              ),
               buildListMessage(),
               buildMessageInput(),
-              const SizedBox(height: 20,)
+              const SizedBox(
+                height: 20,
+              )
             ],
           ),
         ),
@@ -274,6 +284,23 @@ class _ChatItemPageState extends State<ChatItemPage> {
           );
         },
         errorBuilder: (context, object, stackTrace) => errorContainer(),
+      ),
+    );
+  }
+
+  ElevatedButton buildButtonField(
+      String text, Color color, double length, void Function()? onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: length),
+          primary: color,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
       ),
     );
   }
@@ -515,7 +542,8 @@ class _ChatItemPageState extends State<ChatItemPage> {
                             buildItem(index, snapshot.data?.docs[index]));
                   } else {
                     return Center(
-                      child: Text('Talk to ${widget.otherNickname} about the transaction!'),
+                      child: Text(
+                          'Talk to ${widget.otherNickname} about the transaction!'),
                     );
                   }
                 } else {
