@@ -11,6 +11,8 @@ class FirestoreChatKeys {
   static const String sellerId = "sellerId";
   static const String chattingWithId = "chattingWithId";
   static const String listingId = "listingId";
+  static const String madeOffer = "madeOffer";
+  static const String acceptedOffer = "acceptedOffer";
 }
 
 class FirestoreUserKeys {

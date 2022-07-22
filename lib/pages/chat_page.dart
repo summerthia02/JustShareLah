@@ -7,7 +7,7 @@ import 'package:justsharelah_v1/firebase/auth_methods.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
-import 'package:justsharelah_v1/models/chats/chat_item.dart';
+import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/pages/chat_item_page.dart';
 import 'package:justsharelah_v1/pages/login_page.dart';
@@ -191,12 +191,12 @@ class _ChatPageState extends State<ChatPage> {
                   },
                   child: ListTile(
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.vertical(),
                       child: Image.network(
                         listingData["imageUrl"],
                         fit: BoxFit.cover,
-                        width: 50,
-                        height: 50,
+                        width: 60,
+                        height: 90,
                         loadingBuilder: (BuildContext ctx, Widget child,
                             ImageChunkEvent? loadingProgress) {
                           if (loadingProgress == null) {
@@ -307,12 +307,12 @@ class _ChatPageState extends State<ChatPage> {
                   },
                   child: ListTile(
                     leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(30),
+                      borderRadius: BorderRadius.vertical(),
                       child: Image.network(
                         listingData["imageUrl"],
                         fit: BoxFit.cover,
-                        width: 50,
-                        height: 50,
+                        width: 60,
+                        height: 90,
                         loadingBuilder: (BuildContext ctx, Widget child,
                             ImageChunkEvent? loadingProgress) {
                           if (loadingProgress == null) {
@@ -402,7 +402,7 @@ class _ChatPageState extends State<ChatPage> {
                         );
                       } else {
                         return const Text(
-                              'You have not started a chat with listing uploaded by others');
+                            'You have not started a chat with listing uploaded by others');
                       }
                     } else {
                       return const Center(
@@ -412,7 +412,9 @@ class _ChatPageState extends State<ChatPage> {
                   },
                 ),
               ),
-              const Divider(thickness: 2,),
+              const Divider(
+                thickness: 2,
+              ),
               Text(
                 "Your Uploaded Listings",
                 style: kBodyText.copyWith(fontWeight: FontWeight.bold),
