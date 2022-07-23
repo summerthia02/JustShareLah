@@ -246,6 +246,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
     ChatProvider.handleChatRequest(chatItem);
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ChatItemPage(
+              chatData: chatItem,
               otherId: sellerData["uid"],
               otherAvatar: sellerData["imageUrl"],
               otherNickname: sellerData["username"],
