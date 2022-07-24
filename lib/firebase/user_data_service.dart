@@ -28,7 +28,7 @@ class UserDataService {
       'imageUrl': "https://i.stack.imgur.com/l60Hf.png",
       'listings': [],
       'reviews': [],
-      'share_credits': "0",
+      'share_credits': "500",
       'chatting_with': []
     });
   }
