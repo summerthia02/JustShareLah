@@ -177,6 +177,16 @@ class ShareCreditsScreenState extends State<ShareCreditsScreen> {
                     }
                   })
             : Container(),
+        hasSCUpdated == true
+            ? Container(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 15),
+                alignment: Alignment.center,
+                child: const Text(
+                  "You have already updated your Share Creds! :) ",
+                  style: TextStyle(fontSize: 16),
+                ),
+              )
+            : Container(),
       ],
     ));
   }
