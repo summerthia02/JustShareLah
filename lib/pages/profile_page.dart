@@ -174,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => AllReviews(
-                    profileUid: currUserId,
+                    profileUid: userData.uid!,
                   ),
                 ));
           },
