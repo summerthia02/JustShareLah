@@ -15,7 +15,7 @@ class Listing {
   final String createdByEmail;
   final int? likeCount;
   final dynamic dateListed;
-  final List<dynamic> usersLiked;
+  late final List<dynamic> usersLiked;
   final List<String> searchIndex;
   GeoPoint GeoLocation;
   String location;
@@ -41,13 +41,13 @@ class Listing {
     // this.bgColor = const Color(0xFFEFEFF2),
   });
 
-  // void likePost(User? user) {
-  //   if (usersLiked.contains(user?.uid)) {
-  //     usersLiked.remove(user?.uid);
-  //   } else {
-  //     usersLiked.add(user?.uid);
-  //   }
-  // }
+  void likePost(User? user) {
+    if (usersLiked.contains(user?.uid)) {
+      usersLiked.remove(user?.uid);
+    } else {
+      usersLiked.add(user?.uid);
+    }
+  }
 
   // void setId(String id) {
   //   uid = id;
@@ -73,35 +73,65 @@ class Listing {
     };
   }
 
-  // Listing createListing(record) {
-  //   Map<String, dynamic> attributes = {
-  //     'imageUrl': "",
-  //     'title': '',
-  //     'price': '',
-  //     'forRent': '',
-  //     'description': '',
-  //     'available': true,
-  //     'createdByEmail': '',
-  //     'likeCount': 0,
-  //     'usersLiked': []
-  //   };
+  static Listing defaultListing(bool forRent) {
+    return Listing(
+      uid: "1",
+      dateListed: Timestamp.fromDate(DateTime.parse('1969-07-20 20:18:04Z')),
+      imageUrl: 'https://static.thenounproject.com/png/1913842-200.png',
+      title: "testTitle",
+      price: "NA",
+      description: "test record!",
+      createdByEmail: "test@gmail.com",
+      forRent: forRent,
+      available: true,
+      likeCount: 5,
+      usersLiked: [],
+      GeoLocation: const GeoPoint(1, 1),
+      location: 'Test Location',
+      shareCredits: '500',
+      searchIndex: [],
+    );
+  }
 
-  //   record.forEach((key, value) => attributes[key] = value);
+  static Listing createListing(record) {
+    Map<String, dynamic> attributes = {
+      'uid': '',
+      'imageUrl': "",
+      'dateListed': Timestamp.fromDate(DateTime.parse('1969-07-20 20:18:04Z')),
+      'title': '',
+      'price': '',
+      'shareCredits': '',
+      'forRent': '',
+      'description': '',
+      'available': true,
+      'createdByEmail': '',
+      'likeCount': 0,
+      'usersLiked': [],
+      'GeoLocation': GeoPoint(1, 1),
+      'location': '',
+      'searchIndex': []
+    };
 
-  //   Listing listing = Listing(
-  //       available: attributes['available'],
-  //       imageUrl: attributes['imageUrl'],
-  //       title: attributes['title'],
-  //       price: attributes['price'],
-  //       forRent: attributes['forRent'],
-  //       description: attributes['description'],
-  //       createdByEmail: attributes['createdByEmail'],
-  //       uid: attributes['uid'],
-  //       dateListed: attributes['dateListed'],
-  //       likeCount: attributes['likeCount'],
-  //       profImageUrl: attributes['profImageUrl']);
+    record.forEach((key, value) => attributes[key] = value);
 
-  //   listing.usersLiked = Set.from(attributes['usersLiked']);
-  //   return listing;
-  // }
+    Listing listing = Listing(
+      available: attributes['available'],
+      imageUrl: attributes['imageUrl'],
+      title: attributes['title'],
+      price: attributes['price'],
+      forRent: attributes['forRent'],
+      description: attributes['description'],
+      createdByEmail: attributes['createdByEmail'],
+      uid: attributes['uid'],
+      dateListed: attributes['dateListed'],
+      likeCount: attributes['likeCount'],
+      searchIndex: attributes['searchIndex'],
+      usersLiked: attributes['usersLiked'],
+      GeoLocation: attributes['GeoLocation'],
+      location: attributes['location'],
+      shareCredits: attributes['shareCredits'],
+    );
+
+    return listing;
+  }
 }
