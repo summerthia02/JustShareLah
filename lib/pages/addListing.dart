@@ -250,6 +250,18 @@ class _AddListingPageState extends State<AddListingPage> {
       return false;
     }
 
+    if (!forRent && _shareCreditsController.text == '') {
+      showSnackBar(
+          context, 'Please add the number of ShareCredits for lending');
+      return false;
+    }
+
+    if (forRent && _shareCreditsController.text != '0') {
+      showSnackBar(
+          context, 'As you are renting item, please input 0 as ShareCredits');
+      return false;
+    }
+
     return true;
   }
 

@@ -193,14 +193,9 @@ class _ProfilePageState extends State<ProfilePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        TextButton(
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, "/sharecredits");
-          },
-          child: Text(
-            "ShareCredits: ",
-            style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
-          ),
+        Text(
+          "ShareCredits: ",
+          style: kBodyTextSmall.copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
           numShareCreds.toString(),

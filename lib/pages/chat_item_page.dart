@@ -10,6 +10,7 @@ import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/chat_message.dart';
 import 'package:justsharelah_v1/pages/review_page.dart';
+import 'package:justsharelah_v1/pages/sharecredits.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:provider/provider.dart';
@@ -58,6 +59,8 @@ class _ChatItemPageState extends State<ChatItemPage> {
   bool isLoading = false;
   bool isShowSticker = false;
   String imageUrl = '';
+  bool listingForRent = false;
+  bool hasReviewed = false;
 
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
@@ -65,9 +68,11 @@ class _ChatItemPageState extends State<ChatItemPage> {
   @override
   void initState() {
     super.initState();
+    getListingType();
     focusNode.addListener(onFocusChanged);
     scrollController.addListener(_scrollListener);
     readLocal();
+    leftReview();
   }
 
   _scrollListener() {
@@ -198,17 +203,47 @@ class _ChatItemPageState extends State<ChatItemPage> {
   }
 
   // check if left reviews already
-  bool leftReview() {
+  Future<bool?> leftReview() async {
     CollectionReference reviewCollection =
         FirebaseFirestore.instance.collection("Reviews");
-    dynamic reviews = reviewCollection
+    Query reviewDoc = reviewCollection
         .where("listingId", isEqualTo: widget.listingId)
         .where("reviewById", isEqualTo: currentUserId);
-    if (reviews.get() != null) {
-      return true;
-    } else {
-      return false;
-    }
+    await reviewDoc.get().then((value) => {
+          if (value.docs.isEmpty)
+            {
+              setState(() {
+                hasReviewed = false;
+              }),
+            }
+          else
+            {
+              setState(() {
+                hasReviewed = true;
+              }),
+            }
+        });
+  }
+
+  // get listing type
+  Future<bool?> getListingType() async {
+    CollectionReference listings =
+        FirebaseFirestore.instance.collection("listings");
+    // get username for particular reviewer
+    Query listingsDoc = listings.where("uid", isEqualTo: widget.listingId);
+
+    // String userName = userDoc.print("hi");
+    await listingsDoc.get().then(
+      (res) {
+        print("listingData query successful");
+        // userData = res.docs.map((snapshot) => snapshot.data());
+
+        listingForRent = res.docs[0]["forRent"];
+      },
+      onError: (e) => print("Error completing: $e"),
+    );
+
+    return listingForRent;
   }
 
   @override
@@ -270,6 +305,16 @@ class _ChatItemPageState extends State<ChatItemPage> {
               // if user is seller + buyer has made offer ->
               // widget to say "buyer made an offer"
 
+              hasReviewed == true
+                  ? Container(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: const Text(
+                        "Review has been made! Thanks for Reviewing! ",
+                        style: TextStyle(color: Colors.red, fontSize: 18),
+                        textAlign: TextAlign.center,
+                      ),
+                    )
+                  : Container(),
               (widget.chatData.madeOffer &&
                       widget.chatData.sellerId == currentUserId &&
                       widget.chatData.acceptedOffer == false)
@@ -298,8 +343,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
                   ? Text("You have accepted the offer already !")
                   : Container(),
               // make review when accepted offer
-              widget.chatData.acceptedOffer
-                  // leftReview() == false
+              widget.chatData.acceptedOffer && hasReviewed == false
                   ? buildButtonField(
                       "Leave a Review",
                       Colors.cyan,
@@ -315,6 +359,22 @@ class _ChatItemPageState extends State<ChatItemPage> {
                             ));
                       },
                     )
+                  : Container(),
+              // if acceptedOffer and forRent == false (show sharecreds screen)
+              widget.chatData.acceptedOffer && listingForRent == false
+                  ? TextButton(
+                      onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ShareCreditsScreen(
+                                    isBuyer: widget.chatData.sellerId !=
+                                        currentUserId,
+                                    listingId: widget.listingId,
+                                  ),
+                                ))
+                          },
+                      child: Text("Click Here to View Updated Share Credits "))
                   : Container(),
 
               const SizedBox(

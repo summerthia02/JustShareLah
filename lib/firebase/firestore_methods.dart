@@ -6,6 +6,7 @@ import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/review.dart';
+import 'package:justsharelah_v1/models/share_creds.dart';
 import 'package:uuid/uuid.dart';
 
 class FireStoreMethods {
@@ -248,6 +249,35 @@ class FireStoreMethods {
       res = err.toString();
     }
     return res;
+  }
+
+  // update share credits - change number - in User
+  // PLUS create a sc table
+  // share credits table
+  // to see if updated for this particular listing already
+  // shareCreds id, userid, listingid, hasUpdated
+
+  Future<void> updateShareCreds(int numShareCreditsChanged, int currIntSc,
+      String userId, bool isBuyer, String listingId) async {
+    CollectionReference users = FirebaseFirestore.instance.collection("Users");
+    final shareCredsCollection =
+        FirebaseFirestore.instance.collection('ShareCredits');
+    String shareCredsId = const Uuid().v1();
+    ShareCredits shareCredits =
+        ShareCredits(uid: shareCredsId, listingId: listingId, userId: userId);
+    await shareCredsCollection.doc(shareCredsId).set(shareCredits.toJson());
+
+    // final share credits
+    int finalCreds = currIntSc;
+    if (isBuyer) {
+      finalCreds = currIntSc - numShareCreditsChanged;
+    } else {
+      finalCreds = currIntSc + numShareCreditsChanged;
+    }
+    // back to string
+    String newCreds = finalCreds.toString();
+
+    return await users.doc(userId).update({"share_credits": newCreds});
   }
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>>

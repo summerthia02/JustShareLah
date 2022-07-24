@@ -57,7 +57,6 @@ class MyApp extends StatelessWidget {
                 reviewForId: '',
                 listingId: '',
               ),
-          '/sharecredits': (_) => const ShareCreditsScreen(),
         },
       ),
     );
