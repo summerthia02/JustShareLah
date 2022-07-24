@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/firebase/firestore_keys.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/models/listings.dart';
+import 'package:justsharelah_v1/models/review.dart';
 import 'package:uuid/uuid.dart';
 
 class FireStoreMethods {
@@ -13,6 +14,8 @@ class FireStoreMethods {
   static final listingsCollection =
       FirebaseFirestore.instance.collection('listings');
   static final usersCollection = FirebaseFirestore.instance.collection('Users');
+  static final reviewsCollection =
+      FirebaseFirestore.instance.collection('Reviews');
 
   Future<String> uploadlisting(
     String title,
@@ -219,6 +222,31 @@ class FireStoreMethods {
         .collection(collectionPath)
         .doc(path)
         .update(updateData);
+  }
+
+  // create review
+  Future<String> uploadReview(String reviewById, String reviewForId,
+      String listingId, String description, String feedback) async {
+    // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
+    String res = "Some error occurred";
+
+    try {
+      // to create uniqud id based on time, won't have the same id
+      String reviewId = const Uuid().v1(); // creates unique id based on time
+      Review review = Review(
+          uid: reviewId,
+          reviewById: reviewById,
+          reviewForId: reviewForId,
+          listingId: listingId,
+          description: description,
+          feedback: feedback);
+
+      await reviewsCollection.doc(reviewId).set(review.toJson());
+      res = "success";
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
   }
 
   static Stream<DocumentSnapshot<Map<String, dynamic>>>

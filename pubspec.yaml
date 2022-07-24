@@ -107,6 +107,9 @@ flutter:
     - images/def_dp.png
     - images/wallpaper.png
     - images/sharecredits.png
+    - images/happy_face.png
+    - images/neutral_face.png
+    - images/sad_face.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

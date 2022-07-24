@@ -296,6 +296,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
                             MaterialPageRoute(
                               builder: (context) => MakeReviewPage(
                                 reviewForId: widget.otherId,
+                                listingId: widget.listingId,
                               ),
                             ));
                       },
