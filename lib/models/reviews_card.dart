@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 
 class ReviewCard extends StatefulWidget {
   ReviewCard({
@@ -88,6 +89,17 @@ class _ReviewCardState extends State<ReviewCard> {
     return listingUrl;
   }
 
+  // get face pic
+  String getFacePic() {
+    if (widget.snap["feedback"] == "Positive") {
+      return "images/happy_face.png";
+    } else if (widget.snap["feedback"] == "Negative") {
+      return "images/sad.png";
+    } else {
+      return "images/neutral_face.png";
+    }
+  }
+
   // get username of reviewBy
   Future<String> getUserName() async {
     CollectionReference users = FirebaseFirestore.instance.collection("Users");
@@ -139,50 +151,91 @@ class _ReviewCardState extends State<ReviewCard> {
     getProfilePicture();
     getListingTitle();
     getListingImage();
+    getFacePic();
     userId = currentUser?.uid;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ProfileWidget(
-            imageUrl: profPicUrl,
-            onClicked: () => {},
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Text(name,
-              style:
-                  const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
-        ],
-      ),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            ProfileWidget(
+              imageUrl: profPicUrl,
+              onClicked: () => {},
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 100),
+              child: Text(name,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w700, fontSize: 16)),
+            ),
+          ],
+        ),
 
-      // Negative / Neutral / Positve
-      Container(
-        child: widget.snap["feedback"],
-      ),
-      SizedBox(
-        height: 15,
-      ),
-      Container(
-        child: widget.snap["description"],
-      ),
-      SizedBox(
-        height: 15,
-      ),
-      // listing title and photo
-      Column(
-        children: [
-          Text(listingTitle),
-          ClipRRect(
-            child: Image(image: NetworkImage(listingUrl)),
-          )
-        ],
-      ),
-    ]);
+        // Negative / Neutral / Positve
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      listingTitle,
+                      style: kBodyText,
+                    ),
+                    ClipRRect(
+                      child: Image(
+                        image: NetworkImage(listingUrl),
+                        width: 125,
+                        height: 125,
+                      ),
+                    )
+                  ],
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          child: Text(
+                            widget.snap["feedback"],
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.cyan),
+                          ),
+                        ),
+                        Image.asset(
+                          getFacePic(),
+                          scale: 12,
+                        ),
+                      ],
+                    ),
+                    Container(
+                      child: Text(widget.snap["description"]),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            // listing title and photo
+          ],
+        ),
+        const Divider(
+          thickness: 1.0,
+          color: Colors.black,
+        ),
+      ],
+    );
   }
 }

@@ -198,6 +198,20 @@ class _ChatItemPageState extends State<ChatItemPage> {
     }
   }
 
+  // check if left reviews already
+  bool leftReview() {
+    CollectionReference reviewCollection =
+        FirebaseFirestore.instance.collection("Reviews");
+    dynamic reviews = reviewCollection
+        .where("listingId", isEqualTo: widget.listingId)
+        .where("reviewById", isEqualTo: currentUserId);
+    if (reviews.get() != null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -285,7 +299,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
                   ? Text("You have accepted the offer already !")
                   : Container(),
               // make review when accepted offer
-              widget.chatData.acceptedOffer
+              widget.chatData.acceptedOffer && leftReview() == false
                   ? buildButtonField(
                       "Leave a Review",
                       Colors.cyan,
@@ -296,6 +310,7 @@ class _ChatItemPageState extends State<ChatItemPage> {
                             MaterialPageRoute(
                               builder: (context) => MakeReviewPage(
                                 reviewForId: widget.otherId,
+                                listingId: widget.listingId,
                               ),
                             ));
                       },

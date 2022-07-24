@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -13,7 +14,10 @@ import '../utils/bottom_nav_bar.dart';
 
 class MakeReviewPage extends StatefulWidget {
   final String reviewForId;
-  const MakeReviewPage({Key? key, required this.reviewForId}) : super(key: key);
+  final String listingId;
+  const MakeReviewPage(
+      {Key? key, required this.reviewForId, required this.listingId})
+      : super(key: key);
 
   @override
   State<MakeReviewPage> createState() => _MakeReviewPageState();
@@ -47,6 +51,52 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
       onError: (e) => print("Error completing: $e"),
     );
     return name;
+  }
+
+  Future<bool> addReview() async {
+    try {
+      // upload to both storage and 'listing' collection
+      String res = await FireStoreMethods().uploadReview(
+          currUserId!,
+          widget.reviewForId,
+          widget.listingId,
+          _descriptionController.text,
+          getFeedback(index));
+
+      // FireStoreMethods().uploadReview(
+      //     currUserId!,
+      //     widget.reviewForId,
+      //     widget.listingId,
+      //     _descriptionController.text,
+      //     getFeedback(index))
+      print(res);
+      if (res == "success") {
+        showSnackBar(context, 'Added Listing!');
+      }
+    } catch (err) {
+      print(err);
+      return false;
+    }
+
+    return true;
+  }
+  // ================  Button  =============================
+
+  ElevatedButton buildButtonField(
+      String text, Color color, double length, void Function()? onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+          padding: EdgeInsets.symmetric(horizontal: length),
+          primary: color,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30))),
+      child: Text(
+        text,
+        style: const TextStyle(
+            fontSize: 15, letterSpacing: 2.5, color: Colors.black),
+      ),
+    );
   }
   // ================ Toggle Button  =============================
 
@@ -110,6 +160,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
     index = 0;
     getUserName();
     toggleButton();
+    getFeedback(index);
   }
 
   @override
@@ -183,16 +234,12 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 buildButtonField(
-                    "CANCEL", Colors.red, 20.0, context, FeedPage()),
+                    "CANCEL", Colors.red, 20.0, () => Navigator.pop(context)),
                 SizedBox(width: 10.0),
-                buildButtonField(
-                    "SUBMIT",
-                    Colors.green,
-                    20.0,
-                    context,
-                    ProfilePage(
-                      email: currUserEmail,
-                    )),
+                buildButtonField("SUBMIT", Colors.green, 20.0, () async {
+                  bool success = await addReview();
+                  if (success) Navigator.pop(context);
+                }),
               ],
             )
           ],

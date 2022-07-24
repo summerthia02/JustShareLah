@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
+import 'package:justsharelah_v1/models/AllReviews.dart';
 import 'package:justsharelah_v1/pages/edit_profile.dart';
 import 'package:justsharelah_v1/pages/review_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
@@ -30,6 +31,7 @@ class _ProfilePageState extends State<ProfilePage> {
   final usersCollection = FirebaseFirestore.instance.collection('Users');
   final currentUser = FirebaseAuth.instance.currentUser;
   final currUserEmail = FirebaseAuth.instance.currentUser?.email;
+  final currUserId = FirebaseAuth.instance.currentUser!.uid;
   late UserData userData = UserData.defaultUserData();
   var profileData = {};
 
@@ -163,12 +165,18 @@ class _ProfilePageState extends State<ProfilePage> {
           //     fontWeight: FontWeight.bold,
           //     decoration: TextDecoration.underline),
           child: Text(
-            numReviews.toString() + " Reviews",
+            "$numReviews Reviews",
             style:
                 kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
           ),
           onPressed: () {
-            Navigator.pushReplacementNamed(context, "/reviews");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AllReviews(
+                    profileUid: userData.uid!,
+                  ),
+                ));
           },
         ),
       ],

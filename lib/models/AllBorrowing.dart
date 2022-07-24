@@ -152,12 +152,6 @@ class _AllBorrowingState extends State<AllBorrowing> {
                 return const Text("No such Listing");
               }
 
-              // Iterable<Listing>? listingDataIterable = snapshot.data!;
-              // if (listingDataIterable == null ||
-              //     listingDataIterable.isEmpty) {
-              //   return const Text("No such listings :(");
-              // }
-              // List<Listing> listingData = listingDataIterable.toList();
               return SizedBox(
                 height: 500,
                 child: ListView.builder(
@@ -169,9 +163,7 @@ class _AllBorrowingState extends State<AllBorrowing> {
                           child: ListingCard(
                             // collect the data for each indiviudal document at the index
                             snap: snapshot.data!.docs[index].data(),
-                            // image: listingData[index].imageUrl,
-                            // title: listingData[index].title,
-                            // price: listingData[index].price,
+
                             press: () {
                               Navigator.push(
                                   context,
