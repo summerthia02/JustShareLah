@@ -224,8 +224,8 @@ class FireStoreMethods {
         .update(updateData);
   }
 
-  // create review
-  Future<String> uploadReview(String reviewById, String reviewForId,
+  // create review => return the reviewId
+  Future<String?> uploadReview(String reviewById, String reviewForId,
       String listingId, String description, String feedback) async {
     // asking uid here because we dont want to make extra calls to firebase auth when we can just get from our state management
     String res = "Some error occurred";
@@ -243,6 +243,7 @@ class FireStoreMethods {
 
       await reviewsCollection.doc(reviewId).set(review.toJson());
       res = "success";
+      return reviewId;
     } catch (err) {
       res = err.toString();
     }

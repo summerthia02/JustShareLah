@@ -164,11 +164,17 @@ class _ProfilePageState extends State<ProfilePage> {
           // style: kBodyTextSmall.copyWith(
           //     fontWeight: FontWeight.bold,
           //     decoration: TextDecoration.underline),
-          child: Text(
-            "$numReviews Reviews",
-            style:
-                kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
-          ),
+          child: numReviews != 1
+              ? Text(
+                  "$numReviews Reviews",
+                  style: kBodyTextSmall.copyWith(
+                      decoration: TextDecoration.underline),
+                )
+              : Text(
+                  "1 Review",
+                  style: kBodyTextSmall.copyWith(
+                      decoration: TextDecoration.underline),
+                ),
           onPressed: () {
             Navigator.push(
                 context,

@@ -62,7 +62,6 @@ class _ChatItemPageState extends State<ChatItemPage> {
   final TextEditingController textEditingController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final FocusNode focusNode = FocusNode();
-
   @override
   void initState() {
     super.initState();
@@ -299,7 +298,8 @@ class _ChatItemPageState extends State<ChatItemPage> {
                   ? Text("You have accepted the offer already !")
                   : Container(),
               // make review when accepted offer
-              widget.chatData.acceptedOffer && leftReview() == false
+              widget.chatData.acceptedOffer
+                  // leftReview() == false
                   ? buildButtonField(
                       "Leave a Review",
                       Colors.cyan,
