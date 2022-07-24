@@ -12,6 +12,8 @@ class UserDataService {
 
   // get the Users table
   static final usersCollection = FirebaseFirestore.instance.collection('Users');
+  static final reviewCollection =
+      FirebaseFirestore.instance.collection('Reviews');
 
   static Future<void> createUser(String uid, String email, String userName,
       String firstName, String lastName) async {
@@ -114,6 +116,21 @@ class UserDataService {
     return true;
   }
 
+  // update the reviews array in user "reviews"
+  Future<String> updateReviews(String reviewId, String? userId) async {
+    String res = "Some error occurred";
+
+    try {
+      await usersCollection.doc(userId).update({
+        'reviews': FieldValue.arrayUnion([reviewId])
+      });
+      res = 'success';
+    } catch (err) {
+      res = err.toString();
+    }
+    return res;
+  }
+
   static Future<Map<String, dynamic>> getUserData(String email) async {
     Map<String, dynamic> userData = <String, dynamic>{};
     // get data where 'email' field is = email argument field
@@ -144,7 +161,8 @@ class UserDataService {
     return userData;
   }
 
-  static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserDataStreamFromId(String uid) {
+  static Stream<DocumentSnapshot<Map<String, dynamic>>> getUserDataStreamFromId(
+      String uid) {
     return usersCollection.doc(uid).snapshots();
   }
 }

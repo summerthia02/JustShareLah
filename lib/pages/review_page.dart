@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -56,12 +57,18 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
   Future<bool> addReview() async {
     try {
       // upload to both storage and 'listing' collection
-      String res = await FireStoreMethods().uploadReview(
+      String? reviewId = await FireStoreMethods().uploadReview(
           currUserId!,
           widget.reviewForId,
           widget.listingId,
           _descriptionController.text,
           getFeedback(index));
+
+      if (reviewId == null) {
+        showSnackBar(context, 'Error adding Review. Try Again.');
+      }
+
+      await UserDataService().updateReviews(reviewId!, widget.reviewForId);
 
       // FireStoreMethods().uploadReview(
       //     currUserId!,
@@ -69,7 +76,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
       //     widget.listingId,
       //     _descriptionController.text,
       //     getFeedback(index))
-      print(res);
+      String res = "";
       if (res == "success") {
         showSnackBar(context, 'Added Listing!');
       }
