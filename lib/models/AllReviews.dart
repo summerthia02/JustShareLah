@@ -32,9 +32,11 @@ class AllReviews extends StatelessWidget {
             "All Reviews",
             textAlign: TextAlign.start,
             style: kJustShareLahStyle.copyWith(
-                fontSize: 35, fontWeight: FontWeight.w500),
+                fontSize: 50, fontWeight: FontWeight.w200),
           ),
-
+          const SizedBox(
+            height: 10,
+          ),
           // SHOW ALL REVIEWS for a particular profile
           // for each transactions, there are two reviews
           // don't use the review where profildUid == reviewBy (should be shown in the other's profile)

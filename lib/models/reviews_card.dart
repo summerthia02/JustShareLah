@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 
 class ReviewCard extends StatefulWidget {
   ReviewCard({
@@ -185,12 +186,15 @@ class _ReviewCardState extends State<ReviewCard> {
               children: [
                 Column(
                   children: [
-                    Text(listingTitle),
+                    Text(
+                      listingTitle,
+                      style: kBodyText,
+                    ),
                     ClipRRect(
                       child: Image(
                         image: NetworkImage(listingUrl),
-                        width: 100,
-                        height: 100,
+                        width: 125,
+                        height: 125,
                       ),
                     )
                   ],

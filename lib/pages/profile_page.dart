@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
           //     fontWeight: FontWeight.bold,
           //     decoration: TextDecoration.underline),
           child: Text(
-            numReviews.toString() + " Reviews",
+            "$numReviews Reviews",
             style:
                 kBodyTextSmall.copyWith(decoration: TextDecoration.underline),
           ),
