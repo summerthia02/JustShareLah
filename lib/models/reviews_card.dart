@@ -188,13 +188,13 @@ class _ReviewCardState extends State<ReviewCard> {
                   children: [
                     Text(
                       listingTitle,
-                      style: kBodyText,
+                      style: kBodyTextSmall,
                     ),
                     ClipRRect(
                       child: Image(
                         image: NetworkImage(listingUrl),
-                        width: 125,
-                        height: 125,
+                        width: 80,
+                        height: 80,
                       ),
                     )
                   ],
@@ -214,12 +214,12 @@ class _ReviewCardState extends State<ReviewCard> {
                         ),
                         Image.asset(
                           getFacePic(),
-                          scale: 12,
+                          scale: 10,
                         ),
                       ],
                     ),
                     SizedBox(
-                      width: 150,
+                      width: 120,
                       child: Text(widget.snap["description"]),
                     ),
                     SizedBox(

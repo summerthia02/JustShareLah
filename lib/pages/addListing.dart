@@ -337,30 +337,31 @@ class _AddListingPageState extends State<AddListingPage> {
     );
   }
 
-  Container buildFormField(String hintText, TextEditingController controller,
-      {double height = 40.0, int numLines = 1}) {
-    return Container(
-      padding: const EdgeInsets.only(top: 20, right: 20),
-      child: SizedBox(
-        width: 225,
-        height: height,
-        child: TextField(
-          minLines: numLines,
-          maxLines: numLines,
-          onChanged: (value) => print(value),
-          controller: controller,
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            hintText: hintText,
-            border: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(30))),
-            hintStyle: const TextStyle(fontSize: 17, color: Colors.grey),
-          ),
-        ),
-      ),
-    );
-  }
+  // Container buildFormField(
+  //     String hintText, TextEditingController controller, double width,
+  //     {double height = 40.0, int numLines = 1}) {
+  //   return Container(
+  //     padding: const EdgeInsets.only(top: 20, right: 20),
+  //     child: SizedBox(
+  //       width: width,
+  //       height: height,
+  //       child: TextField(
+  //         minLines: numLines,
+  //         maxLines: numLines,
+  //         onChanged: (value) => print(value),
+  //         controller: controller,
+  //         decoration: InputDecoration(
+  //           contentPadding:
+  //               const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+  //           hintText: hintText,
+  //           border: const OutlineInputBorder(
+  //               borderRadius: BorderRadius.all(Radius.circular(30))),
+  //           hintStyle: const TextStyle(fontSize: 17, color: Colors.grey),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   // Container locationField(String initialValue,
   //     {double height = 80.0, int numLines = 2}) {
@@ -430,15 +431,46 @@ class _AddListingPageState extends State<AddListingPage> {
     );
   }
 
+  Center buildTextTitle(String title) {
+    return Center(
+        child: Text(
+      title,
+      style: const TextStyle(
+          fontSize: 20,
+          fontFamily: "Satisfy",
+          fontWeight: FontWeight.w500,
+          color: Colors.black),
+    ));
+  }
+
+  SizedBox buildFormField(String hintText, TextEditingController controller,
+      {double height = 40.0, int numLines = 1}) {
+    return SizedBox(
+      height: height,
+      child: TextFormField(
+        minLines: numLines,
+        maxLines: numLines,
+        textAlign: TextAlign.center,
+        controller: controller,
+        decoration: kTextFormFieldDecoration.copyWith(
+            hintText: hintText,
+            floatingLabelBehavior: FloatingLabelBehavior.always),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // to add the search split into the listing fields (title)
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar:
           MyAppBar().buildAppBar(const Text("Add Listing"), context, '/feed'),
-      body: SingleChildScrollView(
-        child: Column(
+      body: ListView(children: [
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(
               height: 20,
@@ -473,70 +505,46 @@ class _AddListingPageState extends State<AddListingPage> {
                 ),
               ],
             ),
-            Row(children: <Widget>[
-              buildFormTitle("Listing Title"),
-              const Expanded(
-                  child: SizedBox(
-                width: 5,
-              )),
-              buildFormField("Enter Listing Details", _titleController),
-            ]),
-            const SizedBox(height: 10.0),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                buildFormTitle("Listing Type"),
-                const Expanded(
-                    child: SizedBox(
-                  width: 5,
-                )),
-                buildRentOrBorrowDropdown(),
-              ],
+            const SizedBox(
+              height: 20,
             ),
-            const SizedBox(height: 10.0),
-            Row(children: <Widget>[
-              buildFormTitle("Price"),
-              const Expanded(
-                  child: SizedBox(
-                width: 5,
-              )),
-              buildFormField("Price (renting) ", _priceController),
-            ]),
-            const SizedBox(height: 10.0),
-            Row(children: <Widget>[
-              buildFormTitle("ShareCredits"),
+            buildTextTitle("Title"),
+            buildFormField("Listing Title", _titleController),
+            const SizedBox(
+              height: 20,
+            ),
+            buildTextTitle("Price"),
+            buildFormField("Price(Renting)", _priceController),
+            const SizedBox(
+              height: 20,
+            ),
+            buildTextTitle("ShareCredits"),
+            buildFormField(("ShareCreds(Lending)"), _shareCreditsController),
+            const SizedBox(
+              height: 20,
+            ),
+            buildTextTitle("Description"),
+            buildFormField("Description of Listing", _descriptionController,
+                height: 100, numLines: 5),
+            const SizedBox(
+              height: 20,
+            ),
+            buildTextTitle("Rent / Borrow"),
+            buildRentOrBorrowDropdown(),
+            const SizedBox(
+              height: 10,
+            ),
+            buildTextTitle("Available?"),
+            buildTextTitle("Location"),
+            Stack(children: [
               Container(
-                child: buildFormField(
-                    "ShareCreds(lending) ", _shareCreditsController),
-              ),
-            ]),
-            const SizedBox(height: 10.0),
-            Row(children: <Widget>[
-              buildFormTitle("Description "),
-              const Expanded(
-                  child: SizedBox(
-                width: 5,
-              )),
-              buildFormField("Give us a brief description of your listing",
-                  _descriptionController,
-                  height: 100, numLines: 5),
-            ]),
-            const SizedBox(height: 10.0),
-            Row(children: [
-              buildFormTitle("Location"),
-              const Expanded(child: SizedBox()),
-              // locationField(
-              //     "Location",)
-              Stack(children: [
-                Container(
-                    alignment: Alignment.topRight,
-                    padding: EdgeInsets.only(
-                        bottom: 30, left: 250, right: 20, top: 20),
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey),
-                        borderRadius: BorderRadius.all(Radius.circular(30)))),
-                Positioned(top: 17, left: 30, child: Text(_currentAddress)),
-              ]),
+                  alignment: Alignment.topRight,
+                  padding: EdgeInsets.only(
+                      bottom: 30, left: 250, right: 20, top: 20),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                      borderRadius: BorderRadius.all(Radius.circular(30)))),
+              Positioned(top: 17, left: 30, child: Text(_currentAddress)),
             ]),
             Container(
               padding:
@@ -567,7 +575,7 @@ class _AddListingPageState extends State<AddListingPage> {
             ]),
           ],
         ),
-      ),
+      ]),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),
     );
   }
