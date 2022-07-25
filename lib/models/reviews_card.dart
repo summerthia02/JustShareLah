@@ -218,7 +218,8 @@ class _ReviewCardState extends State<ReviewCard> {
                         ),
                       ],
                     ),
-                    Container(
+                    SizedBox(
+                      width: 150,
                       child: Text(widget.snap["description"]),
                     ),
                     SizedBox(

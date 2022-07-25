@@ -26,7 +26,7 @@ class FirestoreUserKeys {
   static const String shareCredits = "share_credits";
   static const String listings = "listings";
   static const String reviews = "reviews";
-  static const String chattingWith = "chatting_with";
+  static const String chats = "chats";
 }
 
 class FirestoreGeneralKeys {
