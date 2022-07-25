@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
+import 'package:justsharelah_v1/models/share_creds.dart';
 
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
@@ -33,6 +34,8 @@ class _EditListingPageState extends State<EditListingPage> {
 
   late TextEditingController _titleController;
   late TextEditingController _priceController;
+  late TextEditingController _shareCreditsController;
+
   late TextEditingController _descriptionController;
 
   final usersCollection = FirebaseFirestore.instance.collection('Users');
@@ -61,6 +64,7 @@ class _EditListingPageState extends State<EditListingPage> {
     _titleController = TextEditingController();
     _priceController = TextEditingController();
     _descriptionController = TextEditingController();
+    _shareCreditsController = TextEditingController();
     userEmail = currentUser?.email;
     _getUserData().then((data) {
       UserData parseUserData = UserData(
@@ -135,6 +139,9 @@ class _EditListingPageState extends State<EditListingPage> {
             const SizedBox(
               height: 20,
             ),
+            buildTextTitle("ShareCredits"),
+            buildFormField(
+                widget.snap["price"], false, _shareCreditsController),
             buildTextTitle("Description"),
             buildFormField(
                 widget.snap["description"], false, _descriptionController),
@@ -250,20 +257,21 @@ class _EditListingPageState extends State<EditListingPage> {
 
   // =================== Firestore interface =============
   void _editListing(String uid) async {
-    String title, price, description, location;
+    String title, price, description, location, shareCredits;
     bool forRent, avail;
     GeoPoint geoLocation;
 
     title = _titleController.text.trim();
     price = _priceController.text.trim();
+    shareCredits = _shareCreditsController.text.trim();
     description = _descriptionController.text.trim();
     forRent = rentDropdownValue == 'Renting' ? true : false;
     avail = availDropDownValue == "yes" ? true : false;
     location = _currentAddress;
     geoLocation = GeoPoint(latitude, longitude);
 
-    bool editedListing = await FireStoreMethods().editListing(
-        uid, title, price, description, forRent, avail, location, geoLocation);
+    bool editedListing = await FireStoreMethods().editListing(uid, title, price,
+        shareCredits, description, forRent, avail, location, geoLocation);
 
     successFailSnackBar(editedListing, "Edit Listing Successful",
         "Error Editing Listing, Please try again.", context);
