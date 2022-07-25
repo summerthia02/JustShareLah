@@ -38,7 +38,7 @@ class ForRenting extends StatelessWidget {
           },
         ),
         StreamBuilder(
-          stream: userEmailToDisplay!.isEmpty || userEmailToDisplay == null
+          stream: userEmailToDisplay!.isEmpty
               ? FirebaseFirestore.instance
                   .collection('listings')
                   .where('forRent', isEqualTo: true)

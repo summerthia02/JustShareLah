@@ -15,7 +15,7 @@ class ForBorrowing extends StatelessWidget {
     this.userEmailToDisplay = "",
   }) : super(key: key);
 
-  late String? userEmailToDisplay;
+  late String userEmailToDisplay;
   List<QueryDocumentSnapshot> listingData = [];
 
   @override
@@ -37,7 +37,7 @@ class ForBorrowing extends StatelessWidget {
           },
         ),
         StreamBuilder(
-          stream: userEmailToDisplay == null || userEmailToDisplay!.isEmpty
+          stream: userEmailToDisplay.isEmpty
               ? FirebaseFirestore.instance
                   .collection('listings')
                   .where('forRent', isEqualTo: false)
