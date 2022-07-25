@@ -29,7 +29,7 @@ class UserDataService {
       'listings': [],
       'reviews': [],
       'share_credits': "500",
-      'chatting_with': []
+      'chats': []
     });
   }
 

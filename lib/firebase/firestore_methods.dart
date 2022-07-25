@@ -107,12 +107,21 @@ class FireStoreMethods {
         await listingsCollection.doc(listingId).update({
           'usersLiked': FieldValue.arrayRemove([uid])
         });
+
+        listingsCollection
+            .doc(listingId)
+            .update({'likeCount': FieldValue.increment(-1)});
       } else {
         // else we need to add uid to the likes array
         await listingsCollection.doc(listingId).update({
           'usersLiked': FieldValue.arrayUnion([uid])
         });
+
+        listingsCollection
+            .doc(listingId)
+            .update({'likeCount': FieldValue.increment(1)});
       }
+
       res = 'success';
     } catch (err) {
       res = err.toString();

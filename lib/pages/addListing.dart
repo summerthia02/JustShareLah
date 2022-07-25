@@ -342,7 +342,7 @@ class _AddListingPageState extends State<AddListingPage> {
     return Container(
       padding: const EdgeInsets.only(top: 20, right: 20),
       child: SizedBox(
-        width: 230,
+        width: 225,
         height: height,
         child: TextField(
           minLines: numLines,
@@ -505,13 +505,9 @@ class _AddListingPageState extends State<AddListingPage> {
             const SizedBox(height: 10.0),
             Row(children: <Widget>[
               buildFormTitle("ShareCredits"),
-              const Expanded(
-                  child: SizedBox(
-                width: 5,
-              )),
               Container(
                 child: buildFormField(
-                    "ShareCredits (lending) ", _shareCreditsController),
+                    "ShareCreds(lending) ", _shareCreditsController),
               ),
             ]),
             const SizedBox(height: 10.0),
