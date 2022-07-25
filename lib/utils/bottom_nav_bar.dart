@@ -53,7 +53,7 @@ class MyBottomNavBar {
       ],
       onTap: (index) {
         String selectedRoute = widgetPages.elementAt(index);
-        Navigator.of(context).pushNamed(selectedRoute).then((_) => null);
+        Navigator.of(context).pushNamed(selectedRoute);
       },
     );
   }
