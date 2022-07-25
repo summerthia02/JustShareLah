@@ -133,6 +133,7 @@ class FireStoreMethods {
       String uid,
       String title,
       String price,
+      String shareCredits,
       String description,
       bool forRent,
       bool avail,
@@ -156,6 +157,9 @@ class FireStoreMethods {
     // if empty, remains the same, else take the controller variable
     listingData!["title"] = title.isEmpty ? listingData!["title"] : title;
     listingData!["price"] = price.isEmpty ? listingData!["price"] : price;
+    listingData!["shareCredits"] =
+        shareCredits.isEmpty ? listingData!["shareCredits"] : shareCredits;
+
     listingData!["description"] =
         description.isEmpty ? listingData!["description"] : description;
     listingData!["forRent"] = forRent;
