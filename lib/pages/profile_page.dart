@@ -39,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Future<Map<String, dynamic>> _getUserData() async {
     Map<String, dynamic> userData = <String, dynamic>{};
     // get data where 'email' field is = email argument field
-    await usersCollection.where('email', isEqualTo: widget.email).get().then(
+    await usersCollection.where('email', isEqualTo: currUserEmail).get().then(
       (res) {
         print("userData query successful");
         userData = res.docs.first.data();
