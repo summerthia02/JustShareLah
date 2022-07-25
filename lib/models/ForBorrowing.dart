@@ -37,7 +37,7 @@ class ForBorrowing extends StatelessWidget {
           },
         ),
         StreamBuilder(
-          stream: userEmailToDisplay == null || userEmailToDisplay!.isEmpty 
+          stream: userEmailToDisplay == null || userEmailToDisplay!.isEmpty
               ? FirebaseFirestore.instance
                   .collection('listings')
                   .where('forRent', isEqualTo: false)
@@ -62,7 +62,7 @@ class ForBorrowing extends StatelessWidget {
               );
             } else if (snapshot.data == null) {
               return const Text("No Listings for Borrowing Yet :( ");
-            } else if (snapshot.hasData) {
+            } else if (!snapshot.hasData) {
               return const Text("Awaiting result...");
             } else if (snapshot.hasError) {
               print(snapshot.error);
