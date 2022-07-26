@@ -15,9 +15,6 @@ import 'package:justsharelah_v1/models/ForBorrowing.dart';
 import 'package:justsharelah_v1/models/ForRenting.dart';
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:justsharelah_v1/utils/image_picker.dart';
-import 'package:justsharelah_v1/utils/profile_image.dart';
-import 'sharecredits.dart';
 
 class ProfilePage extends StatefulWidget {
   ProfilePage({Key? key, required this.email}) : super(key: key);
@@ -82,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
     try {
       var snap = await FirebaseFirestore.instance
           .collection("Users")
-          .doc(currentUser?.uid)
+          .doc(currentUser!.uid)
           .get();
       profileData = snap.data()!;
       setState(() {});

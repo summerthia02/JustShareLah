@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:justsharelah_v1/firebase/auth_provider.dart';
 import 'package:justsharelah_v1/firebase/auth_service.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/main.dart';
 
@@ -65,7 +68,7 @@ class _LoginPageState extends State<LoginPage> {
         Container(
           width: double.infinity,
           height: double.infinity,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               image: DecorationImage(
                   image: NetworkImage(
                       'https://i.pinimg.com/564x/81/68/77/8168774f8b714d65417e7615aac3f361.jpg'),
@@ -134,7 +137,14 @@ class _LoginPageState extends State<LoginPage> {
                           ? null
                           : () async {
                               _signIn();
-                              Navigator.pushReplacementNamed(context, "/feed");
+                              sleep(const Duration(seconds: 2));
+
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProfilePage(
+                                        email: _emailController.text),
+                                  ));
                             },
                       child: _isLoading
                           ? const Center(

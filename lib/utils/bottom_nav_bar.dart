@@ -1,12 +1,18 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:justsharelah_v1/pages/addListing.dart';
+import 'package:justsharelah_v1/pages/chat_page.dart';
+import 'package:justsharelah_v1/pages/favourites.dart';
+import 'package:justsharelah_v1/pages/feed_page.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 
 class MyBottomNavBar {
-  List<String> widgetPages = <String>[
-    "/feed",
-    "/chat",
-    "/addlisting",
-    "/favourites",
-    "/profile",
+  List widgetPages = [
+    const FeedPage(),
+    const ChatPage(),
+    const AddListingPage(),
+    Favourites(),
+    ProfilePage(email: FirebaseAuth.instance.currentUser!.email),
   ];
 
   BottomNavigationBar buildBottomNavBar(BuildContext context) {
@@ -52,8 +58,12 @@ class MyBottomNavBar {
         ),
       ],
       onTap: (index) {
-        String selectedRoute = widgetPages.elementAt(index);
-        Navigator.of(context).pushNamed(selectedRoute);
+        dynamic selectedRoute = widgetPages.elementAt(index);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => selectedRoute,
+            ));
       },
     );
   }

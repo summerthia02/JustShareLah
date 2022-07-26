@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:justsharelah_v1/firebase/firestore_methods.dart';
+import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
 
@@ -28,6 +29,7 @@ class ShareCreditsScreenState extends State<ShareCreditsScreen> {
   String currSC = "";
   int currIntSC = 0;
   String currUserId = FirebaseAuth.instance.currentUser!.uid;
+  String? currUserEmail = FirebaseAuth.instance.currentUser!.email;
   bool hasSCUpdated = false;
 
   // get curr users' sharecredits
@@ -164,7 +166,12 @@ class ShareCreditsScreenState extends State<ShareCreditsScreen> {
                     if (hasSCUpdated == false) {
                       await updateShareCredits();
                     }
-                    Navigator.pushReplacementNamed(context, "/profile");
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              ProfilePage(email: currUserEmail),
+                        ));
                   })
                 : buildButtonField(
                     "I'll EARN IT BACK, Thanks!", Colors.green, 20, () async {
@@ -174,6 +181,12 @@ class ShareCreditsScreenState extends State<ShareCreditsScreen> {
                       Navigator.pop(context);
                     } else {
                       Navigator.pushReplacementNamed(context, "/profile");
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfilePage(email: currUserEmail),
+                          ));
                     }
                   })
             : Container(),

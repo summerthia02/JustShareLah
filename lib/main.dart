@@ -31,7 +31,6 @@ final navigatorKey = GlobalKey<NavigatorState>();
 
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
-  final currUserEmail = FirebaseAuth.instance.currentUser?.email;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +48,7 @@ class MyApp extends StatelessWidget {
           '/feed': (_) => const FeedPage(),
           '/chat': (_) => const ChatPage(),
           '/addlisting': (_) => const AddListingPage(),
-          '/profile': (_) => ProfilePage(
-                email: currUserEmail,
-              ),
+    
           '/favourites': (_) => Favourites(),
           '/reviews': (_) => MakeReviewPage(
                 reviewForId: '',

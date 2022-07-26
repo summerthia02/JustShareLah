@@ -243,6 +243,7 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
         listingId: listingId,
         madeOffer: madeOffer,
         acceptedOffer: acceptedOffer);
+
     ChatProvider.handleChatRequest(chatItem);
     Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ChatItemPage(

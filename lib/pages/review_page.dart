@@ -180,7 +180,7 @@ class _MakeReviewPageState extends State<MakeReviewPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar()
-          .buildAppBar(const Text("Leave A Review"), context, '/profile'),
+          .buildAppBar(const Text("Leave A Review"), context, '/feed'),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
