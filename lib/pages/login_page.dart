@@ -39,8 +39,8 @@ class _LoginPageState extends State<LoginPage> {
     });
     bool success = await AuthService()
         .signIn(_emailController.text.trim(), _passwordController.text.trim());
-    successFailSnackBar(
-        success, "Log In Successful", "Error signing in", context);
+    successFailSnackBar(success, "Log In Successful",
+        "Error signing in. Invalid Email Or Password", context);
 
     setState(() {
       _isLoading = false;
