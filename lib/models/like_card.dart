@@ -3,15 +3,7 @@ import 'dart:ffi';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:justsharelah_v1/firebase/auth_provider.dart';
-import 'package:justsharelah_v1/firebase/firestore_methods.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
-import 'package:justsharelah_v1/models/user_data.dart';
-import 'package:justsharelah_v1/pages/edit_listing.dart';
-import 'package:justsharelah_v1/provider/user_provider.dart';
-import 'package:justsharelah_v1/utils/time_helper.dart';
-import 'package:justsharelah_v1/widget/like_helper.dart';
 
 import '../pages/profile_page.dart';
 import '../utils/const_templates.dart';

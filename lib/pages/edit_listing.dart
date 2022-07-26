@@ -14,12 +14,9 @@ import 'package:justsharelah_v1/firebase/user_data_service.dart';
 import 'package:justsharelah_v1/models/share_creds.dart';
 
 import 'package:justsharelah_v1/models/user_data.dart';
-import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
+import 'package:justsharelah_v1/utils/const_templates.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
-import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
-import 'package:justsharelah_v1/utils/image_picker.dart';
-import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class EditListingPage extends StatefulWidget {
   const EditListingPage({Key? key, required this.snap}) : super(key: key);
@@ -189,12 +186,16 @@ class _EditListingPageState extends State<EditListingPage> {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.center, children: [
               buildButtonField("CANCEL", Colors.red, 20.0, () {
-                Navigator.pushReplacementNamed(context, "/profile");
+                Navigator.pop(context);
               }),
               const SizedBox(width: 60),
               buildButtonField("SAVE", Colors.green, 20.0, () {
                 _editListing(widget.snap["uid"]);
-                Navigator.pushReplacementNamed(context, "/profile");
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ProfilePage(email: userEmail),
+                    ));
               }),
             ]),
           ]),

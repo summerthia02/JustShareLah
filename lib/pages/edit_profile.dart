@@ -3,19 +3,14 @@ import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+
 import 'package:image_picker/image_picker.dart';
-import 'package:justsharelah_v1/firebase/storage_methods.dart';
 import 'package:justsharelah_v1/firebase/user_data_service.dart';
 
 import 'package:justsharelah_v1/models/user_data.dart';
 import 'package:justsharelah_v1/utils/const_templates.dart';
-import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/utils/appbar.dart';
-import 'package:justsharelah_v1/utils/bottom_nav_bar.dart';
 import 'package:justsharelah_v1/utils/image_picker.dart';
-import 'package:justsharelah_v1/utils/profile_image.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({Key? key}) : super(key: key);
