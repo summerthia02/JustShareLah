@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   late final TextEditingController _passwordController;
 
   // local signin function
-  Future<void> _signIn() async {
+  Future<bool> _signIn() async {
     setState(() {
       _isLoading = true;
     });
@@ -45,6 +45,8 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _isLoading = false;
     });
+
+    return success;
   }
 
   @override
@@ -136,15 +138,16 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: _isLoading
                           ? null
                           : () async {
-                              _signIn();
+                              bool success = await _signIn();
                               sleep(const Duration(seconds: 2));
-
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ProfilePage(
-                                        email: _emailController.text),
-                                  ));
+                              if (success) {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ProfilePage(
+                                          email: _emailController.text),
+                                    ));
+                              }
                             },
                       child: _isLoading
                           ? const Center(
