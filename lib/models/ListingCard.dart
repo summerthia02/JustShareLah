@@ -92,14 +92,39 @@ class _ListingCardState extends State<ListingCard> {
   }
 
   // ================ Edit Listing Button + Pop Up  =============
+  //confirmation of deletion
+  confirmDeletion(BuildContext parentContext) async {
+    return showDialog(
+        context: parentContext,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text("Are you sure you want to delete this listing? "),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: const Text("Yes"),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await FireStoreMethods().deletelisting(widget.snap["uid"]);
+                },
+              ),
+              SimpleDialogOption(
+                child: const Text("No"),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              )
+            ],
+          );
+        });
+  }
 
   // ignore: non_constant_identifier_names
-  EditListing(BuildContext parentContext) async {
+  editDeleteListing(BuildContext parentContext) async {
     return showDialog(
       context: parentContext,
       builder: (BuildContext context) {
         return SimpleDialog(
-          title: const Text('Edit Listing'),
+          title: const Text('Edit / Delete Listing'),
           children: <Widget>[
             SimpleDialogOption(
                 padding: const EdgeInsets.all(20),
@@ -113,6 +138,14 @@ class _ListingCardState extends State<ListingCard> {
                         ),
                       ));
                 }),
+            SimpleDialogOption(
+              padding: const EdgeInsets.all(20),
+              child: const Text("Delete Listing "),
+              onPressed: () {
+                Navigator.pop(context);
+                confirmDeletion(context);
+              },
+            ),
             SimpleDialogOption(
               padding: const EdgeInsets.all(20),
               child: const Text("Cancel"),
@@ -198,7 +231,7 @@ class _ListingCardState extends State<ListingCard> {
                                   icon: const Icon(Icons.more_vert,
                                       color: Colors.black, size: 30),
                                   onPressed: () {
-                                    EditListing(context);
+                                    editDeleteListing(context);
                                   },
                                 )
                               : Container()),

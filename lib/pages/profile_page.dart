@@ -100,30 +100,38 @@ class _ProfilePageState extends State<ProfilePage> {
       // if add appbar -> two layers of appbar will appear.
       body: Padding(
         padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-        child: ListView(
-          physics: const BouncingScrollPhysics(),
-          children: [
-            const SizedBox(height: 15),
-            buildProfPic(),
-            buildName(userData),
-            const SizedBox(height: 12),
-            numReviews(userData.reviews.length),
-            numShareCredits(
-                userData.shareCredits.isEmpty ? "0" : userData.shareCredits),
-            // only show this button when it's my own profile
-            currUserEmail == widget.email ? editProfileButton() : Container(),
-            const SizedBox(height: 24),
-            currUserEmail == widget.email
-                ? buildAbout(userData)
-                : userData.about == "Click Edit Profile to add a bio!"
-                    ? buildNoBio()
-                    : buildAbout(userData),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => ProfilePage(email: widget.email)));
+          },
+          child: ListView(
+            physics: const BouncingScrollPhysics(),
+            children: [
+              const SizedBox(height: 15),
+              buildProfPic(),
+              buildName(userData),
+              const SizedBox(height: 12),
+              numReviews(userData.reviews.length),
+              numShareCredits(
+                  userData.shareCredits.isEmpty ? "0" : userData.shareCredits),
+              // only show this button when it's my own profile
+              currUserEmail == widget.email ? editProfileButton() : Container(),
+              const SizedBox(height: 24),
+              currUserEmail == widget.email
+                  ? buildAbout(userData)
+                  : userData.about == "Click Edit Profile to add a bio!"
+                      ? buildNoBio()
+                      : buildAbout(userData),
 
-            const SizedBox(height: defaultPadding),
-            ForBorrowing(userEmailToDisplay: widget.email),
-            const SizedBox(height: defaultPadding),
-            ForRenting(userEmailToDisplay: widget.email)
-          ],
+              const SizedBox(height: defaultPadding),
+              ForBorrowing(userEmailToDisplay: widget.email),
+              const SizedBox(height: defaultPadding),
+              ForRenting(userEmailToDisplay: widget.email)
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: MyBottomNavBar().buildBottomNavBar(context),

@@ -9,6 +9,7 @@ import 'package:justsharelah_v1/models/chat_item.dart';
 import 'package:justsharelah_v1/models/listings.dart';
 import 'package:justsharelah_v1/models/profile_widget.dart';
 import 'package:justsharelah_v1/pages/chat_item_page.dart';
+import 'package:justsharelah_v1/pages/feed_page.dart';
 import 'package:justsharelah_v1/pages/like_page.dart';
 import 'package:justsharelah_v1/pages/profile_page.dart';
 import 'package:justsharelah_v1/provider/chat_provider.dart';
@@ -108,108 +109,110 @@ class _EnlargedScreenState extends State<EnlargedScreen> {
                   topRight: Radius.circular(defaultBorderRadius * 3),
                 ),
               ),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 7.0),
-                          child: LikeHelper(
-                              smallHeart: true,
-                              isLiking:
-                                  widget.snap["usersLiked"].contains(userId),
-                              child: IconButton(
-                                  onPressed: () async {
-                                    // print(
-                                    //   widget.snap["uid"].toString(),
-                                    // );
-                                    print(widget.snap["uid"]);
+              child: ListView(
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 7.0),
+                            child: LikeHelper(
+                                smallHeart: true,
+                                isLiking:
+                                    widget.snap["usersLiked"].contains(userId),
+                                child: IconButton(
+                                    onPressed: () async {
+                                      // print(
+                                      //   widget.snap["uid"].toString(),
+                                      // );
+                                      print(widget.snap["uid"]);
 
-                                    await FireStoreMethods().likelisting(
-                                        widget.snap["uid"].toString(),
-                                        userId!,
-                                        widget.snap["usersLiked"]);
-                                  },
-                                  icon:
-                                      widget.snap["usersLiked"].contains(userId)
-                                          ? const Icon(
-                                              Icons.favorite,
-                                              color: Colors.red,
-                                            )
-                                          : const Icon(
-                                              Icons.favorite_border,
-                                              color: Colors.grey,
-                                            ))),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 14.0),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => LikePage(
-                                      usersLiked: widget.snap["usersLiked"],
-                                    ),
-                                  ));
-                            },
-                            child: Text(
-                              widget.snap["usersLiked"].length != 1
-                                  ? "${widget.snap["usersLiked"].length} likes"
-                                  : "1 like",
-                              style: kBodyTextSmall,
-                            ),
+                                      await FireStoreMethods().likelisting(
+                                          widget.snap["uid"].toString(),
+                                          userId!,
+                                          widget.snap["usersLiked"]);
+                                    },
+                                    icon: widget.snap["usersLiked"]
+                                            .contains(userId)
+                                        ? const Icon(
+                                            Icons.favorite,
+                                            color: Colors.red,
+                                          )
+                                        : const Icon(
+                                            Icons.favorite_border,
+                                            color: Colors.grey,
+                                          ))),
                           ),
-                        ),
-                      ],
-                    ),
-
-                    // listing title, price, description
-                    // IconButton(
-                    //   alignment: Alignment.topLeft,
-                    //   icon: isLiked
-                    //       ? Icon(Icons.favorite)
-                    //       : Icon(Icons.favorite_border),
-                    //   color: isLiked ? Colors.red : Colors.grey,
-                    //   onPressed: () {},
-                    // ),
-                    // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
-                    ListingCardDetails(snap: widget.snap),
-                    Text(
-                      "Listed on ${convertedTime(
-                        widget.snap["dateListed"],
-                      )}",
-                      style: kBodyTextSmall,
-                    ),
-                    // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
-                    Text(
-                      widget.snap["location"],
-                      style: TextStyle(fontSize: 12),
-                    ),
-
-                    const SizedBox(height: (defaultPadding)),
-                    // only show the chat button if the listing isn't mine
-                    widget.snap["createdByEmail"] != userEmail
-                        ? Center(
-                            child: SizedBox(
-                              width: 200,
-                              height: 48,
-                              child: ElevatedButton(
-                                onPressed: onChatPressed,
-                                style: ElevatedButton.styleFrom(
-                                    primary: Colors.redAccent,
-                                    shape: const StadiumBorder()),
-                                child: const Text("Chat"),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 14.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => LikePage(
+                                        usersLiked: widget.snap["usersLiked"],
+                                      ),
+                                    ));
+                              },
+                              child: Text(
+                                widget.snap["usersLiked"].length != 1
+                                    ? "${widget.snap["usersLiked"].length} likes"
+                                    : "1 like",
+                                style: kBodyTextSmall,
                               ),
                             ),
-                          )
-                        : Container(),
-                  ],
-                ),
+                          ),
+                        ],
+                      ),
+
+                      // listing title, price, description
+                      // IconButton(
+                      //   alignment: Alignment.topLeft,
+                      //   icon: isLiked
+                      //       ? Icon(Icons.favorite)
+                      //       : Icon(Icons.favorite_border),
+                      //   color: isLiked ? Colors.red : Colors.grey,
+                      //   onPressed: () {},
+                      // ),
+                      // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
+                      ListingCardDetails(snap: widget.snap),
+                      Text(
+                        "Listed on ${convertedTime(
+                          widget.snap["dateListed"],
+                        )}",
+                        style: kBodyTextSmall,
+                      ),
+                      // LikeCounts(likeCount: likeCount == null ? 0 : likeCount),
+                      Text(
+                        widget.snap["location"],
+                        style: TextStyle(fontSize: 12),
+                      ),
+
+                      const SizedBox(height: (defaultPadding)),
+                      // only show the chat button if the listing isn't mine
+                      widget.snap["createdByEmail"] != userEmail
+                          ? Center(
+                              child: SizedBox(
+                                width: 200,
+                                height: 48,
+                                child: ElevatedButton(
+                                  onPressed: onChatPressed,
+                                  style: ElevatedButton.styleFrom(
+                                      primary: Colors.redAccent,
+                                      shape: const StadiumBorder()),
+                                  child: const Text("Chat"),
+                                ),
+                              ),
+                            )
+                          : Container(),
+                    ],
+                  ),
+                ],
               ),
             ),
           )
