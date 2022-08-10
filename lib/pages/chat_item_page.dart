@@ -208,7 +208,8 @@ class _ChatItemPageState extends State<ChatItemPage> {
         FirebaseFirestore.instance.collection("Reviews");
     Query reviewDoc = reviewCollection
         .where("listingId", isEqualTo: widget.listingId)
-        .where("reviewById", isEqualTo: currentUserId);
+        .where("reviewById", isEqualTo: currentUserId)
+        .where("reviewForId", isEqualTo: widget.otherId);
     await reviewDoc.get().then((value) => {
           if (value.docs.isEmpty)
             {
